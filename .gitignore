@@ -1,28 +1,22 @@
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+_site
+.DS_Store
+.jekyll
+.bundle
+.sass-cache
+Gemfile.lock
+node_modules
+package.json
+.directory
 
-# Precompiled Headers
-*.gch
-*.pch
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
+# Intellij
+**/.idea/copyright
+**/.idea/libraries
+**/.idea/scopes
+**/.idea/.name
+**/.idea/*.xml
+*.iml
+*.ipr
+*.iws
+out/
+.idea_modules/
+atlassian-ide-plugin.xml
