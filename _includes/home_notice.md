@@ -55,6 +55,51 @@ While this page mainly references Neo4j, most of the discussion would actually a
 
 ## Timeline
 
+1. **Up to start of Google Summer of Code 2015:**
+
+    * Initial [discussion with OpenCog mentors](https://groups.google.com/forum/#!topic/opencog/uePABY4OhNA) in [OpenCog Google group](https://groups.google.com/forum/#!forum/opencog) - done / continuous.
+    * Initial [proposal of using Neo4j for OpenCog Atomspace](http://lumen.hendyirawan.com/2014/07/neo4j-as-graph-database-for-opencog.html) (pre-GSoc 2015) - done in July 2014.
+    * Prepare [OpenCog build environment](http://wiki.opencog.org/w/Building_OpenCog) in my Linux Mint 17.1 KDE 64bit notebook - done.
+    * Submit [my patches and pull requests to OpenCog GitHub](https://github.com/opencog/opencog/pulls?q=is%3Apr+author%3Aceefour+is%3Aclosed) - done.
+    * Get commit access to [neo4c Neo4j library for C/C++](https://github.com/wfreeman/neo4c) - done.
+    * Initial analysis of OpenCog's [Bio knowledge base dataset in Scheme format](https://github.com/opencog/agi-bio/tree/master/knowledge-import) - done.
+
+2. **May 25-31, 2015:**
+
+3. **June 1-7, 2015:**
+
+4. **June 8-14, 2015:**
+
+5. **June 15-21, 2015:**
+
+6. **June 22-28, 2015:**
+
+7. **June 29-July 5, 2015:**
+
+8. **July 6-July 12, 2015:**
+
+9. **July 13-July 19, 2015:**
+
+10. **July 20-July 26, 2015:**
+
+11. **July 27-Aug 2, 2015:**
+
+12. **Aug 3-Aug 9, 2015:**
+
+13. **Aug 10-16, 2015:**
+
+    * buffer time if any of the previous tasks are late
+    * stretch goal: research additional moderately sized graph dataset (100-500 MiB) for OpenCog Neo4j Backing Store testing
+
+14. **Aug 17-23, 2015:**
+
+    * buffer time if any of the previous tasks are late
+    * stretch goal: initial performance comparison with [Hypergraph DB](http://www.hypergraphdb.org/index)
+
+Planned time allocated for Google Summer of Code 2015 work during these timeline is 30 hours per week, in most cases also during weekends, when I also love to do my research.
+
+During Google Summer of Code 2015 timeline, there are no scheduled classes for my master's program study.
+
 ## Bugs
 
 ## Past Contributions
