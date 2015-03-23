@@ -1,8 +1,8 @@
 ## Summary
 
-(Define the problem + Goals & benefits, 500 characters, no formatting)
+Create [a graph backing store](http://wiki.opencog.org/w/Neo4j_Backing_Store) for OpenCog using [Neo4j graph database](http://neo4.org/). The GraphBackingStore API will extend the current BackingStore C++ API. It can take special queries that map naturally into Cypher queries and simple manipulations of Neo4j graph traversals. The Neo4j node-relationship structures and custom indices will be optimized for [AtomSpace](http://wiki.opencog.org/w/AtomSpace) usage and performance. [neo4c C/C++ library](https://github.com/wfreeman/neo4c) will be improved to allow OpenCog C/C++ code to execute Neo4j Cypher queries over REST.
 
-Create [a graph backing store](http://wiki.opencog.org/w/Neo4j_Backing_Store) for OpenCog, using the [Neo4j graph database](http://neo4.org/). The GraphBackingStore API will extend the current BackingStore C++ API. It will be capable of taking special queries that map naturally into Neo4j Cypher queries and simple manipulations of Neo4j graph traversals. The Neo4j node-relationship structures and custom indices will be optimized for [AtomSpace](http://wiki.opencog.org/w/AtomSpace) usage and performance. The [neo4c C/C++ library](https://github.com/wfreeman/neo4c) will be improved to allow OpenCog C/C++ code to execute Neo4j Cypher queries over REST.
+See: [Google Summer of Code 2015 Proposal](https://www.google-melange.com/gsoc/proposal/review/student/google/gsoc2015/hendy/5629499534213120)
 
 ## Student Profile
 
@@ -60,6 +60,7 @@ The motivation for suggesting Neo4j is a combination of the following factors:
 5. **Potential customers**. As a side point: a couple potential customers for OpenCog work are already using Neo4j, so using it will help with these particular business relationships.
 6. **Performant**. A specific analysis of the types of queries we probably want to execute against a backing store in the near future, and a comparison of this to Neo4j's querying and indexing methods, suggests that we should be able to execute these queries reasonably efficiently against Neo4j, via appropriate machinations as will be suggested below.
 7. **Scalability**. Neo4j can be run distributed across multiple machines; currently this uses a master-slave architecture, but there is momentum behind scaling it further. Scalability requirements and issues are discussed in [Scaling OpenCog](http://wiki.opencog.org/w/Scaling_OpenCog). See also [Distributed AtomSpace Architecture](http://wiki.opencog.org/w/Distributed_AtomSpace_Architecture).
+8. **Persistence**. The current in-memory AtomSpace and pattern matcher design can run with high performance, without bottlenecks, when the database fits in RAM. The goal is to provide a graph backing store which can perform at least on par or better than PostgreSQL backing store, when the database is sufficiently large or cannot fit in RAM.
 
 OpenCog, in the medium-to-long term, is not going to commit to any particular backing store technology; the BackingStore API should remain storage-technology-independent. However, in the short-to-medium term, the choice of backing store technology may have some meaningful impact on development and utilization of the system; so the choice of which backing stores to utilize isn't a totally trivial choice even though it's not a "permanent" one. For example, it should possible to implement the GraphBackingStore API using [HypergraphDB](http://www.hypergraphdb.org/index).
 
@@ -75,9 +76,73 @@ OpenCog, in the medium-to-long term, is not going to commit to any particular ba
 
 ## Design and Implementation
 
+The current BackingStore API is in [opencog/atomspace/BackingStore.h](https://github.com/opencog/opencog/blob/6fad61aca3fb7af0ccfb01bf2ca98b69b5ec6699/opencog/atomspace/BackingStore.h).
+It supports a small but very useful API including query functions:
 
+* `getLink`
+* `getAtom`
+* `getNode`
+* `getIncoming`
 
-More details about the plan is available and will be updated during work in:
+Currently it is used to access a [PostgreSQL](http://www.postgresql.org) backing store. We will augment PostgreSQL with a graph backing store backed by Neo4j, accessible via the same API and via the extended graph API.
+
+For comparison, the current API for accessing the (in-RAM) [AtomSpace](http://wiki.opencog.org/w/AtomSpace) can be seen in [opencog/atomspace/AtomSpace.h](https://github.com/opencog/opencog/blob/6fad61aca3fb7af0ccfb01bf2ca98b69b5ec6699/opencog/atomspace/AtomSpace.h)
+
+### Preliminary Illustration: Biology Query
+
+As an illustration during initial discussion, suppose we have the query "find drugs whose active ingredients dock with the protein FKH1". This would be formulated as:
+
+    (AND
+      (Inheritance 
+        $X 
+        (ConceptNode "drug"))
+      (Evaluation
+        (PredicateNode "dock")
+        (List
+          $X
+          (ProteinNode "FKH1"))))
+
+Mapping this to Neo4j starts by creating the graph data using Cypher:
+
+    CREATE
+      (inheritance1:Inheritance) <-[:OPERAND]- (and1:And) -[:OPERAND]-> (evaluation1:Evaluation),
+      (inheritance1) -[:SUPER]-> (drug:Concept {id: "drug", name: "drug"}),
+      (inheritance1) -[:SUB]-> (acme:Concept {id: "acme_drug", name: "Acme drug"}),
+      (evaluation1) -[:PREDICATE]-> (dock:Predicate {id: "dock", name: "dock"}),
+      (evaluation1) -[:PARAMETER {position: 0}]-> (acme),
+      (evaluation1) -[:PARAMETER {position: 1}]-> (fkh1:ProteinNode {id: "protein_fkh1", name: "FKH1"});
+
+Having this graph now you can query it: (try this query online at http://console.neo4j.org/r/wmrc6v)
+
+    MATCH
+      (i:Inheritance) <-[:OPERAND]- (:And) -[:OPERAND]-> (e:Evaluation),
+      (i) -[:SUPER]-> (:Concept {id: "drug"}),
+      (i) -[:SUB]-> (x:Concept),
+      (e) -[:PREDICATE]-> (:Predicate {id: "dock"}),
+      (e) -[:PARAMETER {position: 0}]-> (x),
+      (e) -[:PARAMETER {position: 1}]-> (:ProteinNode {id: "protein_fkh1"})
+    RETURN x;
+
+Query Results
+
+    +-------------------------------------------+
+    | x                                         |
+    +-------------------------------------------+
+    | Node[17]{name:"Acme drug",id:"acme_drug"} |
+    +-------------------------------------------+
+    1 row
+
+For the in-memory pattern matcher, this is an easy and straightforward query, as it has only two clauses and one variable joining them.
+
+In the current implementation, to run this across a database, assuming that the current AtomSpace is empty, and that all of the atoms are in the database, this query can be run with (reasonably) high performance in the current in-memory system, with no design changes required. In essence, this is pretty much the simplest possible query that one could perform, and the current AtomSpace design handles it easily, and handles it well.
+
+The primary reason is when the entire AtomSpace fits in RAM, current in-memory pattern will perform best.
+
+The above is only an illustration. The actual dataset that we plan to use for testing will be [Bio knowledge base dataset in Scheme format](https://github.com/opencog/agi-bio/tree/master/knowledge-import) which is a 212 MiB database which is more representative in measuring the performance of the Neo4j based backing store.
+ 
+### Additional Details
+
+In order to make this Google Summer of Code proposal concise, there are longer, more complete details about the plan available and will be updated during work at:
 [Neo4j Backing Store - OpenCog Wiki](http://wiki.opencog.org/w/Neo4j_Backing_Store)
 
 ## Timeline and Administration
@@ -147,7 +212,9 @@ Planned time allocated for Google Summer of Code 2015 work during these timeline
 
 I have ~8 Mbps internet connection whenever I'm on my campus, and I can also use HSPA connection using my mobile provider elsewhere.
 
-I will send weekly email reports to [OpenCog Google group](https://groups.google.com/forum/#!forum/opencog).
+I have [signed the OpenCog Individual Contributor License Agreement](https://www.dropbox.com/s/wvon6suu6bqfhae/OpenCog-ICLA-Hendy-Irawan.pdf?dl=0).
+
+I will send weekly email reports to [OpenCog Google group](https://groups.google.com/forum/#!forum/opencog) and also update the [Neo4j Backing Store - OpenCog Wiki](http://wiki.opencog.org/w/Neo4j_Backing_Store).
 
 ## Future Considerations
 
