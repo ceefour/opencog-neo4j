@@ -76,19 +76,11 @@ OpenCog, in the medium-to-long term, is not going to commit to any particular ba
 
 ## Design and Implementation
 
-The current BackingStore API is in [opencog/atomspace/BackingStore.h](https://github.com/opencog/opencog/blob/6fad61aca3fb7af0ccfb01bf2ca98b69b5ec6699/opencog/atomspace/BackingStore.h).
-It supports a small but very useful API including query functions:
-
-* `getLink`
-* `getAtom`
-* `getNode`
-* `getIncoming`
-
-Currently it is used to access a [PostgreSQL](http://www.postgresql.org) backing store. We will augment PostgreSQL with a graph backing store backed by Neo4j, accessible via the same API and via the extended graph API.
+Currently OpenCog supports a [PostgreSQL](http://www.postgresql.org) backing store. It will be augmented with a graph backing store backed by Neo4j, accessible via the same API and via the extended graph API.
 
 For comparison, the current API for accessing the (in-RAM) [AtomSpace](http://wiki.opencog.org/w/AtomSpace) can be seen in [opencog/atomspace/AtomSpace.h](https://github.com/opencog/opencog/blob/6fad61aca3fb7af0ccfb01bf2ca98b69b5ec6699/opencog/atomspace/AtomSpace.h)
 
-### Preliminary Illustration: Biology Query
+### Pattern Matcher to Cypher Query Translator
 
 As an illustration during initial discussion, suppose we have the query "find drugs whose active ingredients dock with the protein FKH1". This would be formulated as:
 
@@ -102,17 +94,7 @@ As an illustration during initial discussion, suppose we have the query "find dr
           $X
           (ProteinNode "FKH1"))))
 
-Mapping this to Neo4j starts by creating the graph data using Cypher:
-
-    CREATE
-      (inheritance1:Inheritance) <-[:OPERAND]- (and1:And) -[:OPERAND]-> (evaluation1:Evaluation),
-      (inheritance1) -[:SUPER]-> (drug:Concept {id: "drug", name: "drug"}),
-      (inheritance1) -[:SUB]-> (acme:Concept {id: "acme_drug", name: "Acme drug"}),
-      (evaluation1) -[:PREDICATE]-> (dock:Predicate {id: "dock", name: "dock"}),
-      (evaluation1) -[:PARAMETER {position: 0}]-> (acme),
-      (evaluation1) -[:PARAMETER {position: 1}]-> (fkh1:ProteinNode {id: "protein_fkh1", name: "FKH1"});
-
-Having this graph now you can query it: (try this query online at http://console.neo4j.org/r/wmrc6v)
+The Neo4j backing store will need to translate such pattern matcher query into Cypher query as follows: (try this query online at [http://console.neo4j.org/r/wmrc6v](http://console.neo4j.org/r/wmrc6v))
 
     MATCH
       (i:Inheritance) <-[:OPERAND]- (:And) -[:OPERAND]-> (e:Evaluation),
@@ -132,13 +114,39 @@ Query Results
     +-------------------------------------------+
     1 row
 
-For the in-memory pattern matcher, this is an easy and straightforward query, as it has only two clauses and one variable joining them.
-
-In the current implementation, to run this across a database, assuming that the current AtomSpace is empty, and that all of the atoms are in the database, this query can be run with (reasonably) high performance in the current in-memory system, with no design changes required. In essence, this is pretty much the simplest possible query that one could perform, and the current AtomSpace design handles it easily, and handles it well.
-
-The primary reason is when the entire AtomSpace fits in RAM, current in-memory pattern will perform best.
-
 The above is only an illustration. The actual dataset that we plan to use for testing will be [Bio knowledge base dataset in Scheme format](https://github.com/opencog/agi-bio/tree/master/knowledge-import) which is a 212 MiB database which is more representative in measuring the performance of the Neo4j based backing store.
+
+### Recursive Unification in Neo4j
+
+Instead of performing unification (variable grounding) once, some situations may require multiple passes to fully ground the variables, if the unification candidates themselves contain variables.
+
+I propose using Cypher's built-in support for multiple [`MATCH` clauses](http://neo4j.com/docs/stable/query-match.html) to implement this behavior. Each `MATCH` clause can both reuse previous variables and define new variables (to be reused by next `MATCH`es, or to be returned as values).
+
+To illustrate, the following subpattern from the [naive Modus Ponens sample](http://wiki.opencog.org/w/Idea:_Recursive_Unification_using_the_Pattern_Matcher):
+
+    (ImplicationLink
+        (VariableNode "$A")
+        (VariableNode "$B"))
+
+may translate simply to:
+
+    MATCH
+      (a) <-[:WHEN]- (i:Implication) -[:THEN]-> (b)
+    RETURN i, a, b;
+
+However, we want to make sure we find `VariableNode`s:
+
+    MATCH
+      (a) <-[:WHEN]- (i:Implication) -[:THEN]-> (b)
+    OPTIONAL MATCH
+      (a) -[:*]-> (av:Variable),
+      (b) -[:*]-> (bv:Variable)
+    RETURN i, a, b, av, bv;
+
+Those `VariableNode`s (`av` and `bv`) can then be used to translate the pattern to Cypher again in the next iteration.
+This flattens the recursive algorithm into an iterative one. For a recursion 3 levels deep, we will need to execute 3 Cypher queries.
+
+More information about recursive unification is available in [Recursive unification using the Pattern Matcher - OpenCog Wiki](http://wiki.opencog.org/w/Idea:_Recursive_Unification_using_the_Pattern_Matcher).
  
 ### Additional Details
 
