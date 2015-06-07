@@ -4,6 +4,7 @@ import clojure.lang.LineNumberingPushbackReader;
 import clojure.lang.LispReader;
 import clojure.lang.Symbol;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.RandomUtils;
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -79,17 +80,31 @@ public class ImportBio2App implements CommandLineRunner {
         @Nullable
         public ImmutableMap<String, Object> param;
         public String create;
+        /**
+         * List of MATCH dependencies.
+         */
+        public final ImmutableList<String> matchDependencies;
 
-        public CypherPart(String varName, ImmutableMap<String, Object> param, String create) {
+        public CypherPart(@Nullable String varName, ImmutableMap<String, Object> param, String create) {
             this.varName = varName;
             this.param = param;
             this.create = create;
+            this.matchDependencies = ImmutableList.of();
+        }
+
+        public CypherPart(@Nullable String varName, ImmutableMap<String, Object> param, String create,
+                          ImmutableList<String> matchDependencies) {
+            this.varName = varName;
+            this.param = param;
+            this.create = create;
+            this.matchDependencies = matchDependencies;
         }
 
         public CypherPart(String create) {
             this.varName = null;
-            this.param = null;
+            this.param = ImmutableMap.of();
             this.create = create;
+            this.matchDependencies = ImmutableList.of();
         }
 
         @Override
@@ -167,7 +182,21 @@ public class ImportBio2App implements CommandLineRunner {
         return new CypherPart(varName, param, create);
     }
 
+    public void customNodeToMatch(List<?> concept,
+                                  List<String> outDependencies, Map<String, Object> outParams) {
+        final String typeName = ((Symbol) concept.get(0)).getName().replaceFirst("Node$", "");
+        final String conceptName = (String) concept.get(1);
+        final String varName = varNameFor(typeName, concept);
+        final String create = String.format("MATCH (%s:opencog_%s {href: {%s_href}})",
+                varName, typeName, varName, varName, varName);
+        outDependencies.add(create);
+        outParams.put(varName + "_href", "opencog:" + typeName + "_" + conceptName);
+    }
+
     public CypherPart inheritanceToCypher(CypherParts parts, List<?> top) {
+        final ArrayList<String> outDependencies = new ArrayList<>();
+        final LinkedHashMap<String, Object> outParams = new LinkedHashMap<>();
+
         // ensure a is prepared
         final List<?> a = (List<?>) top.get(1);
         final String aType = typeNameFor(a);
@@ -176,6 +205,7 @@ public class ImportBio2App implements CommandLineRunner {
             final CypherPart aCypher = customNodeToCypher(a);
             parts.nodes.put(aVarName, aCypher);
         }
+        customNodeToMatch(a, outDependencies, outParams);
 
         // ensure b is prepared
         final List<?> b = (List<?>) top.get(2);
@@ -185,9 +215,11 @@ public class ImportBio2App implements CommandLineRunner {
             final CypherPart bCypher = customNodeToCypher(b);
             parts.nodes.put(bVarName, bCypher);
         }
+        customNodeToMatch(b, outDependencies, outParams);
 
         final String create = String.format("CREATE UNIQUE (%s) -[:rdfs_subClassOf]-> (%s)", aVarName, bVarName);
-        final CypherPart part = new CypherPart(create);
+        final CypherPart part = new CypherPart(null, ImmutableMap.copyOf(outParams), create,
+                ImmutableList.copyOf(outDependencies));
         parts.relationships.add(part);
         return part;
     }
@@ -203,6 +235,9 @@ public class ImportBio2App implements CommandLineRunner {
      * @return
      */
     public CypherPart evaluationToCypher(CypherParts parts, List<?> top) {
+        final ArrayList<String> outDependencies = new ArrayList<>();
+        final LinkedHashMap<String, Object> outParams = new LinkedHashMap<>();
+
         // ensure predicate is prepared
         final List<?> predicate = (List<?>) top.get(1);
         final String predicateName = (String) predicate.get(1);
@@ -212,6 +247,7 @@ public class ImportBio2App implements CommandLineRunner {
             final CypherPart predicateCypher = customNodeToCypher(predicate);
             parts.nodes.put(predicateVarName, predicateCypher);
         }
+        customNodeToMatch(predicate, outDependencies, outParams);
 
         // ensure all params are prepared
         final List<?> listLink = (List<?>) ((List<?>) top.get(1)).get(2);
@@ -224,6 +260,8 @@ public class ImportBio2App implements CommandLineRunner {
                 final CypherPart paramCypher = customNodeToCypher(param);
                 parts.nodes.put(paramVarName, paramCypher);
             }
+            customNodeToMatch(param, outDependencies, outParams);
+
             paramNames.add(paramVarName);
         }
 
@@ -236,12 +274,15 @@ public class ImportBio2App implements CommandLineRunner {
                     varName, i, paramNames.get(i));
         }
 
-        final CypherPart part = new CypherPart(create);
+        final CypherPart part = new CypherPart(null, ImmutableMap.copyOf(outParams), create, ImmutableList.copyOf(outDependencies));
         parts.relationships.add(part);
         return part;
     }
 
     public CypherPart memberToCypher(CypherParts parts, List<?> top) {
+        final ArrayList<String> outDependencies = new ArrayList<>();
+        final LinkedHashMap<String, Object> outParams = new LinkedHashMap<>();
+
         // ensure gene is prepared
         final List<?> gene = (List<?>) top.get(1);
         final String geneVarName = varNameForGene(gene);
@@ -249,6 +290,7 @@ public class ImportBio2App implements CommandLineRunner {
             final CypherPart geneCypher = customNodeToCypher(gene);
             parts.nodes.put(geneVarName, geneCypher);
         }
+        customNodeToMatch(gene, outDependencies, outParams);
 
         // ensure concept is prepared
         final List<?> concept = (List<?>) top.get(2);
@@ -257,9 +299,11 @@ public class ImportBio2App implements CommandLineRunner {
             final CypherPart conceptCypher = customNodeToCypher(concept);
             parts.nodes.put(conceptVarName, conceptCypher);
         }
+        customNodeToMatch(concept, outDependencies, outParams);
 
         final String create = String.format("CREATE UNIQUE (%s) -[:rdf_type]-> (%s)", geneVarName, conceptVarName);
-        final CypherPart part = new CypherPart(create);
+        final CypherPart part = new CypherPart(null, ImmutableMap.copyOf(outParams), create,
+                ImmutableList.copyOf(outDependencies));
         parts.relationships.add(part);
         return part;
     }
@@ -319,8 +363,25 @@ public class ImportBio2App implements CommandLineRunner {
         log.info("Ensured constraints and indexes.");
 
         try (final Transaction tx = graphDb.beginTx()) {
-            log.info("Executing Cypher ...");
-            graphDb.execute(parts.getAllCypher(), parts.getAllParams());
+            for (CypherPart node : parts.nodes.values()) {
+                String cypher = "";
+                for (String matchDependency : node.matchDependencies) {
+                    cypher += matchDependency + "\n";
+                }
+                cypher += node.toString();
+                log.info("Creating node {}: {}", node.varName, cypher);
+                graphDb.execute(cypher, node.param);
+            }
+
+            for (CypherPart relationship : parts.relationships) {
+                String cypher = "";
+                for (String matchDependency : relationship.matchDependencies) {
+                    cypher += matchDependency + "\n";
+                }
+                cypher += relationship.toString();
+                log.info("Creating relationship: {}", cypher);
+                graphDb.execute(cypher, relationship.param);
+            }
             tx.success();
         }
         log.info("Done");
