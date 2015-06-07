@@ -16,8 +16,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.env.Environment;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -31,13 +33,19 @@ import java.util.stream.Collectors;
 public class ImportBio2App implements CommandLineRunner {
 
     private static final Logger log = LoggerFactory.getLogger(ImportBio2App.class);
+    private static String[] args;
 
     public static void main(String[] args) {
+        Preconditions.checkArgument(args.length >= 2, "Required arguments: input-scm output-neo4j");
+        ImportBio2App.args = args;
         new SpringApplicationBuilder(ImportBio2App.class)
                 .profiles("cli")
                 .web(false)
                 .run(args);
     }
+
+    @Inject
+    private Environment env;
 
     public List<List<?>> readScheme(File schemeFile) {
         // http://www.programcreek.com/java-api-examples/index.php?api=clojure.lang.LispReader
@@ -258,7 +266,7 @@ public class ImportBio2App implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        final File schemeFile = new File("/data/project_netadm/opencog/neo4j/Bio_schemeFiles/mmc4.scm");
+        final File schemeFile = new File(args[0]);
         final CypherParts parts = new CypherParts();
         final List<List<?>> lists = readScheme(schemeFile);
         for (final List<?> top : lists) {
@@ -320,7 +328,9 @@ public class ImportBio2App implements CommandLineRunner {
 
     @Bean(destroyMethod = "shutdown")
     public GraphDatabaseService graphDb() {
-        return new GraphDatabaseFactory().newEmbeddedDatabase(System.getProperty("user.home") + "/tmp/opencog-neo4j");
+        final String dbDir = args[1];
+        log.info("Opening Neo4j database '{}'", dbDir);
+        return new GraphDatabaseFactory().newEmbeddedDatabase(dbDir);//System.getProperty("user.home") + "/tmp/opencog-neo4j");
     }
 
 }
