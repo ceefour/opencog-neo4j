@@ -6,7 +6,7 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = OpenCogNeo4jGraphBackingStoreApplication.class)
+@SpringApplicationConfiguration(classes = ImportBio1App.class)
 public class OpenCogNeo4jGraphBackingStoreApplicationTests {
 
 	@Test

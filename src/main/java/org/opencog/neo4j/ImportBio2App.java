@@ -4,18 +4,14 @@ import clojure.lang.LineNumberingPushbackReader;
 import clojure.lang.LispReader;
 import clojure.lang.Symbol;
 import com.google.common.base.Preconditions;
-import com.google.common.base.Throwables;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.RandomUtils;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
-import org.neo4j.kernel.EmbeddedGraphDatabase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
@@ -23,9 +19,7 @@ import org.springframework.context.annotation.Profile;
 
 import javax.annotation.Nullable;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.PushbackReader;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -34,12 +28,12 @@ import java.util.stream.Collectors;
 
 @SpringBootApplication
 @Profile("cli")
-public class OpenCogNeo4jGraphBackingStoreApplication implements CommandLineRunner {
+public class ImportBio2App implements CommandLineRunner {
 
-    private static final Logger log = LoggerFactory.getLogger(OpenCogNeo4jGraphBackingStoreApplication.class);
+    private static final Logger log = LoggerFactory.getLogger(ImportBio2App.class);
 
     public static void main(String[] args) {
-        new SpringApplicationBuilder(OpenCogNeo4jGraphBackingStoreApplication.class)
+        new SpringApplicationBuilder(ImportBio2App.class)
                 .profiles("cli")
                 .web(false)
                 .run(args);
@@ -165,30 +159,6 @@ public class OpenCogNeo4jGraphBackingStoreApplication implements CommandLineRunn
         return new CypherPart(varName, param, create);
     }
 
-    @Deprecated
-    public CypherPart geneToCypher(List<?> gene) {
-        final String geneName = (String) gene.get(1);
-        final String varName = varNameForGene(gene);
-        final String create = String.format("MERGE (%s:opencog_Gene {href: {%s_href}}) ON CREATE SET %s.prefLabel = {%s_prefLabel}",
-                varName, varName, varName, varName);
-        final ImmutableMap<String, Object> param = ImmutableMap.of(
-                varName + "_href", "opencog:Gene_" + geneName,
-                varName + "_prefLabel", geneName);
-        return new CypherPart(varName, param, create);
-    }
-
-    @Deprecated
-    public CypherPart conceptToCypher(List<?> concept) {
-        final String conceptName = (String) concept.get(1);
-        final String varName = varNameForConcept(concept);
-        final String create = String.format("MERGE (%s:opencog_Concept {href: {%s_href}}) ON CREATE SET %s.prefLabel = {%s_prefLabel}",
-                varName, varName, varName, varName);
-        final ImmutableMap<String, Object> param = ImmutableMap.of(
-                varName + "_href", "opencog:Concept_" + conceptName,
-                varName + "_prefLabel", conceptName);
-        return new CypherPart(varName, param, create);
-    }
-
     public CypherPart inheritanceToCypher(CypherParts parts, List<?> top) {
         // ensure a is prepared
         final List<?> a = (List<?>) top.get(1);
@@ -268,7 +238,7 @@ public class OpenCogNeo4jGraphBackingStoreApplication implements CommandLineRunn
         final List<?> gene = (List<?>) top.get(1);
         final String geneVarName = varNameForGene(gene);
         if (!parts.nodes.containsKey(geneVarName)) {
-            final CypherPart geneCypher = geneToCypher(gene);
+            final CypherPart geneCypher = customNodeToCypher(gene);
             parts.nodes.put(geneVarName, geneCypher);
         }
 
@@ -276,7 +246,7 @@ public class OpenCogNeo4jGraphBackingStoreApplication implements CommandLineRunn
         final List<?> concept = (List<?>) top.get(2);
         final String conceptVarName = varNameForConcept(concept);
         if (!parts.nodes.containsKey(conceptVarName)) {
-            final CypherPart conceptCypher = conceptToCypher(concept);
+            final CypherPart conceptCypher = customNodeToCypher(concept);
             parts.nodes.put(conceptVarName, conceptCypher);
         }
 
