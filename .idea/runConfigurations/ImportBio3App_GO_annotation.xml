@@ -1,14 +1,14 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="ImportBio2App_LifespanObservations" type="Application" factoryName="Application" singleton="true">
+  <configuration default="false" name="ImportBio3App_GO_annotation" type="Application" factoryName="Application" singleton="true">
     <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
       <pattern>
         <option name="PATTERN" value="org.opencog.neo4j.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>
-    <option name="MAIN_CLASS_NAME" value="org.opencog.neo4j.ImportBio2App" />
+    <option name="MAIN_CLASS_NAME" value="org.opencog.neo4j.ImportBio3App" />
     <option name="VM_PARAMETERS" value="-Xmx1g" />
-    <option name="PROGRAM_PARAMETERS" value="/data/project_netadm/opencog/neo4j/Bio_schemeFiles/Lifespan-observations_2015-02-21.scm $USER_HOME$/tmp/lifespan.neo4j" />
+    <option name="PROGRAM_PARAMETERS" value="/data/project_netadm/opencog/neo4j/Bio_schemeFiles/GO_annotation.scm $USER_HOME$/tmp/go_annotation.neo4j" />
     <option name="WORKING_DIRECTORY" value="file://$MODULE_DIR$" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
     <option name="ALTERNATIVE_JRE_PATH" value="" />

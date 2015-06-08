@@ -4,6 +4,7 @@ import clojure.lang.LineNumberingPushbackReader;
 import clojure.lang.LispReader;
 import clojure.lang.Symbol;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Verify;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.RandomUtils;
@@ -30,23 +31,30 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Importer that works with:
+ * Importer that should still work with:
  * <ol>
  *  <li>Bio_schemeFiles/mmc4.scm</li>
  *  <li>Bio_schemeFiles/Lifespan-observations_2015-02-21.scm</li>
  * </ol>
+ *
+ * and targeted to work with:
+ *
+ * <ol>
+ *     <li>Bio_schemeFiles/GO_annotation.scm</li>
+ *     <li>Bio_schemeFiles/GO_new.scm</li>
+ * </ol>
  */
 @SpringBootApplication
 @Profile("cli")
-public class ImportBio2App implements CommandLineRunner {
+public class ImportBio3App implements CommandLineRunner {
 
-    private static final Logger log = LoggerFactory.getLogger(ImportBio2App.class);
+    private static final Logger log = LoggerFactory.getLogger(ImportBio3App.class);
     private static String[] args;
 
     public static void main(String[] args) {
         Preconditions.checkArgument(args.length >= 2, "Required arguments: input-scm output-neo4j");
-        ImportBio2App.args = args;
-        new SpringApplicationBuilder(ImportBio2App.class)
+        ImportBio3App.args = args;
+        new SpringApplicationBuilder(ImportBio3App.class)
                 .profiles("cli")
                 .web(false)
                 .run(args);
@@ -232,8 +240,13 @@ public class ImportBio2App implements CommandLineRunner {
     }
 
     /**
-     * note that mmc4.scm has incorrect EvaluationLink structure, it should be
-     * (EvaluationLink (PredicateNode ...) (ListLink (...) (...)))
+     * note that mmc4.scm + GO_annotation.scm has incorrect EvaluationLink structure, it should be
+     * either:
+     *
+     * <ol>
+     *    <li>(EvaluationLink (PredicateNode ...) (ListLink (...) (...)))</li>
+     *    <li>(EvaluationLink (stv 0.0 0.0) (PredicateNode ...) (ListLink (...) (...)))</li>
+     * </ol>
      *
      * i.e. PredicateNode should have no child ListLink
      *
@@ -245,9 +258,26 @@ public class ImportBio2App implements CommandLineRunner {
         final ArrayList<String> outDependencies = new ArrayList<>();
         final LinkedHashMap<String, Object> outParams = new LinkedHashMap<>();
 
+        double stvStrength = 0.0;
+        double stvConfidence = 0.0;
+        final List<?> stvMaybe = (List<?>) top.get(1);
+        final int predicateOffset;
+        if ("stv".equals(((Symbol) stvMaybe.get(0)).getName())) {
+            predicateOffset = 2;
+            stvStrength = (Double) stvMaybe.get(1);
+            stvConfidence = (Double) stvMaybe.get(2);
+        } else {
+            predicateOffset = 1;
+        }
+
         // ensure predicate is prepared
-        final List<?> predicate = (List<?>) top.get(1);
-        final String predicateName = (String) predicate.get(1);
+        final List<?> predicate = (List<?>) top.get(predicateOffset);
+        final String predicateName;
+        try {
+            predicateName = (String) predicate.get(1);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid predicate: " + predicate + " inside " + top, e);
+        }
         final String predicateType = typeNameFor(predicate);
         final String predicateVarName = varNameFor(predicateType, predicate);
         if (!parts.nodes.containsKey(predicateVarName)) {
@@ -257,7 +287,7 @@ public class ImportBio2App implements CommandLineRunner {
         customNodeToMatch(predicate, outDependencies, outParams);
 
         // ensure all params are prepared
-        final List<?> listLink = (List<?>) ((List<?>) top.get(1)).get(2);
+        final List<?> listLink = (List<?>) ((List<?>) top.get(predicateOffset)).get(2);
         final List<List<?>> params = (List<List<?>>) listLink.subList(1, listLink.size());
         final List<String> paramNames = new ArrayList<>();
         for (List<?> param : params) {
@@ -273,8 +303,8 @@ public class ImportBio2App implements CommandLineRunner {
         }
 
         final String varName = "EvaluationLink_" + predicateName + "_" + RandomUtils.nextInt(1000, 10000);
-        String create = String.format("CREATE UNIQUE (%s:opencog_EvaluationLink) -[:opencog_predicate]-> (%s)",
-                varName, predicateVarName);
+        String create = String.format("CREATE UNIQUE (%s:opencog_EvaluationLink {stvStrength: %f, stvConfidence: %f}) -[:opencog_predicate]-> (%s)",
+                varName, stvStrength, stvConfidence, predicateVarName);
         // http://schema.org/position
         for (int i = 0; i < paramNames.size(); i++) {
             create += String.format("\n  CREATE UNIQUE (%s) -[:opencog_parameter {position: %d}]-> (%s)",
@@ -332,18 +362,19 @@ public class ImportBio2App implements CommandLineRunner {
                     break;
                 // InheritanceLink is mapped to "rdfs:subClassOf"
                 case "InheritanceLink":
-                    log.info("INHERITANCE {}", top);
+                    log.trace("INHERITANCE {}", top);
                     inheritanceToCypher(parts, top);
                     break;
-                // EvaluationLink
+                // (EvaluationLink (PredicateNode "") (ListLink (GeneNode "") (ConceptNode "")) )
+                // workaround for incorrect (EvaluationLink (PredicateNode "" (ListLink (GeneNode "") (ConceptNode ""))) )
                 case "EvaluationLink":
-                    log.info("EVALUATION {}", top);
+                    log.trace("EVALUATION {}", top);
                     evaluationToCypher(parts, top);
                     break;
                 // MemberLink/2 gene:GeneNode concept:ConceptNode
                 // MemberLink is mapped to "rdf:type" ("a" in TURTLE-speak)
                 case "MemberLink":
-                    log.info("MEMBER {}", top);
+                    log.trace("MEMBER {}", top);
                     memberToCypher(parts, top);
                     break;
                 default:
