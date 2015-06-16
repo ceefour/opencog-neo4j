@@ -1,0 +1,15 @@
+package org.opencog.neo4j;
+
+import java.io.Serializable;
+
+/**
+ * Nodes are Atoms with names.
+ * The name and the type of a Node together determine a unique key.
+ * It means there exist only one Node with a given (name,type) pair.
+ * If a second Node with the same key is inserted, it is merged with the previously inserted Node.
+ * The name and type of the node cannot be changed after the node has been inserted into the AtomSpace: OpenCog atoms are immutable objects.
+ * Represents an AtomSpace <a href="http://wiki.opencog.org/w/Node">Node</a>.
+ * Inspired by <a href="https://github.com/opencog/atomspace/blob/master/opencog/atomspace/Node.h">opencog/atomspace/Node.h</a>.
+ */
+public class Node implements Serializable {
+}

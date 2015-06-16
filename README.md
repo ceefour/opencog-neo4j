@@ -2,6 +2,11 @@
 
 Google Summer of Code 2015 Proposal to implement Neo4j Graph Backing Store as described in http://wiki.opencog.org/w/Neo4j_Backing_Store
 
+## Bio scheme files
+
+We'll use the [OpenCog Bio knowledge base](https://github.com/opencog/agi-bio/tree/master/knowledge-import)
+(dataset in separate repo at `git@gitlab.com:opencog-bio/bio-data.git`), a moderately sized dataset about 212 MiB in size, to test performance.
+
 ## mmc4.scm patch
 
 `mmc4.scm` must be patched as follows due to typo and `ConceptNode` name mismatch:

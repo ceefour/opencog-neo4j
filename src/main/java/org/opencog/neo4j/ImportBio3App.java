@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
  *  <li>Bio_schemeFiles/Lifespan-observations_2015-02-21.scm</li>
  * </ol>
  *
- * and targeted to work with:
+ * and targeted to work with: (but not working, because insufficient Java heap)
  *
  * <ol>
  *     <li>Bio_schemeFiles/GO_annotation.scm</li>
@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
  * </ol>
  */
 @SpringBootApplication
-@Profile("cli")
+@Profile("importbio3app")
 public class ImportBio3App implements CommandLineRunner {
 
     private static final Logger log = LoggerFactory.getLogger(ImportBio3App.class);
@@ -55,7 +55,7 @@ public class ImportBio3App implements CommandLineRunner {
         Preconditions.checkArgument(args.length >= 2, "Required arguments: input-scm output-neo4j");
         ImportBio3App.args = args;
         new SpringApplicationBuilder(ImportBio3App.class)
-                .profiles("cli")
+                .profiles("cli", "importbio3app")
                 .web(false)
                 .run(args);
     }

@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
  * </ol>
  */
 @SpringBootApplication
-@Profile("cli")
+@Profile("importbio2app")
 public class ImportBio2App implements CommandLineRunner {
 
     private static final Logger log = LoggerFactory.getLogger(ImportBio2App.class);
@@ -47,7 +47,7 @@ public class ImportBio2App implements CommandLineRunner {
         Preconditions.checkArgument(args.length >= 2, "Required arguments: input-scm output-neo4j");
         ImportBio2App.args = args;
         new SpringApplicationBuilder(ImportBio2App.class)
-                .profiles("cli")
+                .profiles("cli", "importbio2app")
                 .web(false)
                 .run(args);
     }
