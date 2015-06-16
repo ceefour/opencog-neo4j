@@ -68,7 +68,8 @@ OpenCog, in the medium-to-long term, is not going to commit to any particular ba
 
 **Challenge:** Sufficiently small datasets could be fully in performed in RAM, efficiently.
 
-**Approach:** We'll use the [OpenCog Bio knowledge base dataset](https://github.com/opencog/agi-bio/tree/master/knowledge-import), a moderately sized dataset about 212 MiB in size, to test performance.
+**Approach:** We'll use the [OpenCog Bio knowledge base](https://github.com/opencog/agi-bio/tree/master/knowledge-import)
+(dataset in separate repo at `git@gitlab.com:opencog-bio/bio-data.git`), a moderately sized dataset about 212 MiB in size, to test performance.
 
 **Challenge:** The pattern matcher has a hefty setup overhead, and makes a number of worst-case, non-optimal assumptions about how to perform the query. In essence, its designed to work well for complex queries, not simple ones. 
 
