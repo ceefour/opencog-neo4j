@@ -179,12 +179,12 @@ public class ImportBio4App implements CommandLineRunner {
     }
 
     public String typeNameFor(List<?> concept) {
-        final String typeName = ((Symbol) concept.get(0)).getName().replaceFirst("Node$", "");
+        final String typeName = ((Symbol) concept.get(0)).getName();// maintain 1:1 with OpenCog terms - .replaceFirst("Node$", "");
         return typeName;
     }
 
     public CypherPart customNodeToCypher(List<?> concept) {
-        final String typeName = ((Symbol) concept.get(0)).getName().replaceFirst("Node$", "");
+        final String typeName = ((Symbol) concept.get(0)).getName();// maintain 1:1 with OpenCog terms - .replaceFirst("Node$", "");
         final String conceptName = (String) concept.get(1);
         final String varName = varNameFor(typeName, concept);
         final String create = String.format("MERGE (%s:opencog_%s {href: {%s_href}}) ON CREATE SET %s.prefLabel = {%s_prefLabel}",
@@ -197,7 +197,7 @@ public class ImportBio4App implements CommandLineRunner {
 
     public void customNodeToMatch(List<?> concept,
                                   List<String> outDependencies, Map<String, Object> outParams) {
-        final String typeName = ((Symbol) concept.get(0)).getName().replaceFirst("Node$", "");
+        final String typeName = ((Symbol) concept.get(0)).getName();// maintain 1:1 with OpenCog terms - .replaceFirst("Node$", "");
         final String conceptName = (String) concept.get(1);
         final String varName = varNameFor(typeName, concept);
         final String hrefVar = varName + "_match_href";
@@ -351,15 +351,15 @@ public class ImportBio4App implements CommandLineRunner {
 
         try (final Transaction tx = graphDb.beginTx()) {
             log.info("Ensuring constraints and indexes...");
-            graphDb.execute("CREATE CONSTRAINT ON (n:opencog_Concept) ASSERT n.href IS UNIQUE");
-            graphDb.execute("CREATE CONSTRAINT ON (n:opencog_Gene) ASSERT n.href IS UNIQUE");
-            graphDb.execute("CREATE CONSTRAINT ON (n:opencog_Predicate) ASSERT n.href IS UNIQUE");
-            graphDb.execute("CREATE CONSTRAINT ON (n:opencog_Phrase) ASSERT n.href IS UNIQUE");
+            graphDb.execute("CREATE CONSTRAINT ON (n:opencog_ConceptNode) ASSERT n.href IS UNIQUE");
+            graphDb.execute("CREATE CONSTRAINT ON (n:opencog_GeneNode) ASSERT n.href IS UNIQUE");
+            graphDb.execute("CREATE CONSTRAINT ON (n:opencog_PredicateNode) ASSERT n.href IS UNIQUE");
+            graphDb.execute("CREATE CONSTRAINT ON (n:opencog_PhraseNode) ASSERT n.href IS UNIQUE");
 
-            graphDb.execute("CREATE INDEX ON :opencog_Concept(prefLabel)");
-            graphDb.execute("CREATE INDEX ON :opencog_Gene(prefLabel)");
-            graphDb.execute("CREATE INDEX ON :opencog_Predicate(prefLabel)");
-            graphDb.execute("CREATE INDEX ON :opencog_Phrase(prefLabel)");
+            graphDb.execute("CREATE INDEX ON :opencog_ConceptNode(prefLabel)");
+            graphDb.execute("CREATE INDEX ON :opencog_GeneNode(prefLabel)");
+            graphDb.execute("CREATE INDEX ON :opencog_PredicateNode(prefLabel)");
+            graphDb.execute("CREATE INDEX ON :opencog_PhraseNode(prefLabel)");
 
             tx.success();
         }
@@ -436,6 +436,8 @@ public class ImportBio4App implements CommandLineRunner {
 //                }
 
             }
+
+            log.info("Committing transaction...");
             tx.success();
         }
         log.info("Done");
