@@ -1,12 +1,12 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="ImportBio4App_GO_new" type="Application" factoryName="Application" singleton="true">
+  <configuration default="false" name="ImportBio5App_GO_new" type="Application" factoryName="Application" singleton="true">
     <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
       <pattern>
         <option name="PATTERN" value="org.opencog.neo4j.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>
-    <option name="MAIN_CLASS_NAME" value="org.opencog.neo4j.ImportBio4App" />
+    <option name="MAIN_CLASS_NAME" value="org.opencog.neo4j.ImportBio5App" />
     <option name="VM_PARAMETERS" value="-Xmx6g" />
     <option name="PROGRAM_PARAMETERS" value="/data/project_netadm/opencog/neo4j/Bio_schemeFiles/GO_new.scm $USER_HOME$/tmp/go_new.neo4j" />
     <option name="WORKING_DIRECTORY" value="file://$MODULE_DIR$" />

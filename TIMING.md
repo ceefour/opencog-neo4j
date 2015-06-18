@@ -1,10 +1,20 @@
 # Import Timings
 
+## ImportBio5App
+
+ImportBio5App GO_annotation (325188 lists) with 4GB heap : 12:57:57..13:20:53
+From 36.3 MB Scheme to 253 MB Neo4j (~7×).
+
+ImportBio5App GO_new (311234 lists) with 6GB heap : 14:13:51..14:45:47
+From 38.3 MB Scheme to 229 MB Neo4j (~7×).
+
+## ImportBio4App
+
 ImportBio4App GO_annotation (325188 lists) with 8GB heap (not required) : 08:08:01.329 .. 08:34:55.930 
-From 36.3 MB Scheme to 258 MB Neo4j (~7x).
+From 36.3 MB Scheme to 258 MB Neo4j (~7×).
 
 ImportBio4App GO_new (311234 lists) with 6GB heap (4GB heap throws GC error during commit) :  
-From 38.3 MB Scheme to 289 MB Neo4j (~x).
+From 38.3 MB Scheme to 289 MB Neo4j (~×).
 
     2015-06-16 12:02:01.832  INFO 2368 --- [           main] org.opencog.neo4j.ImportBio4App          : Starting ImportBio4App on netadm.dev with PID 2368 (/home/ceefour/git/opencog-neo4j/target/classes started by ceefour in /home/ceefour/git/opencog-neo4j)
     2015-06-16 12:02:01.922  INFO 2368 --- [           main] s.c.a.AnnotationConfigApplicationContext : Refreshing org.springframework.context.annotation.AnnotationConfigApplicationContext@3891771e: startup date [Tue Jun 16 12:02:01 WIB 2015]; root of context hierarchy
