@@ -8,7 +8,7 @@
     </extension>
     <option name="MAIN_CLASS_NAME" value="org.opencog.neo4j.ImportBio5App" />
     <option name="VM_PARAMETERS" value="-Xmx4g" />
-    <option name="PROGRAM_PARAMETERS" value="/data/project_netadm/opencog/neo4j/Bio_schemeFiles/GO_annotation.scm $USER_HOME$/tmp/go_annotation.neo4j" />
+    <option name="PROGRAM_PARAMETERS" value="/data/project_netadm/opencog/agi-bio/GO_annotation.scm $USER_HOME$/tmp/go_annotation.neo4j" />
     <option name="WORKING_DIRECTORY" value="file://$MODULE_DIR$" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
     <option name="ALTERNATIVE_JRE_PATH" value="" />

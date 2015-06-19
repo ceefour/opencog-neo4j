@@ -1,6 +1,68 @@
 # Import Timings
 
-## ImportBio5App
+## ImportBio5App (public from test-datasets)
+
+ImportBio5App GO (324240 lists) with 4GB heap : 1663 seconds
+From 36.3 MB Scheme to 200 MB Neo4j.
+
+    2015-06-19 21:21:53.561  INFO 23549 --- [           main] org.opencog.neo4j.ImportBio5App          : Starting ImportBio5App on netadm.dev with PID 23549 (/home/ceefour/git/opencog-neo4j/target/classes started by ceefour in /home/ceefour/git/opencog-neo4j)
+    2015-06-19 21:21:53.703  INFO 23549 --- [           main] s.c.a.AnnotationConfigApplicationContext : Refreshing org.springframework.context.annotation.AnnotationConfigApplicationContext@2de8284b: startup date [Fri Jun 19 21:21:53 WIB 2015]; root of context hierarchy
+    2015-06-19 21:21:55.690  INFO 23549 --- [           main] f.a.AutowiredAnnotationBeanPostProcessor : JSR-330 'javax.inject.Inject' annotation found and supported for autowiring
+    2015-06-19 21:21:55.848  INFO 23549 --- [           main] org.opencog.neo4j.ImportBio5App          : Opening Neo4j database '/home/ceefour/tmp/go.neo4j'
+    2015-06-19 21:21:59.086  INFO 23549 --- [           main] o.s.j.e.a.AnnotationMBeanExporter        : Registering beans for JMX exposure on startup
+    2015-06-19 21:21:59.102  INFO 23549 --- [           main] org.opencog.neo4j.ImportBio5App          : Ensuring constraints and indexes...
+    2015-06-19 21:22:01.207  INFO 23549 --- [           main] org.opencog.neo4j.ImportBio5App          : Ensured constraints and indexes.
+    2015-06-19 21:22:01.208  INFO 23549 --- [           main] org.opencog.neo4j.ImportBio5App          : Reading scheme file '/data/project_netadm/opencog/agi-bio/GO.scm'
+    2015-06-19 21:22:10.368  INFO 23549 --- [           main] org.opencog.neo4j.ImportBio5App          : List 0 of 324240 (0%)
+    2015-06-19 21:22:25.819  INFO 23549 --- [           main] org.opencog.neo4j.ImportBio5App          : List 1000 of 324240 (0%)
+    2015-06-19 21:22:33.297  INFO 23549 --- [           main] org.opencog.neo4j.ImportBio5App          : List 2000 of 324240 (0%)
+    2015-06-19 21:22:39.629  INFO 23549 --- [           main] org.opencog.neo4j.ImportBio5App          : List 3000 of 324240 (0%)
+    2015-06-19 21:22:44.382  INFO 23549 --- [           main] org.opencog.neo4j.ImportBio5App          : List 4000 of 324240 (1%)
+    2015-06-19 21:22:50.637  INFO 23549 --- [           main] org.opencog.neo4j.ImportBio5App          : List 5000 of 324240 (1%)
+    ...
+    2015-06-19 21:48:41.550  INFO 23549 --- [           main] org.opencog.neo4j.ImportBio5App          : List 319000 of 324240 (98%)
+    2015-06-19 21:48:46.388  INFO 23549 --- [           main] org.opencog.neo4j.ImportBio5App          : List 320000 of 324240 (98%)
+    2015-06-19 21:48:49.974  INFO 23549 --- [           main] org.opencog.neo4j.ImportBio5App          : List 321000 of 324240 (99%)
+    2015-06-19 21:48:53.583  INFO 23549 --- [           main] org.opencog.neo4j.ImportBio5App          : List 322000 of 324240 (99%)
+    2015-06-19 21:48:57.260  INFO 23549 --- [           main] org.opencog.neo4j.ImportBio5App          : List 323000 of 324240 (99%)
+    2015-06-19 21:49:00.682  INFO 23549 --- [           main] org.opencog.neo4j.ImportBio5App          : List 324000 of 324240 (99%)
+    2015-06-19 21:49:01.761  INFO 23549 --- [           main] org.opencog.neo4j.ImportBio5App          : Committing transaction...
+    2015-06-19 21:49:35.162  INFO 23549 --- [           main] org.opencog.neo4j.ImportBio5App          : Done
+    2015-06-19 21:49:35.248  INFO 23549 --- [           main] org.opencog.neo4j.ImportBio5App          : Started ImportBio5App in 1662.18 seconds (JVM running for 1663.611)
+    2015-06-19 21:49:35.254  INFO 23549 --- [       Thread-1] s.c.a.AnnotationConfigApplicationContext : Closing org.springframework.context.annotation.AnnotationConfigApplicationContext@2de8284b: startup date [Fri Jun 19 21:21:53 WIB 2015]; root of context hierarchy
+    2015-06-19 21:49:35.266  INFO 23549 --- [       Thread-1] o.s.j.e.a.AnnotationMBeanExporter        : Unregistering JMX-exposed beans on shutdown
+
+ImportBio5App GO_annotation (324240 lists) with 6GB heap : 821 seconds
+From 39.9 MB Scheme to 89.2 MB Neo4j.
+
+    2015-06-19 20:58:09.139  INFO 21565 --- [           main] org.opencog.neo4j.ImportBio5App          : Starting ImportBio5App on netadm.dev with PID 21565 (/home/ceefour/git/opencog-neo4j/target/classes started by ceefour in /home/ceefour/git/opencog-neo4j)
+    2015-06-19 20:58:09.261  INFO 21565 --- [           main] s.c.a.AnnotationConfigApplicationContext : Refreshing org.springframework.context.annotation.AnnotationConfigApplicationContext@2de8284b: startup date [Fri Jun 19 20:58:09 WIB 2015]; root of context hierarchy
+    2015-06-19 20:58:11.411  INFO 21565 --- [           main] f.a.AutowiredAnnotationBeanPostProcessor : JSR-330 'javax.inject.Inject' annotation found and supported for autowiring
+    2015-06-19 20:58:11.682  INFO 21565 --- [           main] org.opencog.neo4j.ImportBio5App          : Opening Neo4j database '/home/ceefour/tmp/go_annotation.neo4j'
+    2015-06-19 20:58:15.256  INFO 21565 --- [           main] o.s.j.e.a.AnnotationMBeanExporter        : Registering beans for JMX exposure on startup
+    2015-06-19 20:58:15.277  INFO 21565 --- [           main] org.opencog.neo4j.ImportBio5App          : Ensuring constraints and indexes...
+    2015-06-19 20:58:17.229  INFO 21565 --- [           main] org.opencog.neo4j.ImportBio5App          : Ensured constraints and indexes.
+    2015-06-19 20:58:17.230  INFO 21565 --- [           main] org.opencog.neo4j.ImportBio5App          : Reading scheme file '/data/project_netadm/opencog/agi-bio/GO_annotation.scm'
+    2015-06-19 20:58:24.208  INFO 21565 --- [           main] org.opencog.neo4j.ImportBio5App          : List 0 of 369755 (0%)
+    2015-06-19 20:58:32.333  INFO 21565 --- [           main] org.opencog.neo4j.ImportBio5App          : List 1000 of 369755 (0%)
+    2015-06-19 20:58:36.859  INFO 21565 --- [           main] org.opencog.neo4j.ImportBio5App          : List 2000 of 369755 (0%)
+    2015-06-19 20:58:40.962  INFO 21565 --- [           main] org.opencog.neo4j.ImportBio5App          : List 3000 of 369755 (0%)
+    2015-06-19 20:58:45.064  INFO 21565 --- [           main] org.opencog.neo4j.ImportBio5App          : List 4000 of 369755 (1%)
+    2015-06-19 20:58:47.783  INFO 21565 --- [           main] org.opencog.neo4j.ImportBio5App          : List 5000 of 369755 (1%)
+    ...
+    2015-06-19 21:10:58.438  INFO 21565 --- [           main] org.opencog.neo4j.ImportBio5App          : List 364000 of 369755 (98%)
+    2015-06-19 21:11:00.490  INFO 21565 --- [           main] org.opencog.neo4j.ImportBio5App          : List 365000 of 369755 (98%)
+    2015-06-19 21:11:02.516  INFO 21565 --- [           main] org.opencog.neo4j.ImportBio5App          : List 366000 of 369755 (98%)
+    2015-06-19 21:11:04.923  INFO 21565 --- [           main] org.opencog.neo4j.ImportBio5App          : List 367000 of 369755 (99%)
+    2015-06-19 21:11:07.437  INFO 21565 --- [           main] org.opencog.neo4j.ImportBio5App          : List 368000 of 369755 (99%)
+    2015-06-19 21:11:15.628  INFO 21565 --- [           main] org.opencog.neo4j.ImportBio5App          : List 369000 of 369755 (99%)
+    2015-06-19 21:11:17.281  INFO 21565 --- [           main] org.opencog.neo4j.ImportBio5App          : Committing transaction...
+    2015-06-19 21:11:50.393  INFO 21565 --- [           main] org.opencog.neo4j.ImportBio5App          : Done
+    2015-06-19 21:11:50.397  INFO 21565 --- [           main] org.opencog.neo4j.ImportBio5App          : Started ImportBio5App in 821.823 seconds (JVM running for 822.596)
+    2015-06-19 21:11:50.404  INFO 21565 --- [       Thread-1] s.c.a.AnnotationConfigApplicationContext : Closing org.springframework.context.annotation.AnnotationConfigApplicationContext@2de8284b: startup date [Fri Jun 19 20:58:09 WIB 2015]; root of context hierarchy
+    2015-06-19 21:11:50.407  INFO 21565 --- [       Thread-1] o.s.j.e.a.AnnotationMBeanExporter        : Unregistering JMX-exposed beans on shutdown
+
+## ImportBio5App (private bio scheme files)
 
 ImportBio5App GO_annotation (325188 lists) with 4GB heap : 12:57:57..13:20:53
 From 36.3 MB Scheme to 253 MB Neo4j (~7×).

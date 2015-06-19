@@ -260,8 +260,10 @@ public class ImportBio5App implements CommandLineRunner {
         final ArrayList<String> outDependencies = new ArrayList<>();
         final LinkedHashMap<String, Object> outParams = new LinkedHashMap<>();
 
-        double stvStrength = 0.0;
-        double stvConfidence = 0.0;
+        @Nullable
+        Double stvStrength = null;
+        @Nullable
+        Double stvConfidence = null;
         final List<?> stvMaybe = (List<?>) top.get(1);
         final int predicateOffset;
         if ("stv".equals(((Symbol) stvMaybe.get(0)).getName())) {
@@ -289,63 +291,108 @@ public class ImportBio5App implements CommandLineRunner {
         customNodeToMatch(predicate, outDependencies, outParams);
 
         // ensure all params are prepared
-        final List<?> listLink = (List<?>) ((List<?>) top.get(predicateOffset)).get(2);
-        final List<List<?>> params = (List<List<?>>) listLink.subList(1, listLink.size());
-        final List<String> paramNames = new ArrayList<>();
-        for (List<?> param : params) {
-            final String paramType = typeNameFor(param);
-            final String paramVarName = varNameFor(paramType, param);
-            if (!parts.nodes.containsKey(paramVarName)) {
-                final CypherPart paramCypher = customNodeToCypher(param);
-                parts.nodes.put(paramVarName, paramCypher);
+        try {
+            final List<?> listLink = (List<?>) ((List<?>) top.get(predicateOffset + 1));
+            final List<List<?>> params = (List<List<?>>) listLink.subList(1, listLink.size());
+            final List<String> paramNames = new ArrayList<>();
+            for (List<?> param : params) {
+                final String paramType = typeNameFor(param);
+                final String paramVarName = varNameFor(paramType, param);
+                if (!parts.nodes.containsKey(paramVarName)) {
+                    final CypherPart paramCypher = customNodeToCypher(param);
+                    parts.nodes.put(paramVarName, paramCypher);
+                }
+                customNodeToMatch(param, outDependencies, outParams);
+
+                paramNames.add(paramVarName);
             }
-            customNodeToMatch(param, outDependencies, outParams);
 
-            paramNames.add(paramVarName);
+            final String varName = "EvaluationLink_" + predicateName + "_" + RandomUtils.nextInt(1000, 10000);
+            String create;
+            if (stvStrength != null) {
+                create = String.format("CREATE (%s:opencog_EvaluationLink {stv_strength: %f, stv_confidence: %f})",
+                        varName, stvStrength, stvConfidence);
+            } else {
+                create = String.format("CREATE (%s:opencog_EvaluationLink)", varName);
+            }
+            create += String.format("\n  CREATE (%s) -[:opencog_predicate]-> (%s)", varName, predicateVarName);
+            // http://schema.org/position
+            for (int i = 0; i < paramNames.size(); i++) {
+                create += String.format("\n  CREATE (%s) -[:opencog_parameter {position: %d}]-> (%s)",
+                        varName, i, paramNames.get(i));
+            }
+
+            final CypherPart part = new CypherPart(null, ImmutableMap.copyOf(outParams), create, ImmutableList.copyOf(outDependencies));
+            parts.relationships.add(part);
+            return part;
+        } catch (Exception e) {
+            throw new RuntimeException("Cannot create CypherPart for " + top, e);
         }
-
-        final String varName = "EvaluationLink_" + predicateName + "_" + RandomUtils.nextInt(1000, 10000);
-        String create = String.format("CREATE (%s:opencog_EvaluationLink {stvStrength: %f, stvConfidence: %f})",
-                varName, stvStrength, stvConfidence);
-        create += String.format("\n  CREATE (%s) -[:opencog_predicate]-> (%s)", varName, predicateVarName);
-        // http://schema.org/position
-        for (int i = 0; i < paramNames.size(); i++) {
-            create += String.format("\n  CREATE (%s) -[:opencog_parameter {position: %d}]-> (%s)",
-                    varName, i, paramNames.get(i));
-        }
-
-        final CypherPart part = new CypherPart(null, ImmutableMap.copyOf(outParams), create, ImmutableList.copyOf(outDependencies));
-        parts.relationships.add(part);
-        return part;
     }
 
+    /**
+     * Either:
+     *
+     * <ol>
+     *     <li><code>(MemberLink (GeneNode "A0A087WZ62") (ConceptNode "GO:0004826"))</code></li>
+     *     <li><code>(MemberLink (stv 0.0 1.0) (GeneNode "A0A087WZ62") (ConceptNode "GO:0004826"))</code></li>
+     * </ol>
+     *
+     * @param parts
+     * @param top
+     * @return
+     */
     public CypherPart memberToCypher(CypherParts parts, List<?> top) {
-        final ArrayList<String> outDependencies = new ArrayList<>();
-        final LinkedHashMap<String, Object> outParams = new LinkedHashMap<>();
+        try {
+            final ArrayList<String> outDependencies = new ArrayList<>();
+            final LinkedHashMap<String, Object> outParams = new LinkedHashMap<>();
 
-        // ensure gene is prepared
-        final List<?> gene = (List<?>) top.get(1);
-        final String geneVarName = varNameForGene(gene);
-        if (!parts.nodes.containsKey(geneVarName)) {
-            final CypherPart geneCypher = customNodeToCypher(gene);
-            parts.nodes.put(geneVarName, geneCypher);
+            @Nullable
+            Double stvStrength = null;
+            @Nullable
+            Double stvConfidence = null;
+            final List<?> stvMaybe = (List<?>) top.get(1);
+            final int memberOffset;
+            if ("stv".equals(((Symbol) stvMaybe.get(0)).getName())) {
+                memberOffset = 2;
+                stvStrength = (Double) stvMaybe.get(1);
+                stvConfidence = (Double) stvMaybe.get(2);
+            } else {
+                memberOffset = 1;
+            }
+
+            // ensure gene is prepared
+            final List<?> gene = (List<?>) top.get(memberOffset);
+            final String geneVarName = varNameForGene(gene);
+            if (!parts.nodes.containsKey(geneVarName)) {
+                final CypherPart geneCypher = customNodeToCypher(gene);
+                parts.nodes.put(geneVarName, geneCypher);
+            }
+            customNodeToMatch(gene, outDependencies, outParams);
+
+            // ensure concept is prepared
+            final List<?> concept = (List<?>) top.get(memberOffset + 1);
+            final String conceptVarName = varNameForConcept(concept);
+            if (!parts.nodes.containsKey(conceptVarName)) {
+                final CypherPart conceptCypher = customNodeToCypher(concept);
+                parts.nodes.put(conceptVarName, conceptCypher);
+            }
+            customNodeToMatch(concept, outDependencies, outParams);
+
+            final String create;
+            if (stvStrength != null) {
+                create = String.format("CREATE (%s) -[:rdf_type {stv_strength: %f, stv_confidence: %f}]-> (%s)",
+                        geneVarName, stvStrength, stvConfidence, conceptVarName);
+            } else {
+                create = String.format("CREATE (%s) -[:rdf_type]-> (%s)", geneVarName, conceptVarName);
+            }
+            final CypherPart part = new CypherPart(null, ImmutableMap.copyOf(outParams), create,
+                    ImmutableList.copyOf(outDependencies));
+            parts.relationships.add(part);
+            return part;
+        } catch (Exception e) {
+            throw new RuntimeException("Cannot create CypherParts for MemberLink " + top, e);
         }
-        customNodeToMatch(gene, outDependencies, outParams);
-
-        // ensure concept is prepared
-        final List<?> concept = (List<?>) top.get(2);
-        final String conceptVarName = varNameForConcept(concept);
-        if (!parts.nodes.containsKey(conceptVarName)) {
-            final CypherPart conceptCypher = customNodeToCypher(concept);
-            parts.nodes.put(conceptVarName, conceptCypher);
-        }
-        customNodeToMatch(concept, outDependencies, outParams);
-
-        final String create = String.format("CREATE (%s) -[:rdf_type]-> (%s)", geneVarName, conceptVarName);
-        final CypherPart part = new CypherPart(null, ImmutableMap.copyOf(outParams), create,
-                ImmutableList.copyOf(outDependencies));
-        parts.relationships.add(part);
-        return part;
     }
 
     @Override
