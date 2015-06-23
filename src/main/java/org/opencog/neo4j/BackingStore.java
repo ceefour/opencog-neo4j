@@ -1,5 +1,6 @@
 package org.opencog.neo4j;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -11,10 +12,10 @@ public interface BackingStore {
      * Return a pointer to a link of the indicated type and outset,
      * if it exists.
      * @param type
-     * @param handleSeq
+     * @param handleSeq the outgoing set of the link.
      * @return
      */
-    Optional<Link> getLink(String type, String handleSeq);
+    Optional<Link> getLink(AtomType type, List<Handle> handleSeq);
 
     /**
      * Return a pointer to a node of the indicated type and name,
@@ -23,7 +24,7 @@ public interface BackingStore {
      * @param name
      * @return
      */
-    Optional<Node> getNode(String type, String name);
+    Optional<Node> getNode(AtomType type, String name);
 
     /**
      * Return a pointer to an Atom associated with the given
@@ -31,7 +32,7 @@ public interface BackingStore {
      * @param handle
      * @return
      */
-    Optional<Atom> getAtom(String handle);
+    Optional<Atom> getAtom(Handle handle);
 
     /**
      * Return a vector containing the handles of the entire incoming
@@ -39,7 +40,7 @@ public interface BackingStore {
      * @param handle
      * @return
      */
-    String getIncomingSet(String handle);
+    List<Handle> getIncomingSet(Handle handle);
 
     /**
      * Recursively store the atom and anything in it's outgoing set.
@@ -48,7 +49,7 @@ public interface BackingStore {
      * @param handle
      * @return
      */
-    String storeAtom(String handle);
+    String storeAtom(Handle handle);
 
     /**
      * Load <strong>all</strong> atoms of the given type, but only if they are not
@@ -59,7 +60,7 @@ public interface BackingStore {
      * @param type
      * @return
      */
-    String loadType(String atomTable, String type);
+    String loadType(String atomTable, AtomType type);
 
     /**
      * Read-write synchronization barrier.
@@ -78,7 +79,7 @@ public interface BackingStore {
      * @param type
      * @return
      */
-    boolean isTypeIgnored(String type);
+    boolean isTypeIgnored(AtomType type);
 
     /**
      * Returns true if the backing store will ignore this atom,
@@ -87,6 +88,6 @@ public interface BackingStore {
      * @param handle
      * @return
      */
-    boolean isAtomIgnored(String handle);
+    boolean isAtomIgnored(Handle handle);
 
 }

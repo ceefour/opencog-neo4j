@@ -11,5 +11,16 @@ import java.io.Serializable;
  * Represents an AtomSpace <a href="http://wiki.opencog.org/w/Node">Node</a>.
  * Inspired by <a href="https://github.com/opencog/atomspace/blob/master/opencog/atomspace/Node.h">opencog/atomspace/Node.h</a>.
  */
-public class Node implements Serializable {
+public class Node extends Atom implements Serializable {
+
+    protected String name;
+
+    public Node(AtomType type, String name) {
+        super(type);
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
 }

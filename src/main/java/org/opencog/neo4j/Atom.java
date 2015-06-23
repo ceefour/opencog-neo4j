@@ -9,4 +9,15 @@ import java.io.Serializable;
  * @see Link
  */
 public class Atom implements Serializable {
+
+    private AtomType type;
+
+    public Atom(AtomType type) {
+        this.type = type;
+    }
+
+    public AtomType getType() {
+        return type;
+    }
+
 }
