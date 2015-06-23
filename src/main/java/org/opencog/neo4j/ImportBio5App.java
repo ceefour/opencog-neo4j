@@ -29,7 +29,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Removes {@code href} and {@code prefLabel} support, and only uses AtomSpace concept {@code nodeName}
+ * Removes {@code href} and {@code prefLabel} support, and only uses AtomSpace concept {@link Neo4jNode#NODE_NAME}
  * as {@code UNIQUE} index. To save space and improve import time.
  *
  * <p>Importer that should still work with:</p>
@@ -191,8 +191,8 @@ public class ImportBio5App implements CommandLineRunner {
         final String typeName = ((Symbol) concept.get(0)).getName();// maintain 1:1 with OpenCog terms - .replaceFirst("Node$", "");
         final String conceptName = (String) concept.get(1);
         final String varName = varNameFor(typeName, concept);
-        final String create = String.format("MERGE (%s:opencog_%s {nodeName: {%s_nodeName}})",
-                varName, typeName, varName, varName, varName);
+        final String create = String.format("MERGE (%s:opencog_%s {%s: {%s_nodeName}})",
+                varName, typeName, Neo4jNode.NODE_NAME, varName, varName, varName);
         final ImmutableMap<String, Object> param = ImmutableMap.of(
                 varName + "_nodeName", conceptName);
         return new CypherPart(varName, param, create);
@@ -204,8 +204,8 @@ public class ImportBio5App implements CommandLineRunner {
         final String conceptName = (String) concept.get(1);
         final String varName = varNameFor(typeName, concept);
         final String nodeNameVar = varName + "_match_nodeName";
-        final String create = String.format("MATCH (%s:opencog_%s {nodeName: {%s}})",
-                varName, typeName, varName, varName, nodeNameVar);
+        final String create = String.format("MATCH (%s:opencog_%s {%s: {%s}})",
+                varName, typeName, varName, varName, Neo4jNode.NODE_NAME, nodeNameVar);
         outDependencies.add(create);
         outParams.put(nodeNameVar, conceptName);
     }
@@ -401,10 +401,10 @@ public class ImportBio5App implements CommandLineRunner {
 
         try (final Transaction tx = graphDb.beginTx()) {
             log.info("Ensuring constraints and indexes...");
-            graphDb.execute("CREATE CONSTRAINT ON (n:opencog_ConceptNode) ASSERT n.nodeName IS UNIQUE");
-            graphDb.execute("CREATE CONSTRAINT ON (n:opencog_GeneNode) ASSERT n.nodeName IS UNIQUE");
-            graphDb.execute("CREATE CONSTRAINT ON (n:opencog_PredicateNode) ASSERT n.nodeName IS UNIQUE");
-            graphDb.execute("CREATE CONSTRAINT ON (n:opencog_PhraseNode) ASSERT n.nodeName IS UNIQUE");
+            graphDb.execute(String.format("CREATE CONSTRAINT ON (n:%s) ASSERT n.%s IS UNIQUE", AtomType.CONCEPT_NODE.getGraphLabel(), Neo4jNode.NODE_NAME));
+            graphDb.execute(String.format("CREATE CONSTRAINT ON (n:%s) ASSERT n.%s IS UNIQUE", AtomType.GENE_NODE.getGraphLabel(), Neo4jNode.NODE_NAME));
+            graphDb.execute(String.format("CREATE CONSTRAINT ON (n:%s) ASSERT n.%s IS UNIQUE", AtomType.PREDICATE_NODE.getGraphLabel(), Neo4jNode.NODE_NAME));
+            graphDb.execute(String.format("CREATE CONSTRAINT ON (n:%s) ASSERT n.%s IS UNIQUE", AtomType.PHRASE_NODE.getGraphLabel(), Neo4jNode.NODE_NAME));
 
 //            graphDb.execute("CREATE INDEX ON :opencog_ConceptNode(prefLabel)");
 //            graphDb.execute("CREATE INDEX ON :opencog_GeneNode(prefLabel)");

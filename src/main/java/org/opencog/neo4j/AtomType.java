@@ -32,7 +32,9 @@ public enum AtomType {
      * rdf_type relationship
      */
     MEMBER_LINK(GraphMapping.EDGE, "rdf_type"), // WARNING: impossible to link to a MemberLink!
-    ;
+    GENE_NODE(GraphMapping.VERTEX, "opencog_GeneNode"),
+    PREDICATE_NODE(GraphMapping.VERTEX, "opencog_PredicateNode"),
+    PHRASE_NODE(GraphMapping.VERTEX, "opencog_PhraseNode");
 
     private GraphMapping graphMapping;
     private String graphLabel;

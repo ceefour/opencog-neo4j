@@ -5,7 +5,11 @@ package org.opencog.neo4j;
  */
 public class Neo4jNode extends Node {
 
-    public static final String NODE_NAME = "nodeName";
+    /**
+     * Abbreviated to save space, because in majority of nodes this will be
+     * the only property.
+     */
+    public static final String NODE_NAME = "nn";
 
     public Neo4jNode(AtomType type, String name) {
         super(type, name);
