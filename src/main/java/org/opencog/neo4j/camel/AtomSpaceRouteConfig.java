@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 import java.util.UUID;
 
@@ -13,6 +14,7 @@ import java.util.UUID;
  * Camel routes configuration.
  */
 @Configuration
+@Profile("camel")
 public class AtomSpaceRouteConfig {
 
     private static final Logger log = LoggerFactory.getLogger(AtomSpaceRouteConfig.class);
@@ -38,7 +40,9 @@ public class AtomSpaceRouteConfig {
             @Override
             public void configure() throws Exception {
                 from("timer:5")
-                        .process((Exchange it) -> { it.getIn().setBody("Sending " + UUID.randomUUID()); })
+                        .process((Exchange it) -> {
+                            it.getIn().setBody("Sending " + UUID.randomUUID());
+                        })
                         .to("zeromq:tcp://127.0.0.1:5555?socketType=PUSH&topics=atomspace.neo4j")
                         .to("log:timer-to-atomspace?showAll=true&multiline=true");
             }
