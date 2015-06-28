@@ -1,5 +1,6 @@
-package org.opencog.neo4j;
+package org.opencog.atomspace;
 
+import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
@@ -74,5 +75,9 @@ public enum AtomType {
             }
         }
         throw new IllegalArgumentException("Unknown AtomType for label '" + label + "'");
+    }
+
+    public static AtomType forUpperCamel(String camelType) {
+        return valueOf(CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, camelType));
     }
 }

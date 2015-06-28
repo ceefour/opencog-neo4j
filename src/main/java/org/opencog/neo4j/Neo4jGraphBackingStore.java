@@ -5,6 +5,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import org.neo4j.graphdb.*;
+import org.opencog.atomspace.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +65,7 @@ public class Neo4jGraphBackingStore implements GraphBackingStore {
     }
 
     @Override
-    public Optional<Node> getNode(AtomType type, String name) {
+    public Optional<org.opencog.atomspace.Node> getNode(AtomType type, String name) {
         final Optional<org.neo4j.graphdb.Node> graphNode = Optional.ofNullable(
                 db.findNode(DynamicLabel.label(type.getGraphLabel()), Neo4jNode.NODE_NAME, name));
         return graphNode.map(it -> new Neo4jNode(type, name));

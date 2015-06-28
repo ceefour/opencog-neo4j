@@ -20,7 +20,8 @@ message AtomRequest {
 }
 
 message AtomsRequest {
-    repeated AtomRequest requests = 1;
+    required bytes correlation_id = 1; // 128-bit UUID
+    repeated AtomRequest requests = 2;
 }
 
 message AtomResult {
@@ -36,5 +37,10 @@ message AtomResult {
     optional fixed64 uuid = 2;
     optional string atom_type = 3;
     optional string node_name = 4;
-    repeated fixed64 handle_seq = 5;
+    repeated fixed64 outgoing_set = 5;
+}
+
+message AtomsResult {
+    required string correlation_id = 1; // Usually UUID
+    repeated AtomResult results = 2;
 }

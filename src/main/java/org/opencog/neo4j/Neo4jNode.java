@@ -1,5 +1,8 @@
 package org.opencog.neo4j;
 
+import org.opencog.atomspace.AtomType;
+import org.opencog.atomspace.Node;
+
 /**
  * Created by ceefour on 6/23/15.
  */

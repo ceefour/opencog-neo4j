@@ -1,9 +1,7 @@
-package org.opencog.neo4j;
+package org.opencog.atomspace;
 
 import com.google.common.collect.ImmutableList;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,18 +10,18 @@ import java.util.List;
  */
 public class Link extends Atom {
 
-    private ImmutableList<Handle> outgoingSet;
+    private ImmutableList<? extends Handle> outgoingSet;
 
     public Link(AtomType type) {
         super(type);
     }
 
-    public Link(AtomType type, ImmutableList<Handle> outgoingSet) {
+    public Link(AtomType type, List<? extends Handle> outgoingSet) {
         super(type);
-        this.outgoingSet = outgoingSet;
+        this.outgoingSet = ImmutableList.copyOf(outgoingSet);
     }
 
-    public ImmutableList<Handle> getOutgoingSet() {
+    public ImmutableList<? extends Handle> getOutgoingSet() {
         return outgoingSet;
     }
 

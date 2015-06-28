@@ -1,6 +1,6 @@
 package org.opencog.neo4j;
 
-import org.neo4j.graphdb.*;
+import org.opencog.atomspace.Handle;
 
 /**
  * Positive value is {@link org.neo4j.graphdb.Node}/vertex ID.

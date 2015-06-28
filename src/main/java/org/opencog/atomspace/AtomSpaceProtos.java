@@ -1086,27 +1086,45 @@ public final class AtomSpaceProtos {
   public interface AtomsRequestOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // repeated .atomspace.AtomRequest requests = 1;
+    // required bytes correlation_id = 1;
     /**
-     * <code>repeated .atomspace.AtomRequest requests = 1;</code>
+     * <code>required bytes correlation_id = 1;</code>
+     *
+     * <pre>
+     * 128-bit UUID
+     * </pre>
+     */
+    boolean hasCorrelationId();
+    /**
+     * <code>required bytes correlation_id = 1;</code>
+     *
+     * <pre>
+     * 128-bit UUID
+     * </pre>
+     */
+    com.google.protobuf.ByteString getCorrelationId();
+
+    // repeated .atomspace.AtomRequest requests = 2;
+    /**
+     * <code>repeated .atomspace.AtomRequest requests = 2;</code>
      */
     java.util.List<org.opencog.atomspace.AtomSpaceProtos.AtomRequest> 
         getRequestsList();
     /**
-     * <code>repeated .atomspace.AtomRequest requests = 1;</code>
+     * <code>repeated .atomspace.AtomRequest requests = 2;</code>
      */
     org.opencog.atomspace.AtomSpaceProtos.AtomRequest getRequests(int index);
     /**
-     * <code>repeated .atomspace.AtomRequest requests = 1;</code>
+     * <code>repeated .atomspace.AtomRequest requests = 2;</code>
      */
     int getRequestsCount();
     /**
-     * <code>repeated .atomspace.AtomRequest requests = 1;</code>
+     * <code>repeated .atomspace.AtomRequest requests = 2;</code>
      */
     java.util.List<? extends org.opencog.atomspace.AtomSpaceProtos.AtomRequestOrBuilder> 
         getRequestsOrBuilderList();
     /**
-     * <code>repeated .atomspace.AtomRequest requests = 1;</code>
+     * <code>repeated .atomspace.AtomRequest requests = 2;</code>
      */
     org.opencog.atomspace.AtomSpaceProtos.AtomRequestOrBuilder getRequestsOrBuilder(
         int index);
@@ -1163,9 +1181,14 @@ public final class AtomSpaceProtos {
               break;
             }
             case 10: {
-              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+              bitField0_ |= 0x00000001;
+              correlationId_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
                 requests_ = new java.util.ArrayList<org.opencog.atomspace.AtomSpaceProtos.AtomRequest>();
-                mutable_bitField0_ |= 0x00000001;
+                mutable_bitField0_ |= 0x00000002;
               }
               requests_.add(input.readMessage(org.opencog.atomspace.AtomSpaceProtos.AtomRequest.PARSER, extensionRegistry));
               break;
@@ -1178,7 +1201,7 @@ public final class AtomSpaceProtos {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
-        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+        if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
           requests_ = java.util.Collections.unmodifiableList(requests_);
         }
         this.unknownFields = unknownFields.build();
@@ -1212,36 +1235,61 @@ public final class AtomSpaceProtos {
       return PARSER;
     }
 
-    // repeated .atomspace.AtomRequest requests = 1;
-    public static final int REQUESTS_FIELD_NUMBER = 1;
+    private int bitField0_;
+    // required bytes correlation_id = 1;
+    public static final int CORRELATION_ID_FIELD_NUMBER = 1;
+    private com.google.protobuf.ByteString correlationId_;
+    /**
+     * <code>required bytes correlation_id = 1;</code>
+     *
+     * <pre>
+     * 128-bit UUID
+     * </pre>
+     */
+    public boolean hasCorrelationId() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required bytes correlation_id = 1;</code>
+     *
+     * <pre>
+     * 128-bit UUID
+     * </pre>
+     */
+    public com.google.protobuf.ByteString getCorrelationId() {
+      return correlationId_;
+    }
+
+    // repeated .atomspace.AtomRequest requests = 2;
+    public static final int REQUESTS_FIELD_NUMBER = 2;
     private java.util.List<org.opencog.atomspace.AtomSpaceProtos.AtomRequest> requests_;
     /**
-     * <code>repeated .atomspace.AtomRequest requests = 1;</code>
+     * <code>repeated .atomspace.AtomRequest requests = 2;</code>
      */
     public java.util.List<org.opencog.atomspace.AtomSpaceProtos.AtomRequest> getRequestsList() {
       return requests_;
     }
     /**
-     * <code>repeated .atomspace.AtomRequest requests = 1;</code>
+     * <code>repeated .atomspace.AtomRequest requests = 2;</code>
      */
     public java.util.List<? extends org.opencog.atomspace.AtomSpaceProtos.AtomRequestOrBuilder> 
         getRequestsOrBuilderList() {
       return requests_;
     }
     /**
-     * <code>repeated .atomspace.AtomRequest requests = 1;</code>
+     * <code>repeated .atomspace.AtomRequest requests = 2;</code>
      */
     public int getRequestsCount() {
       return requests_.size();
     }
     /**
-     * <code>repeated .atomspace.AtomRequest requests = 1;</code>
+     * <code>repeated .atomspace.AtomRequest requests = 2;</code>
      */
     public org.opencog.atomspace.AtomSpaceProtos.AtomRequest getRequests(int index) {
       return requests_.get(index);
     }
     /**
-     * <code>repeated .atomspace.AtomRequest requests = 1;</code>
+     * <code>repeated .atomspace.AtomRequest requests = 2;</code>
      */
     public org.opencog.atomspace.AtomSpaceProtos.AtomRequestOrBuilder getRequestsOrBuilder(
         int index) {
@@ -1249,6 +1297,7 @@ public final class AtomSpaceProtos {
     }
 
     private void initFields() {
+      correlationId_ = com.google.protobuf.ByteString.EMPTY;
       requests_ = java.util.Collections.emptyList();
     }
     private byte memoizedIsInitialized = -1;
@@ -1256,6 +1305,10 @@ public final class AtomSpaceProtos {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
+      if (!hasCorrelationId()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
       for (int i = 0; i < getRequestsCount(); i++) {
         if (!getRequests(i).isInitialized()) {
           memoizedIsInitialized = 0;
@@ -1269,8 +1322,11 @@ public final class AtomSpaceProtos {
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, correlationId_);
+      }
       for (int i = 0; i < requests_.size(); i++) {
-        output.writeMessage(1, requests_.get(i));
+        output.writeMessage(2, requests_.get(i));
       }
       getUnknownFields().writeTo(output);
     }
@@ -1281,9 +1337,13 @@ public final class AtomSpaceProtos {
       if (size != -1) return size;
 
       size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, correlationId_);
+      }
       for (int i = 0; i < requests_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, requests_.get(i));
+          .computeMessageSize(2, requests_.get(i));
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -1402,9 +1462,11 @@ public final class AtomSpaceProtos {
 
       public Builder clear() {
         super.clear();
+        correlationId_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
         if (requestsBuilder_ == null) {
           requests_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
+          bitField0_ = (bitField0_ & ~0x00000002);
         } else {
           requestsBuilder_.clear();
         }
@@ -1435,15 +1497,21 @@ public final class AtomSpaceProtos {
       public org.opencog.atomspace.AtomSpaceProtos.AtomsRequest buildPartial() {
         org.opencog.atomspace.AtomSpaceProtos.AtomsRequest result = new org.opencog.atomspace.AtomSpaceProtos.AtomsRequest(this);
         int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.correlationId_ = correlationId_;
         if (requestsBuilder_ == null) {
-          if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          if (((bitField0_ & 0x00000002) == 0x00000002)) {
             requests_ = java.util.Collections.unmodifiableList(requests_);
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ = (bitField0_ & ~0x00000002);
           }
           result.requests_ = requests_;
         } else {
           result.requests_ = requestsBuilder_.build();
         }
+        result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
       }
@@ -1459,11 +1527,14 @@ public final class AtomSpaceProtos {
 
       public Builder mergeFrom(org.opencog.atomspace.AtomSpaceProtos.AtomsRequest other) {
         if (other == org.opencog.atomspace.AtomSpaceProtos.AtomsRequest.getDefaultInstance()) return this;
+        if (other.hasCorrelationId()) {
+          setCorrelationId(other.getCorrelationId());
+        }
         if (requestsBuilder_ == null) {
           if (!other.requests_.isEmpty()) {
             if (requests_.isEmpty()) {
               requests_ = other.requests_;
-              bitField0_ = (bitField0_ & ~0x00000001);
+              bitField0_ = (bitField0_ & ~0x00000002);
             } else {
               ensureRequestsIsMutable();
               requests_.addAll(other.requests_);
@@ -1476,7 +1547,7 @@ public final class AtomSpaceProtos {
               requestsBuilder_.dispose();
               requestsBuilder_ = null;
               requests_ = other.requests_;
-              bitField0_ = (bitField0_ & ~0x00000001);
+              bitField0_ = (bitField0_ & ~0x00000002);
               requestsBuilder_ = 
                 com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
                    getRequestsFieldBuilder() : null;
@@ -1490,6 +1561,10 @@ public final class AtomSpaceProtos {
       }
 
       public final boolean isInitialized() {
+        if (!hasCorrelationId()) {
+          
+          return false;
+        }
         for (int i = 0; i < getRequestsCount(); i++) {
           if (!getRequests(i).isInitialized()) {
             
@@ -1518,13 +1593,65 @@ public final class AtomSpaceProtos {
       }
       private int bitField0_;
 
-      // repeated .atomspace.AtomRequest requests = 1;
+      // required bytes correlation_id = 1;
+      private com.google.protobuf.ByteString correlationId_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>required bytes correlation_id = 1;</code>
+       *
+       * <pre>
+       * 128-bit UUID
+       * </pre>
+       */
+      public boolean hasCorrelationId() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required bytes correlation_id = 1;</code>
+       *
+       * <pre>
+       * 128-bit UUID
+       * </pre>
+       */
+      public com.google.protobuf.ByteString getCorrelationId() {
+        return correlationId_;
+      }
+      /**
+       * <code>required bytes correlation_id = 1;</code>
+       *
+       * <pre>
+       * 128-bit UUID
+       * </pre>
+       */
+      public Builder setCorrelationId(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        correlationId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required bytes correlation_id = 1;</code>
+       *
+       * <pre>
+       * 128-bit UUID
+       * </pre>
+       */
+      public Builder clearCorrelationId() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        correlationId_ = getDefaultInstance().getCorrelationId();
+        onChanged();
+        return this;
+      }
+
+      // repeated .atomspace.AtomRequest requests = 2;
       private java.util.List<org.opencog.atomspace.AtomSpaceProtos.AtomRequest> requests_ =
         java.util.Collections.emptyList();
       private void ensureRequestsIsMutable() {
-        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+        if (!((bitField0_ & 0x00000002) == 0x00000002)) {
           requests_ = new java.util.ArrayList<org.opencog.atomspace.AtomSpaceProtos.AtomRequest>(requests_);
-          bitField0_ |= 0x00000001;
+          bitField0_ |= 0x00000002;
          }
       }
 
@@ -1532,7 +1659,7 @@ public final class AtomSpaceProtos {
           org.opencog.atomspace.AtomSpaceProtos.AtomRequest, org.opencog.atomspace.AtomSpaceProtos.AtomRequest.Builder, org.opencog.atomspace.AtomSpaceProtos.AtomRequestOrBuilder> requestsBuilder_;
 
       /**
-       * <code>repeated .atomspace.AtomRequest requests = 1;</code>
+       * <code>repeated .atomspace.AtomRequest requests = 2;</code>
        */
       public java.util.List<org.opencog.atomspace.AtomSpaceProtos.AtomRequest> getRequestsList() {
         if (requestsBuilder_ == null) {
@@ -1542,7 +1669,7 @@ public final class AtomSpaceProtos {
         }
       }
       /**
-       * <code>repeated .atomspace.AtomRequest requests = 1;</code>
+       * <code>repeated .atomspace.AtomRequest requests = 2;</code>
        */
       public int getRequestsCount() {
         if (requestsBuilder_ == null) {
@@ -1552,7 +1679,7 @@ public final class AtomSpaceProtos {
         }
       }
       /**
-       * <code>repeated .atomspace.AtomRequest requests = 1;</code>
+       * <code>repeated .atomspace.AtomRequest requests = 2;</code>
        */
       public org.opencog.atomspace.AtomSpaceProtos.AtomRequest getRequests(int index) {
         if (requestsBuilder_ == null) {
@@ -1562,7 +1689,7 @@ public final class AtomSpaceProtos {
         }
       }
       /**
-       * <code>repeated .atomspace.AtomRequest requests = 1;</code>
+       * <code>repeated .atomspace.AtomRequest requests = 2;</code>
        */
       public Builder setRequests(
           int index, org.opencog.atomspace.AtomSpaceProtos.AtomRequest value) {
@@ -1579,7 +1706,7 @@ public final class AtomSpaceProtos {
         return this;
       }
       /**
-       * <code>repeated .atomspace.AtomRequest requests = 1;</code>
+       * <code>repeated .atomspace.AtomRequest requests = 2;</code>
        */
       public Builder setRequests(
           int index, org.opencog.atomspace.AtomSpaceProtos.AtomRequest.Builder builderForValue) {
@@ -1593,7 +1720,7 @@ public final class AtomSpaceProtos {
         return this;
       }
       /**
-       * <code>repeated .atomspace.AtomRequest requests = 1;</code>
+       * <code>repeated .atomspace.AtomRequest requests = 2;</code>
        */
       public Builder addRequests(org.opencog.atomspace.AtomSpaceProtos.AtomRequest value) {
         if (requestsBuilder_ == null) {
@@ -1609,7 +1736,7 @@ public final class AtomSpaceProtos {
         return this;
       }
       /**
-       * <code>repeated .atomspace.AtomRequest requests = 1;</code>
+       * <code>repeated .atomspace.AtomRequest requests = 2;</code>
        */
       public Builder addRequests(
           int index, org.opencog.atomspace.AtomSpaceProtos.AtomRequest value) {
@@ -1626,7 +1753,7 @@ public final class AtomSpaceProtos {
         return this;
       }
       /**
-       * <code>repeated .atomspace.AtomRequest requests = 1;</code>
+       * <code>repeated .atomspace.AtomRequest requests = 2;</code>
        */
       public Builder addRequests(
           org.opencog.atomspace.AtomSpaceProtos.AtomRequest.Builder builderForValue) {
@@ -1640,7 +1767,7 @@ public final class AtomSpaceProtos {
         return this;
       }
       /**
-       * <code>repeated .atomspace.AtomRequest requests = 1;</code>
+       * <code>repeated .atomspace.AtomRequest requests = 2;</code>
        */
       public Builder addRequests(
           int index, org.opencog.atomspace.AtomSpaceProtos.AtomRequest.Builder builderForValue) {
@@ -1654,7 +1781,7 @@ public final class AtomSpaceProtos {
         return this;
       }
       /**
-       * <code>repeated .atomspace.AtomRequest requests = 1;</code>
+       * <code>repeated .atomspace.AtomRequest requests = 2;</code>
        */
       public Builder addAllRequests(
           java.lang.Iterable<? extends org.opencog.atomspace.AtomSpaceProtos.AtomRequest> values) {
@@ -1668,12 +1795,12 @@ public final class AtomSpaceProtos {
         return this;
       }
       /**
-       * <code>repeated .atomspace.AtomRequest requests = 1;</code>
+       * <code>repeated .atomspace.AtomRequest requests = 2;</code>
        */
       public Builder clearRequests() {
         if (requestsBuilder_ == null) {
           requests_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
+          bitField0_ = (bitField0_ & ~0x00000002);
           onChanged();
         } else {
           requestsBuilder_.clear();
@@ -1681,7 +1808,7 @@ public final class AtomSpaceProtos {
         return this;
       }
       /**
-       * <code>repeated .atomspace.AtomRequest requests = 1;</code>
+       * <code>repeated .atomspace.AtomRequest requests = 2;</code>
        */
       public Builder removeRequests(int index) {
         if (requestsBuilder_ == null) {
@@ -1694,14 +1821,14 @@ public final class AtomSpaceProtos {
         return this;
       }
       /**
-       * <code>repeated .atomspace.AtomRequest requests = 1;</code>
+       * <code>repeated .atomspace.AtomRequest requests = 2;</code>
        */
       public org.opencog.atomspace.AtomSpaceProtos.AtomRequest.Builder getRequestsBuilder(
           int index) {
         return getRequestsFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .atomspace.AtomRequest requests = 1;</code>
+       * <code>repeated .atomspace.AtomRequest requests = 2;</code>
        */
       public org.opencog.atomspace.AtomSpaceProtos.AtomRequestOrBuilder getRequestsOrBuilder(
           int index) {
@@ -1711,7 +1838,7 @@ public final class AtomSpaceProtos {
         }
       }
       /**
-       * <code>repeated .atomspace.AtomRequest requests = 1;</code>
+       * <code>repeated .atomspace.AtomRequest requests = 2;</code>
        */
       public java.util.List<? extends org.opencog.atomspace.AtomSpaceProtos.AtomRequestOrBuilder> 
            getRequestsOrBuilderList() {
@@ -1722,14 +1849,14 @@ public final class AtomSpaceProtos {
         }
       }
       /**
-       * <code>repeated .atomspace.AtomRequest requests = 1;</code>
+       * <code>repeated .atomspace.AtomRequest requests = 2;</code>
        */
       public org.opencog.atomspace.AtomSpaceProtos.AtomRequest.Builder addRequestsBuilder() {
         return getRequestsFieldBuilder().addBuilder(
             org.opencog.atomspace.AtomSpaceProtos.AtomRequest.getDefaultInstance());
       }
       /**
-       * <code>repeated .atomspace.AtomRequest requests = 1;</code>
+       * <code>repeated .atomspace.AtomRequest requests = 2;</code>
        */
       public org.opencog.atomspace.AtomSpaceProtos.AtomRequest.Builder addRequestsBuilder(
           int index) {
@@ -1737,7 +1864,7 @@ public final class AtomSpaceProtos {
             index, org.opencog.atomspace.AtomSpaceProtos.AtomRequest.getDefaultInstance());
       }
       /**
-       * <code>repeated .atomspace.AtomRequest requests = 1;</code>
+       * <code>repeated .atomspace.AtomRequest requests = 2;</code>
        */
       public java.util.List<org.opencog.atomspace.AtomSpaceProtos.AtomRequest.Builder> 
            getRequestsBuilderList() {
@@ -1750,7 +1877,7 @@ public final class AtomSpaceProtos {
           requestsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
               org.opencog.atomspace.AtomSpaceProtos.AtomRequest, org.opencog.atomspace.AtomSpaceProtos.AtomRequest.Builder, org.opencog.atomspace.AtomSpaceProtos.AtomRequestOrBuilder>(
                   requests_,
-                  ((bitField0_ & 0x00000001) == 0x00000001),
+                  ((bitField0_ & 0x00000002) == 0x00000002),
                   getParentForChildren(),
                   isClean());
           requests_ = null;
@@ -1822,19 +1949,19 @@ public final class AtomSpaceProtos {
     com.google.protobuf.ByteString
         getNodeNameBytes();
 
-    // repeated fixed64 handle_seq = 5;
+    // repeated fixed64 outgoing_set = 5;
     /**
-     * <code>repeated fixed64 handle_seq = 5;</code>
+     * <code>repeated fixed64 outgoing_set = 5;</code>
      */
-    java.util.List<java.lang.Long> getHandleSeqList();
+    java.util.List<java.lang.Long> getOutgoingSetList();
     /**
-     * <code>repeated fixed64 handle_seq = 5;</code>
+     * <code>repeated fixed64 outgoing_set = 5;</code>
      */
-    int getHandleSeqCount();
+    int getOutgoingSetCount();
     /**
-     * <code>repeated fixed64 handle_seq = 5;</code>
+     * <code>repeated fixed64 outgoing_set = 5;</code>
      */
-    long getHandleSeq(int index);
+    long getOutgoingSet(int index);
   }
   /**
    * Protobuf type {@code atomspace.AtomResult}
@@ -1915,21 +2042,21 @@ public final class AtomSpaceProtos {
             }
             case 41: {
               if (!((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
-                handleSeq_ = new java.util.ArrayList<java.lang.Long>();
+                outgoingSet_ = new java.util.ArrayList<java.lang.Long>();
                 mutable_bitField0_ |= 0x00000010;
               }
-              handleSeq_.add(input.readFixed64());
+              outgoingSet_.add(input.readFixed64());
               break;
             }
             case 42: {
               int length = input.readRawVarint32();
               int limit = input.pushLimit(length);
               if (!((mutable_bitField0_ & 0x00000010) == 0x00000010) && input.getBytesUntilLimit() > 0) {
-                handleSeq_ = new java.util.ArrayList<java.lang.Long>();
+                outgoingSet_ = new java.util.ArrayList<java.lang.Long>();
                 mutable_bitField0_ |= 0x00000010;
               }
               while (input.getBytesUntilLimit() > 0) {
-                handleSeq_.add(input.readFixed64());
+                outgoingSet_.add(input.readFixed64());
               }
               input.popLimit(limit);
               break;
@@ -1943,7 +2070,7 @@ public final class AtomSpaceProtos {
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
         if (((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
-          handleSeq_ = java.util.Collections.unmodifiableList(handleSeq_);
+          outgoingSet_ = java.util.Collections.unmodifiableList(outgoingSet_);
         }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -2210,27 +2337,27 @@ public final class AtomSpaceProtos {
       }
     }
 
-    // repeated fixed64 handle_seq = 5;
-    public static final int HANDLE_SEQ_FIELD_NUMBER = 5;
-    private java.util.List<java.lang.Long> handleSeq_;
+    // repeated fixed64 outgoing_set = 5;
+    public static final int OUTGOING_SET_FIELD_NUMBER = 5;
+    private java.util.List<java.lang.Long> outgoingSet_;
     /**
-     * <code>repeated fixed64 handle_seq = 5;</code>
+     * <code>repeated fixed64 outgoing_set = 5;</code>
      */
     public java.util.List<java.lang.Long>
-        getHandleSeqList() {
-      return handleSeq_;
+        getOutgoingSetList() {
+      return outgoingSet_;
     }
     /**
-     * <code>repeated fixed64 handle_seq = 5;</code>
+     * <code>repeated fixed64 outgoing_set = 5;</code>
      */
-    public int getHandleSeqCount() {
-      return handleSeq_.size();
+    public int getOutgoingSetCount() {
+      return outgoingSet_.size();
     }
     /**
-     * <code>repeated fixed64 handle_seq = 5;</code>
+     * <code>repeated fixed64 outgoing_set = 5;</code>
      */
-    public long getHandleSeq(int index) {
-      return handleSeq_.get(index);
+    public long getOutgoingSet(int index) {
+      return outgoingSet_.get(index);
     }
 
     private void initFields() {
@@ -2238,7 +2365,7 @@ public final class AtomSpaceProtos {
       uuid_ = 0L;
       atomType_ = "";
       nodeName_ = "";
-      handleSeq_ = java.util.Collections.emptyList();
+      outgoingSet_ = java.util.Collections.emptyList();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -2268,8 +2395,8 @@ public final class AtomSpaceProtos {
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeBytes(4, getNodeNameBytes());
       }
-      for (int i = 0; i < handleSeq_.size(); i++) {
-        output.writeFixed64(5, handleSeq_.get(i));
+      for (int i = 0; i < outgoingSet_.size(); i++) {
+        output.writeFixed64(5, outgoingSet_.get(i));
       }
       getUnknownFields().writeTo(output);
     }
@@ -2298,9 +2425,9 @@ public final class AtomSpaceProtos {
       }
       {
         int dataSize = 0;
-        dataSize = 8 * getHandleSeqList().size();
+        dataSize = 8 * getOutgoingSetList().size();
         size += dataSize;
-        size += 1 * getHandleSeqList().size();
+        size += 1 * getOutgoingSetList().size();
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -2426,7 +2553,7 @@ public final class AtomSpaceProtos {
         bitField0_ = (bitField0_ & ~0x00000004);
         nodeName_ = "";
         bitField0_ = (bitField0_ & ~0x00000008);
-        handleSeq_ = java.util.Collections.emptyList();
+        outgoingSet_ = java.util.Collections.emptyList();
         bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
@@ -2473,10 +2600,10 @@ public final class AtomSpaceProtos {
         }
         result.nodeName_ = nodeName_;
         if (((bitField0_ & 0x00000010) == 0x00000010)) {
-          handleSeq_ = java.util.Collections.unmodifiableList(handleSeq_);
+          outgoingSet_ = java.util.Collections.unmodifiableList(outgoingSet_);
           bitField0_ = (bitField0_ & ~0x00000010);
         }
-        result.handleSeq_ = handleSeq_;
+        result.outgoingSet_ = outgoingSet_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -2509,13 +2636,13 @@ public final class AtomSpaceProtos {
           nodeName_ = other.nodeName_;
           onChanged();
         }
-        if (!other.handleSeq_.isEmpty()) {
-          if (handleSeq_.isEmpty()) {
-            handleSeq_ = other.handleSeq_;
+        if (!other.outgoingSet_.isEmpty()) {
+          if (outgoingSet_.isEmpty()) {
+            outgoingSet_ = other.outgoingSet_;
             bitField0_ = (bitField0_ & ~0x00000010);
           } else {
-            ensureHandleSeqIsMutable();
-            handleSeq_.addAll(other.handleSeq_);
+            ensureOutgoingSetIsMutable();
+            outgoingSet_.addAll(other.outgoingSet_);
           }
           onChanged();
         }
@@ -2767,67 +2894,67 @@ public final class AtomSpaceProtos {
         return this;
       }
 
-      // repeated fixed64 handle_seq = 5;
-      private java.util.List<java.lang.Long> handleSeq_ = java.util.Collections.emptyList();
-      private void ensureHandleSeqIsMutable() {
+      // repeated fixed64 outgoing_set = 5;
+      private java.util.List<java.lang.Long> outgoingSet_ = java.util.Collections.emptyList();
+      private void ensureOutgoingSetIsMutable() {
         if (!((bitField0_ & 0x00000010) == 0x00000010)) {
-          handleSeq_ = new java.util.ArrayList<java.lang.Long>(handleSeq_);
+          outgoingSet_ = new java.util.ArrayList<java.lang.Long>(outgoingSet_);
           bitField0_ |= 0x00000010;
          }
       }
       /**
-       * <code>repeated fixed64 handle_seq = 5;</code>
+       * <code>repeated fixed64 outgoing_set = 5;</code>
        */
       public java.util.List<java.lang.Long>
-          getHandleSeqList() {
-        return java.util.Collections.unmodifiableList(handleSeq_);
+          getOutgoingSetList() {
+        return java.util.Collections.unmodifiableList(outgoingSet_);
       }
       /**
-       * <code>repeated fixed64 handle_seq = 5;</code>
+       * <code>repeated fixed64 outgoing_set = 5;</code>
        */
-      public int getHandleSeqCount() {
-        return handleSeq_.size();
+      public int getOutgoingSetCount() {
+        return outgoingSet_.size();
       }
       /**
-       * <code>repeated fixed64 handle_seq = 5;</code>
+       * <code>repeated fixed64 outgoing_set = 5;</code>
        */
-      public long getHandleSeq(int index) {
-        return handleSeq_.get(index);
+      public long getOutgoingSet(int index) {
+        return outgoingSet_.get(index);
       }
       /**
-       * <code>repeated fixed64 handle_seq = 5;</code>
+       * <code>repeated fixed64 outgoing_set = 5;</code>
        */
-      public Builder setHandleSeq(
+      public Builder setOutgoingSet(
           int index, long value) {
-        ensureHandleSeqIsMutable();
-        handleSeq_.set(index, value);
+        ensureOutgoingSetIsMutable();
+        outgoingSet_.set(index, value);
         onChanged();
         return this;
       }
       /**
-       * <code>repeated fixed64 handle_seq = 5;</code>
+       * <code>repeated fixed64 outgoing_set = 5;</code>
        */
-      public Builder addHandleSeq(long value) {
-        ensureHandleSeqIsMutable();
-        handleSeq_.add(value);
+      public Builder addOutgoingSet(long value) {
+        ensureOutgoingSetIsMutable();
+        outgoingSet_.add(value);
         onChanged();
         return this;
       }
       /**
-       * <code>repeated fixed64 handle_seq = 5;</code>
+       * <code>repeated fixed64 outgoing_set = 5;</code>
        */
-      public Builder addAllHandleSeq(
+      public Builder addAllOutgoingSet(
           java.lang.Iterable<? extends java.lang.Long> values) {
-        ensureHandleSeqIsMutable();
-        super.addAll(values, handleSeq_);
+        ensureOutgoingSetIsMutable();
+        super.addAll(values, outgoingSet_);
         onChanged();
         return this;
       }
       /**
-       * <code>repeated fixed64 handle_seq = 5;</code>
+       * <code>repeated fixed64 outgoing_set = 5;</code>
        */
-      public Builder clearHandleSeq() {
-        handleSeq_ = java.util.Collections.emptyList();
+      public Builder clearOutgoingSet() {
+        outgoingSet_ = java.util.Collections.emptyList();
         bitField0_ = (bitField0_ & ~0x00000010);
         onChanged();
         return this;
@@ -2842,6 +2969,907 @@ public final class AtomSpaceProtos {
     }
 
     // @@protoc_insertion_point(class_scope:atomspace.AtomResult)
+  }
+
+  public interface AtomsResultOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // required string correlation_id = 1;
+    /**
+     * <code>required string correlation_id = 1;</code>
+     *
+     * <pre>
+     * Usually UUID
+     * </pre>
+     */
+    boolean hasCorrelationId();
+    /**
+     * <code>required string correlation_id = 1;</code>
+     *
+     * <pre>
+     * Usually UUID
+     * </pre>
+     */
+    java.lang.String getCorrelationId();
+    /**
+     * <code>required string correlation_id = 1;</code>
+     *
+     * <pre>
+     * Usually UUID
+     * </pre>
+     */
+    com.google.protobuf.ByteString
+        getCorrelationIdBytes();
+
+    // repeated .atomspace.AtomResult results = 2;
+    /**
+     * <code>repeated .atomspace.AtomResult results = 2;</code>
+     */
+    java.util.List<org.opencog.atomspace.AtomSpaceProtos.AtomResult> 
+        getResultsList();
+    /**
+     * <code>repeated .atomspace.AtomResult results = 2;</code>
+     */
+    org.opencog.atomspace.AtomSpaceProtos.AtomResult getResults(int index);
+    /**
+     * <code>repeated .atomspace.AtomResult results = 2;</code>
+     */
+    int getResultsCount();
+    /**
+     * <code>repeated .atomspace.AtomResult results = 2;</code>
+     */
+    java.util.List<? extends org.opencog.atomspace.AtomSpaceProtos.AtomResultOrBuilder> 
+        getResultsOrBuilderList();
+    /**
+     * <code>repeated .atomspace.AtomResult results = 2;</code>
+     */
+    org.opencog.atomspace.AtomSpaceProtos.AtomResultOrBuilder getResultsOrBuilder(
+        int index);
+  }
+  /**
+   * Protobuf type {@code atomspace.AtomsResult}
+   */
+  public static final class AtomsResult extends
+      com.google.protobuf.GeneratedMessage
+      implements AtomsResultOrBuilder {
+    // Use AtomsResult.newBuilder() to construct.
+    private AtomsResult(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private AtomsResult(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final AtomsResult defaultInstance;
+    public static AtomsResult getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public AtomsResult getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private AtomsResult(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              correlationId_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                results_ = new java.util.ArrayList<org.opencog.atomspace.AtomSpaceProtos.AtomResult>();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              results_.add(input.readMessage(org.opencog.atomspace.AtomSpaceProtos.AtomResult.PARSER, extensionRegistry));
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+          results_ = java.util.Collections.unmodifiableList(results_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return org.opencog.atomspace.AtomSpaceProtos.internal_static_atomspace_AtomsResult_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return org.opencog.atomspace.AtomSpaceProtos.internal_static_atomspace_AtomsResult_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              org.opencog.atomspace.AtomSpaceProtos.AtomsResult.class, org.opencog.atomspace.AtomSpaceProtos.AtomsResult.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<AtomsResult> PARSER =
+        new com.google.protobuf.AbstractParser<AtomsResult>() {
+      public AtomsResult parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new AtomsResult(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<AtomsResult> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    // required string correlation_id = 1;
+    public static final int CORRELATION_ID_FIELD_NUMBER = 1;
+    private java.lang.Object correlationId_;
+    /**
+     * <code>required string correlation_id = 1;</code>
+     *
+     * <pre>
+     * Usually UUID
+     * </pre>
+     */
+    public boolean hasCorrelationId() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required string correlation_id = 1;</code>
+     *
+     * <pre>
+     * Usually UUID
+     * </pre>
+     */
+    public java.lang.String getCorrelationId() {
+      java.lang.Object ref = correlationId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          correlationId_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string correlation_id = 1;</code>
+     *
+     * <pre>
+     * Usually UUID
+     * </pre>
+     */
+    public com.google.protobuf.ByteString
+        getCorrelationIdBytes() {
+      java.lang.Object ref = correlationId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        correlationId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    // repeated .atomspace.AtomResult results = 2;
+    public static final int RESULTS_FIELD_NUMBER = 2;
+    private java.util.List<org.opencog.atomspace.AtomSpaceProtos.AtomResult> results_;
+    /**
+     * <code>repeated .atomspace.AtomResult results = 2;</code>
+     */
+    public java.util.List<org.opencog.atomspace.AtomSpaceProtos.AtomResult> getResultsList() {
+      return results_;
+    }
+    /**
+     * <code>repeated .atomspace.AtomResult results = 2;</code>
+     */
+    public java.util.List<? extends org.opencog.atomspace.AtomSpaceProtos.AtomResultOrBuilder> 
+        getResultsOrBuilderList() {
+      return results_;
+    }
+    /**
+     * <code>repeated .atomspace.AtomResult results = 2;</code>
+     */
+    public int getResultsCount() {
+      return results_.size();
+    }
+    /**
+     * <code>repeated .atomspace.AtomResult results = 2;</code>
+     */
+    public org.opencog.atomspace.AtomSpaceProtos.AtomResult getResults(int index) {
+      return results_.get(index);
+    }
+    /**
+     * <code>repeated .atomspace.AtomResult results = 2;</code>
+     */
+    public org.opencog.atomspace.AtomSpaceProtos.AtomResultOrBuilder getResultsOrBuilder(
+        int index) {
+      return results_.get(index);
+    }
+
+    private void initFields() {
+      correlationId_ = "";
+      results_ = java.util.Collections.emptyList();
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      if (!hasCorrelationId()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      for (int i = 0; i < getResultsCount(); i++) {
+        if (!getResults(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, getCorrelationIdBytes());
+      }
+      for (int i = 0; i < results_.size(); i++) {
+        output.writeMessage(2, results_.get(i));
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, getCorrelationIdBytes());
+      }
+      for (int i = 0; i < results_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, results_.get(i));
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static org.opencog.atomspace.AtomSpaceProtos.AtomsResult parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.opencog.atomspace.AtomSpaceProtos.AtomsResult parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.opencog.atomspace.AtomSpaceProtos.AtomsResult parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.opencog.atomspace.AtomSpaceProtos.AtomsResult parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.opencog.atomspace.AtomSpaceProtos.AtomsResult parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static org.opencog.atomspace.AtomSpaceProtos.AtomsResult parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static org.opencog.atomspace.AtomSpaceProtos.AtomsResult parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static org.opencog.atomspace.AtomSpaceProtos.AtomsResult parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static org.opencog.atomspace.AtomSpaceProtos.AtomsResult parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static org.opencog.atomspace.AtomSpaceProtos.AtomsResult parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(org.opencog.atomspace.AtomSpaceProtos.AtomsResult prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code atomspace.AtomsResult}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements org.opencog.atomspace.AtomSpaceProtos.AtomsResultOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.opencog.atomspace.AtomSpaceProtos.internal_static_atomspace_AtomsResult_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.opencog.atomspace.AtomSpaceProtos.internal_static_atomspace_AtomsResult_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.opencog.atomspace.AtomSpaceProtos.AtomsResult.class, org.opencog.atomspace.AtomSpaceProtos.AtomsResult.Builder.class);
+      }
+
+      // Construct using org.opencog.atomspace.AtomSpaceProtos.AtomsResult.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getResultsFieldBuilder();
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        correlationId_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        if (resultsBuilder_ == null) {
+          results_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000002);
+        } else {
+          resultsBuilder_.clear();
+        }
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return org.opencog.atomspace.AtomSpaceProtos.internal_static_atomspace_AtomsResult_descriptor;
+      }
+
+      public org.opencog.atomspace.AtomSpaceProtos.AtomsResult getDefaultInstanceForType() {
+        return org.opencog.atomspace.AtomSpaceProtos.AtomsResult.getDefaultInstance();
+      }
+
+      public org.opencog.atomspace.AtomSpaceProtos.AtomsResult build() {
+        org.opencog.atomspace.AtomSpaceProtos.AtomsResult result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public org.opencog.atomspace.AtomSpaceProtos.AtomsResult buildPartial() {
+        org.opencog.atomspace.AtomSpaceProtos.AtomsResult result = new org.opencog.atomspace.AtomSpaceProtos.AtomsResult(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.correlationId_ = correlationId_;
+        if (resultsBuilder_ == null) {
+          if (((bitField0_ & 0x00000002) == 0x00000002)) {
+            results_ = java.util.Collections.unmodifiableList(results_);
+            bitField0_ = (bitField0_ & ~0x00000002);
+          }
+          result.results_ = results_;
+        } else {
+          result.results_ = resultsBuilder_.build();
+        }
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof org.opencog.atomspace.AtomSpaceProtos.AtomsResult) {
+          return mergeFrom((org.opencog.atomspace.AtomSpaceProtos.AtomsResult)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(org.opencog.atomspace.AtomSpaceProtos.AtomsResult other) {
+        if (other == org.opencog.atomspace.AtomSpaceProtos.AtomsResult.getDefaultInstance()) return this;
+        if (other.hasCorrelationId()) {
+          bitField0_ |= 0x00000001;
+          correlationId_ = other.correlationId_;
+          onChanged();
+        }
+        if (resultsBuilder_ == null) {
+          if (!other.results_.isEmpty()) {
+            if (results_.isEmpty()) {
+              results_ = other.results_;
+              bitField0_ = (bitField0_ & ~0x00000002);
+            } else {
+              ensureResultsIsMutable();
+              results_.addAll(other.results_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.results_.isEmpty()) {
+            if (resultsBuilder_.isEmpty()) {
+              resultsBuilder_.dispose();
+              resultsBuilder_ = null;
+              results_ = other.results_;
+              bitField0_ = (bitField0_ & ~0x00000002);
+              resultsBuilder_ = 
+                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                   getResultsFieldBuilder() : null;
+            } else {
+              resultsBuilder_.addAllMessages(other.results_);
+            }
+          }
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasCorrelationId()) {
+          
+          return false;
+        }
+        for (int i = 0; i < getResultsCount(); i++) {
+          if (!getResults(i).isInitialized()) {
+            
+            return false;
+          }
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        org.opencog.atomspace.AtomSpaceProtos.AtomsResult parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (org.opencog.atomspace.AtomSpaceProtos.AtomsResult) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // required string correlation_id = 1;
+      private java.lang.Object correlationId_ = "";
+      /**
+       * <code>required string correlation_id = 1;</code>
+       *
+       * <pre>
+       * Usually UUID
+       * </pre>
+       */
+      public boolean hasCorrelationId() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required string correlation_id = 1;</code>
+       *
+       * <pre>
+       * Usually UUID
+       * </pre>
+       */
+      public java.lang.String getCorrelationId() {
+        java.lang.Object ref = correlationId_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          correlationId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>required string correlation_id = 1;</code>
+       *
+       * <pre>
+       * Usually UUID
+       * </pre>
+       */
+      public com.google.protobuf.ByteString
+          getCorrelationIdBytes() {
+        java.lang.Object ref = correlationId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          correlationId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string correlation_id = 1;</code>
+       *
+       * <pre>
+       * Usually UUID
+       * </pre>
+       */
+      public Builder setCorrelationId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        correlationId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string correlation_id = 1;</code>
+       *
+       * <pre>
+       * Usually UUID
+       * </pre>
+       */
+      public Builder clearCorrelationId() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        correlationId_ = getDefaultInstance().getCorrelationId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string correlation_id = 1;</code>
+       *
+       * <pre>
+       * Usually UUID
+       * </pre>
+       */
+      public Builder setCorrelationIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        correlationId_ = value;
+        onChanged();
+        return this;
+      }
+
+      // repeated .atomspace.AtomResult results = 2;
+      private java.util.List<org.opencog.atomspace.AtomSpaceProtos.AtomResult> results_ =
+        java.util.Collections.emptyList();
+      private void ensureResultsIsMutable() {
+        if (!((bitField0_ & 0x00000002) == 0x00000002)) {
+          results_ = new java.util.ArrayList<org.opencog.atomspace.AtomSpaceProtos.AtomResult>(results_);
+          bitField0_ |= 0x00000002;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilder<
+          org.opencog.atomspace.AtomSpaceProtos.AtomResult, org.opencog.atomspace.AtomSpaceProtos.AtomResult.Builder, org.opencog.atomspace.AtomSpaceProtos.AtomResultOrBuilder> resultsBuilder_;
+
+      /**
+       * <code>repeated .atomspace.AtomResult results = 2;</code>
+       */
+      public java.util.List<org.opencog.atomspace.AtomSpaceProtos.AtomResult> getResultsList() {
+        if (resultsBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(results_);
+        } else {
+          return resultsBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .atomspace.AtomResult results = 2;</code>
+       */
+      public int getResultsCount() {
+        if (resultsBuilder_ == null) {
+          return results_.size();
+        } else {
+          return resultsBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .atomspace.AtomResult results = 2;</code>
+       */
+      public org.opencog.atomspace.AtomSpaceProtos.AtomResult getResults(int index) {
+        if (resultsBuilder_ == null) {
+          return results_.get(index);
+        } else {
+          return resultsBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .atomspace.AtomResult results = 2;</code>
+       */
+      public Builder setResults(
+          int index, org.opencog.atomspace.AtomSpaceProtos.AtomResult value) {
+        if (resultsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureResultsIsMutable();
+          results_.set(index, value);
+          onChanged();
+        } else {
+          resultsBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .atomspace.AtomResult results = 2;</code>
+       */
+      public Builder setResults(
+          int index, org.opencog.atomspace.AtomSpaceProtos.AtomResult.Builder builderForValue) {
+        if (resultsBuilder_ == null) {
+          ensureResultsIsMutable();
+          results_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          resultsBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .atomspace.AtomResult results = 2;</code>
+       */
+      public Builder addResults(org.opencog.atomspace.AtomSpaceProtos.AtomResult value) {
+        if (resultsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureResultsIsMutable();
+          results_.add(value);
+          onChanged();
+        } else {
+          resultsBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .atomspace.AtomResult results = 2;</code>
+       */
+      public Builder addResults(
+          int index, org.opencog.atomspace.AtomSpaceProtos.AtomResult value) {
+        if (resultsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureResultsIsMutable();
+          results_.add(index, value);
+          onChanged();
+        } else {
+          resultsBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .atomspace.AtomResult results = 2;</code>
+       */
+      public Builder addResults(
+          org.opencog.atomspace.AtomSpaceProtos.AtomResult.Builder builderForValue) {
+        if (resultsBuilder_ == null) {
+          ensureResultsIsMutable();
+          results_.add(builderForValue.build());
+          onChanged();
+        } else {
+          resultsBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .atomspace.AtomResult results = 2;</code>
+       */
+      public Builder addResults(
+          int index, org.opencog.atomspace.AtomSpaceProtos.AtomResult.Builder builderForValue) {
+        if (resultsBuilder_ == null) {
+          ensureResultsIsMutable();
+          results_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          resultsBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .atomspace.AtomResult results = 2;</code>
+       */
+      public Builder addAllResults(
+          java.lang.Iterable<? extends org.opencog.atomspace.AtomSpaceProtos.AtomResult> values) {
+        if (resultsBuilder_ == null) {
+          ensureResultsIsMutable();
+          super.addAll(values, results_);
+          onChanged();
+        } else {
+          resultsBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .atomspace.AtomResult results = 2;</code>
+       */
+      public Builder clearResults() {
+        if (resultsBuilder_ == null) {
+          results_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000002);
+          onChanged();
+        } else {
+          resultsBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .atomspace.AtomResult results = 2;</code>
+       */
+      public Builder removeResults(int index) {
+        if (resultsBuilder_ == null) {
+          ensureResultsIsMutable();
+          results_.remove(index);
+          onChanged();
+        } else {
+          resultsBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .atomspace.AtomResult results = 2;</code>
+       */
+      public org.opencog.atomspace.AtomSpaceProtos.AtomResult.Builder getResultsBuilder(
+          int index) {
+        return getResultsFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .atomspace.AtomResult results = 2;</code>
+       */
+      public org.opencog.atomspace.AtomSpaceProtos.AtomResultOrBuilder getResultsOrBuilder(
+          int index) {
+        if (resultsBuilder_ == null) {
+          return results_.get(index);  } else {
+          return resultsBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .atomspace.AtomResult results = 2;</code>
+       */
+      public java.util.List<? extends org.opencog.atomspace.AtomSpaceProtos.AtomResultOrBuilder> 
+           getResultsOrBuilderList() {
+        if (resultsBuilder_ != null) {
+          return resultsBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(results_);
+        }
+      }
+      /**
+       * <code>repeated .atomspace.AtomResult results = 2;</code>
+       */
+      public org.opencog.atomspace.AtomSpaceProtos.AtomResult.Builder addResultsBuilder() {
+        return getResultsFieldBuilder().addBuilder(
+            org.opencog.atomspace.AtomSpaceProtos.AtomResult.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .atomspace.AtomResult results = 2;</code>
+       */
+      public org.opencog.atomspace.AtomSpaceProtos.AtomResult.Builder addResultsBuilder(
+          int index) {
+        return getResultsFieldBuilder().addBuilder(
+            index, org.opencog.atomspace.AtomSpaceProtos.AtomResult.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .atomspace.AtomResult results = 2;</code>
+       */
+      public java.util.List<org.opencog.atomspace.AtomSpaceProtos.AtomResult.Builder> 
+           getResultsBuilderList() {
+        return getResultsFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilder<
+          org.opencog.atomspace.AtomSpaceProtos.AtomResult, org.opencog.atomspace.AtomSpaceProtos.AtomResult.Builder, org.opencog.atomspace.AtomSpaceProtos.AtomResultOrBuilder> 
+          getResultsFieldBuilder() {
+        if (resultsBuilder_ == null) {
+          resultsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+              org.opencog.atomspace.AtomSpaceProtos.AtomResult, org.opencog.atomspace.AtomSpaceProtos.AtomResult.Builder, org.opencog.atomspace.AtomSpaceProtos.AtomResultOrBuilder>(
+                  results_,
+                  ((bitField0_ & 0x00000002) == 0x00000002),
+                  getParentForChildren(),
+                  isClean());
+          results_ = null;
+        }
+        return resultsBuilder_;
+      }
+
+      // @@protoc_insertion_point(builder_scope:atomspace.AtomsResult)
+    }
+
+    static {
+      defaultInstance = new AtomsResult(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:atomspace.AtomsResult)
   }
 
   private static com.google.protobuf.Descriptors.Descriptor
@@ -2859,6 +3887,11 @@ public final class AtomSpaceProtos {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_atomspace_AtomResult_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_atomspace_AtomsResult_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_atomspace_AtomsResult_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -2873,14 +3906,17 @@ public final class AtomSpaceProtos {
       "st.AtomRequestKind\022\014\n\004uuid\030\002 \001(\006\022\021\n\tatom" +
       "_type\030\003 \001(\t\022\021\n\tnode_name\030\004 \001(\t\022\022\n\nhandle" +
       "_seq\030\005 \003(\006\"/\n\017AtomRequestKind\022\010\n\004UUID\020\000\022" +
-      "\010\n\004NODE\020\001\022\010\n\004LINK\020\002\"8\n\014AtomsRequest\022(\n\010r" +
-      "equests\030\001 \003(\0132\026.atomspace.AtomRequest\"\265\001" +
-      "\n\nAtomResult\022.\n\004kind\030\001 \002(\0162 .atomspace.A" +
-      "tomResult.ResultKind\022\014\n\004uuid\030\002 \001(\006\022\021\n\tat" +
-      "om_type\030\003 \001(\t\022\021\n\tnode_name\030\004 \001(\t\022\022\n\nhand",
-      "le_seq\030\005 \003(\006\"/\n\nResultKind\022\r\n\tNOT_FOUND\020" +
-      "\000\022\010\n\004NODE\020\001\022\010\n\004LINK\020\002B(\n\025org.opencog.ato" +
-      "mspaceB\017AtomSpaceProtos"
+      "\010\n\004NODE\020\001\022\010\n\004LINK\020\002\"P\n\014AtomsRequest\022\026\n\016c" +
+      "orrelation_id\030\001 \002(\014\022(\n\010requests\030\002 \003(\0132\026." +
+      "atomspace.AtomRequest\"\267\001\n\nAtomResult\022.\n\004" +
+      "kind\030\001 \002(\0162 .atomspace.AtomResult.Result" +
+      "Kind\022\014\n\004uuid\030\002 \001(\006\022\021\n\tatom_type\030\003 \001(\t\022\021\n",
+      "\tnode_name\030\004 \001(\t\022\024\n\014outgoing_set\030\005 \003(\006\"/" +
+      "\n\nResultKind\022\r\n\tNOT_FOUND\020\000\022\010\n\004NODE\020\001\022\010\n" +
+      "\004LINK\020\002\"M\n\013AtomsResult\022\026\n\016correlation_id" +
+      "\030\001 \002(\t\022&\n\007results\030\002 \003(\0132\025.atomspace.Atom" +
+      "ResultB(\n\025org.opencog.atomspaceB\017AtomSpa" +
+      "ceProtos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -2898,13 +3934,19 @@ public final class AtomSpaceProtos {
           internal_static_atomspace_AtomsRequest_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_atomspace_AtomsRequest_descriptor,
-              new java.lang.String[] { "Requests", });
+              new java.lang.String[] { "CorrelationId", "Requests", });
           internal_static_atomspace_AtomResult_descriptor =
             getDescriptor().getMessageTypes().get(2);
           internal_static_atomspace_AtomResult_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_atomspace_AtomResult_descriptor,
-              new java.lang.String[] { "Kind", "Uuid", "AtomType", "NodeName", "HandleSeq", });
+              new java.lang.String[] { "Kind", "Uuid", "AtomType", "NodeName", "OutgoingSet", });
+          internal_static_atomspace_AtomsResult_descriptor =
+            getDescriptor().getMessageTypes().get(3);
+          internal_static_atomspace_AtomsResult_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_atomspace_AtomsResult_descriptor,
+              new java.lang.String[] { "CorrelationId", "Results", });
           return null;
         }
       };

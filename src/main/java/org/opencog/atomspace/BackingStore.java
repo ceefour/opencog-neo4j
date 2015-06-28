@@ -1,4 +1,4 @@
-package org.opencog.neo4j;
+package org.opencog.atomspace;
 
 import java.util.List;
 import java.util.Optional;

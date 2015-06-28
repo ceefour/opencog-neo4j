@@ -1,4 +1,4 @@
-package org.opencog.neo4j;
+package org.opencog.atomspace;
 
 /**
  * Represents an <a href="http://wiki.opencog.org/w/Atom">Atom</a> handle in the {@link AtomSpace}.

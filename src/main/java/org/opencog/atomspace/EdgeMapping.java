@@ -1,4 +1,4 @@
-package org.opencog.neo4j;
+package org.opencog.atomspace;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;

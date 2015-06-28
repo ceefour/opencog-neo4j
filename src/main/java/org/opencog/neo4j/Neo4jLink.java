@@ -3,6 +3,9 @@ package org.opencog.neo4j;
 import com.google.common.collect.ImmutableList;
 import org.neo4j.graphdb.*;
 import org.neo4j.graphdb.Node;
+import org.opencog.atomspace.AtomType;
+import org.opencog.atomspace.Handle;
+import org.opencog.atomspace.Link;
 
 import javax.annotation.Nullable;
 
