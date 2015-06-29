@@ -1,18 +1,17 @@
 package org.opencog.neo4j;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
-import org.opencog.neo4j.camel.AtomSpaceCamelConfiguration;
-import org.opencog.neo4j.camel.AtomSpaceRouteConfig;
+import org.opencog.atomspace.Atom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 
@@ -22,6 +21,7 @@ import javax.inject.Inject;
  * Runs {@link org.opencog.neo4j.camel.AtomSpaceRouteConfig}.
  */
 @SpringBootApplication
+@ComponentScan(basePackageClasses = {ZeroMqApp.class, Atom.class})
 //@Configuration
 //@Import({AtomSpaceCamelConfiguration.class, AtomSpaceRouteConfig.class})
 @Profile("zeromqapp")
@@ -32,9 +32,11 @@ public class ZeroMqApp implements CommandLineRunner {
 
     public static void main(String[] args) {
         ZeroMqApp.args = args;
+        Preconditions.checkArgument(args.length >= 1, "Argument required: NEO4J_DB_LOCATION");
+        final String dbLocation = args[0];
         new SpringApplicationBuilder(ZeroMqApp.class)
-                .properties(ImmutableMap.of("org.neo4j.server.database.location", args[0]))
-                .profiles("zeromqapp", "camel")
+                .properties(ImmutableMap.of("org.neo4j.server.database.location", dbLocation))
+                .profiles("zeromqapp", "camel", "zeromqstore")
                 .web(false)
                 .run(args);
     }

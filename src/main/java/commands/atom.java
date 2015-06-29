@@ -21,7 +21,7 @@ public class atom {
     public void get(@Usage("Atom handle UUID") @Required @Argument long uuid,
                      InvocationContext context) {
         final ApplicationContext appCtx = (ApplicationContext) context.getAttributes().get("spring.beanfactory");
-        final GraphBackingStore backingStore = appCtx.getBean(GraphBackingStore.class);
+        final GraphBackingStore backingStore = appCtx.getBean("zmqGraphBackingStore", GraphBackingStore.class);
         final GenericHandle handle = new GenericHandle(uuid);
         final Optional<Atom> atom = backingStore.getAtom(handle);
         atom.ifPresent(it -> System.out.println(it));

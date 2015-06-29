@@ -2974,32 +2974,23 @@ public final class AtomSpaceProtos {
   public interface AtomsResultOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // required string correlation_id = 1;
+    // required bytes correlation_id = 1;
     /**
-     * <code>required string correlation_id = 1;</code>
+     * <code>required bytes correlation_id = 1;</code>
      *
      * <pre>
-     * Usually UUID
+     * 128-bit UUID
      * </pre>
      */
     boolean hasCorrelationId();
     /**
-     * <code>required string correlation_id = 1;</code>
+     * <code>required bytes correlation_id = 1;</code>
      *
      * <pre>
-     * Usually UUID
+     * 128-bit UUID
      * </pre>
      */
-    java.lang.String getCorrelationId();
-    /**
-     * <code>required string correlation_id = 1;</code>
-     *
-     * <pre>
-     * Usually UUID
-     * </pre>
-     */
-    com.google.protobuf.ByteString
-        getCorrelationIdBytes();
+    com.google.protobuf.ByteString getCorrelationId();
 
     // repeated .atomspace.AtomResult results = 2;
     /**
@@ -3133,59 +3124,28 @@ public final class AtomSpaceProtos {
     }
 
     private int bitField0_;
-    // required string correlation_id = 1;
+    // required bytes correlation_id = 1;
     public static final int CORRELATION_ID_FIELD_NUMBER = 1;
-    private java.lang.Object correlationId_;
+    private com.google.protobuf.ByteString correlationId_;
     /**
-     * <code>required string correlation_id = 1;</code>
+     * <code>required bytes correlation_id = 1;</code>
      *
      * <pre>
-     * Usually UUID
+     * 128-bit UUID
      * </pre>
      */
     public boolean hasCorrelationId() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>required string correlation_id = 1;</code>
+     * <code>required bytes correlation_id = 1;</code>
      *
      * <pre>
-     * Usually UUID
+     * 128-bit UUID
      * </pre>
      */
-    public java.lang.String getCorrelationId() {
-      java.lang.Object ref = correlationId_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          correlationId_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>required string correlation_id = 1;</code>
-     *
-     * <pre>
-     * Usually UUID
-     * </pre>
-     */
-    public com.google.protobuf.ByteString
-        getCorrelationIdBytes() {
-      java.lang.Object ref = correlationId_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        correlationId_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+    public com.google.protobuf.ByteString getCorrelationId() {
+      return correlationId_;
     }
 
     // repeated .atomspace.AtomResult results = 2;
@@ -3225,7 +3185,7 @@ public final class AtomSpaceProtos {
     }
 
     private void initFields() {
-      correlationId_ = "";
+      correlationId_ = com.google.protobuf.ByteString.EMPTY;
       results_ = java.util.Collections.emptyList();
     }
     private byte memoizedIsInitialized = -1;
@@ -3251,7 +3211,7 @@ public final class AtomSpaceProtos {
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeBytes(1, getCorrelationIdBytes());
+        output.writeBytes(1, correlationId_);
       }
       for (int i = 0; i < results_.size(); i++) {
         output.writeMessage(2, results_.get(i));
@@ -3267,7 +3227,7 @@ public final class AtomSpaceProtos {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(1, getCorrelationIdBytes());
+          .computeBytesSize(1, correlationId_);
       }
       for (int i = 0; i < results_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
@@ -3390,7 +3350,7 @@ public final class AtomSpaceProtos {
 
       public Builder clear() {
         super.clear();
-        correlationId_ = "";
+        correlationId_ = com.google.protobuf.ByteString.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000001);
         if (resultsBuilder_ == null) {
           results_ = java.util.Collections.emptyList();
@@ -3456,9 +3416,7 @@ public final class AtomSpaceProtos {
       public Builder mergeFrom(org.opencog.atomspace.AtomSpaceProtos.AtomsResult other) {
         if (other == org.opencog.atomspace.AtomSpaceProtos.AtomsResult.getDefaultInstance()) return this;
         if (other.hasCorrelationId()) {
-          bitField0_ |= 0x00000001;
-          correlationId_ = other.correlationId_;
-          onChanged();
+          setCorrelationId(other.getCorrelationId());
         }
         if (resultsBuilder_ == null) {
           if (!other.results_.isEmpty()) {
@@ -3523,65 +3481,36 @@ public final class AtomSpaceProtos {
       }
       private int bitField0_;
 
-      // required string correlation_id = 1;
-      private java.lang.Object correlationId_ = "";
+      // required bytes correlation_id = 1;
+      private com.google.protobuf.ByteString correlationId_ = com.google.protobuf.ByteString.EMPTY;
       /**
-       * <code>required string correlation_id = 1;</code>
+       * <code>required bytes correlation_id = 1;</code>
        *
        * <pre>
-       * Usually UUID
+       * 128-bit UUID
        * </pre>
        */
       public boolean hasCorrelationId() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>required string correlation_id = 1;</code>
+       * <code>required bytes correlation_id = 1;</code>
        *
        * <pre>
-       * Usually UUID
+       * 128-bit UUID
        * </pre>
        */
-      public java.lang.String getCorrelationId() {
-        java.lang.Object ref = correlationId_;
-        if (!(ref instanceof java.lang.String)) {
-          java.lang.String s = ((com.google.protobuf.ByteString) ref)
-              .toStringUtf8();
-          correlationId_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
+      public com.google.protobuf.ByteString getCorrelationId() {
+        return correlationId_;
       }
       /**
-       * <code>required string correlation_id = 1;</code>
+       * <code>required bytes correlation_id = 1;</code>
        *
        * <pre>
-       * Usually UUID
+       * 128-bit UUID
        * </pre>
        */
-      public com.google.protobuf.ByteString
-          getCorrelationIdBytes() {
-        java.lang.Object ref = correlationId_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          correlationId_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>required string correlation_id = 1;</code>
-       *
-       * <pre>
-       * Usually UUID
-       * </pre>
-       */
-      public Builder setCorrelationId(
-          java.lang.String value) {
+      public Builder setCorrelationId(com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -3591,32 +3520,15 @@ public final class AtomSpaceProtos {
         return this;
       }
       /**
-       * <code>required string correlation_id = 1;</code>
+       * <code>required bytes correlation_id = 1;</code>
        *
        * <pre>
-       * Usually UUID
+       * 128-bit UUID
        * </pre>
        */
       public Builder clearCorrelationId() {
         bitField0_ = (bitField0_ & ~0x00000001);
         correlationId_ = getDefaultInstance().getCorrelationId();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string correlation_id = 1;</code>
-       *
-       * <pre>
-       * Usually UUID
-       * </pre>
-       */
-      public Builder setCorrelationIdBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        correlationId_ = value;
         onChanged();
         return this;
       }
@@ -3914,7 +3826,7 @@ public final class AtomSpaceProtos {
       "\tnode_name\030\004 \001(\t\022\024\n\014outgoing_set\030\005 \003(\006\"/" +
       "\n\nResultKind\022\r\n\tNOT_FOUND\020\000\022\010\n\004NODE\020\001\022\010\n" +
       "\004LINK\020\002\"M\n\013AtomsResult\022\026\n\016correlation_id" +
-      "\030\001 \002(\t\022&\n\007results\030\002 \003(\0132\025.atomspace.Atom" +
+      "\030\001 \002(\014\022&\n\007results\030\002 \003(\0132\025.atomspace.Atom" +
       "ResultB(\n\025org.opencog.atomspaceB\017AtomSpa" +
       "ceProtos"
     };

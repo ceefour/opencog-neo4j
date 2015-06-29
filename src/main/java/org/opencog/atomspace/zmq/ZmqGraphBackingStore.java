@@ -11,6 +11,7 @@ import org.opencog.atomspace.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -28,11 +29,13 @@ import java.util.stream.Collectors;
  * Proxies {@link GraphBackingStore} calls through ZeroMQ.
  */
 @Service
-@Profile("zeromqclient")
+@Profile({"clientapp", "zeromqstore"})
 public class ZmqGraphBackingStore implements GraphBackingStore, AutoCloseable {
 
     private static final Logger log = LoggerFactory.getLogger(ZmqGraphBackingStore.class);
 
+    @Inject
+    private Environment env;
     @Inject
     private CamelContext camelContext;
     private ProducerTemplate producerTemplate;
@@ -45,7 +48,10 @@ public class ZmqGraphBackingStore implements GraphBackingStore, AutoCloseable {
     public void init() throws Exception {
         executorService = MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
         producerTemplate = camelContext.createProducerTemplate();
-        producerTemplate.setDefaultEndpointUri("zeromq:tcp://127.0.0.1:5555?messageConvertor=org.opencog.atomspace.ProtoMessageConvertor&socketType=PUSH&topics=atomspace.neo4j");
+        final String zmqHost = env.getRequiredProperty("zeromq.host");
+        final int zmqPort = env.getRequiredProperty("zeromq.port", Integer.class);
+        final String zmqTopic = env.getRequiredProperty("zeromq.topic");
+        producerTemplate.setDefaultEndpointUri("zeromq:tcp://" + zmqHost + ":" + zmqPort + "?messageConvertor=org.opencog.atomspace.ProtoMessageConvertor&socketType=PUSH&topics=" + zmqTopic);
     }
 
     @PreDestroy
@@ -58,7 +64,7 @@ public class ZmqGraphBackingStore implements GraphBackingStore, AutoCloseable {
 
     @Handler
     public void handleMessage(@Body AtomSpaceProtos.AtomsResult atomsResult) {
-        final UUID correlationId = UUID.fromString(atomsResult.getCorrelationId());
+        final UUID correlationId = UuidUtils.fromByteArray(atomsResult.getCorrelationId().toByteArray());
         final SettableFuture<GeneratedMessage> pending = pendings.get(correlationId);
         if (pending != null) {
             pendings.remove(correlationId);
@@ -123,7 +129,7 @@ public class ZmqGraphBackingStore implements GraphBackingStore, AutoCloseable {
         final UUID correlationId = UUID.randomUUID();
         pendings.put(correlationId, (SettableFuture) msgFuture);
         final AtomSpaceProtos.AtomsRequest reqs = AtomSpaceProtos.AtomsRequest.newBuilder()
-                .setCorrelationId(ByteString.copyFromUtf8(correlationId.toString()))
+                .setCorrelationId(ByteString.copyFrom(UuidUtils.toByteArray(correlationId)))
                 .addRequests(req)
                 .build();
         producerTemplate.sendBody(reqs);

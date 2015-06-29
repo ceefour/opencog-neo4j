@@ -41,6 +41,6 @@ message AtomResult {
 }
 
 message AtomsResult {
-    required string correlation_id = 1; // Usually UUID
+    required bytes correlation_id = 1; // 128-bit UUID
     repeated AtomResult results = 2;
 }

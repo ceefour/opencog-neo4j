@@ -8,7 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.env.Environment;
 
+import javax.inject.Inject;
 import java.util.UUID;
 
 /**
@@ -20,12 +22,18 @@ public class AtomSpaceRouteConfig {
 
     private static final Logger log = LoggerFactory.getLogger(AtomSpaceRouteConfig.class);
 
+    @Inject
+    private Environment env;
+
     @Bean
     public RouteBuilder neo4jPullRouteBuilder() {
+        final String zmqHost = env.getRequiredProperty("zeromq.host");
+        final int zmqPort = env.getRequiredProperty("zeromq.port", Integer.class);
+        final String zmqTopic = env.getRequiredProperty("zeromq.topic");
         return new RouteBuilder() {
             @Override
             public void configure() throws Exception {
-                from("zeromq:tcp://127.0.0.1:5555?socketType=PULL&topics=atomspace.neo4j")
+                from("zeromq:tcp://" + zmqHost + ":" + zmqPort + "?socketType=PULL&topics=" + zmqTopic)
                         .to("log:atomspace-in?showAll=true&multiline=true")
                         .process((Exchange xc) -> {
                             final byte[] bytes = (byte[]) xc.getIn().getBody();
@@ -36,8 +44,11 @@ public class AtomSpaceRouteConfig {
         };
     }
 
-    @Bean
+    //@Bean
     public RouteBuilder timerRouteBuilder() {
+        final String zmqHost = env.getRequiredProperty("zeromq.host");
+        final int zmqPort = env.getRequiredProperty("zeromq.port", Integer.class);
+        final String zmqTopic = env.getRequiredProperty("zeromq.topic");
         return new RouteBuilder() {
             @Override
             public void configure() throws Exception {
@@ -52,7 +63,7 @@ public class AtomSpaceRouteConfig {
                             final AtomSpaceProtos.AtomsRequest reqs = AtomSpaceProtos.AtomsRequest.newBuilder().addRequests(req).build();
                             it.getIn().setBody(reqs);
                         })
-                        .to("zeromq:tcp://127.0.0.1:5555?messageConvertor=org.opencog.atomspace.ProtoMessageConvertor&socketType=PUSH&topics=atomspace.neo4j")
+                        .to("zeromq:tcp://" + zmqHost + ":" + zmqPort + "?messageConvertor=org.opencog.atomspace.ProtoMessageConvertor&socketType=PUSH&topics=" + zmqTopic)
                         .to("log:timer-to-atomspace?showAll=true&multiline=true");
             }
         };

@@ -23,7 +23,7 @@ public class node {
                     @Usage("Node name") @Required @Argument String nodeName,
                      InvocationContext context) {
         final ApplicationContext appCtx = (ApplicationContext) context.getAttributes().get("spring.beanfactory");
-        final GraphBackingStore backingStore = appCtx.getBean(GraphBackingStore.class);
+        final GraphBackingStore backingStore = appCtx.getBean("zmqGraphBackingStore", GraphBackingStore.class);
         final AtomType atomType = AtomType.valueOf(CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, atomTypeName));
         final Optional<Node> node = backingStore.getNode(atomType, nodeName);
         node.ifPresent(it -> System.out.println(it));
