@@ -53,6 +53,8 @@ public enum AtomType {
         return graphLabel;
     }
 
+    public String toUpperCamel() { return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, name()); }
+
     public List<EdgeMapping> getEdgeMappings(int outgoingCount) {
         final ImmutableList.Builder<EdgeMapping> mappingb = ImmutableList.builder();
         if (this == EVALUATION_LINK) {

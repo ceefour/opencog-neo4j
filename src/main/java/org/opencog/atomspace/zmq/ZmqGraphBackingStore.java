@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
@@ -81,7 +82,56 @@ public class ZmqGraphBackingStore implements GraphBackingStore, AutoCloseable {
 
     @Override
     public Optional<Node> getNode(AtomType type, String name) {
-        throw new UnsupportedOperationException();
+        try {
+            return getNodeAsync(type, name).get();
+        } catch (Exception e) {
+            throw new AtomSpaceException(e, "Cannot get node %s/%s", type, name);
+        }
+    }
+
+    @Override
+    public ListenableFuture<Optional<Node>> getNodeAsync(AtomType type, String name) {
+        final SettableFuture<Optional<Node>> nodeFuture = SettableFuture.create();
+        final SettableFuture<AtomSpaceProtos.AtomsResult> msgFuture = SettableFuture.create();
+        Futures.addCallback(msgFuture, new FutureCallback<AtomSpaceProtos.AtomsResult>() {
+            @Override
+            public void onSuccess(AtomSpaceProtos.AtomsResult result) {
+                final AtomSpaceProtos.AtomResult first = result.getResults(0);
+                switch (first.getKind()) {
+                    case NOT_FOUND:
+                        nodeFuture.set(Optional.empty());
+                        break;
+                    case NODE:
+                        nodeFuture.set(Optional.of(new Node(AtomType.forUpperCamel(first.getAtomType()), first.getNodeName())));
+                        break;
+                    case LINK:
+                        final List<GenericHandle> outgoingSet = first.getOutgoingSetList().stream().map(it -> new GenericHandle(it))
+                                .collect(Collectors.toList());
+                        final Link link = new Link(AtomType.forUpperCamel(first.getAtomType()), outgoingSet);
+                        throw new IllegalStateException("Expected node, but got link " + link);
+                    default:
+                        throw new IllegalArgumentException("Unknown AtomResult kind: " + first.getKind());
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                nodeFuture.setException(t);
+            }
+        });
+        final AtomSpaceProtos.AtomRequest req = AtomSpaceProtos.AtomRequest.newBuilder()
+                .setKind(AtomSpaceProtos.AtomRequest.AtomRequestKind.NODE)
+                .setAtomType(type.toUpperCamel())
+                .build();
+        final UUID correlationId = UUID.randomUUID();
+        pendings.put(correlationId, (SettableFuture) msgFuture);
+        final AtomSpaceProtos.AtomsRequest reqs = AtomSpaceProtos.AtomsRequest.newBuilder()
+                .setCorrelationId(ByteString.copyFrom(UuidUtils.toByteArray(correlationId)))
+                .addRequests(req)
+                .build();
+        producerTemplate.sendBody(reqs);
+//        log.info("Request: {}", producerTemplate.requestBody(reqs));
+        return nodeFuture;
     }
 
     @Override

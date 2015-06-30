@@ -68,7 +68,26 @@
                     <groupId>log4j</groupId>
                     <artifactId>log4j</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>com.typesafe.akka</groupId>
+                    <artifactId>akka-zeromq_2.10</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.zeromq</groupId>
+                    <artifactId>zeromq-scala-binding_2.10</artifactId>
+                </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.zeromq</groupId>
+            <artifactId>jzmq</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.zeromq</groupId>
+            <artifactId>jzmq</artifactId>
+            <version>3.1.0</version>
+            <classifier>native-amd64-Linux</classifier>
         </dependency>
         <dependency>
             <groupId>com.google.protobuf</groupId>

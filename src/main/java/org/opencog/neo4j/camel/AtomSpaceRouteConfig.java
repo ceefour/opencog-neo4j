@@ -1,8 +1,10 @@
 package org.opencog.neo4j.camel;
 
+import com.google.protobuf.ByteString;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.opencog.atomspace.AtomSpaceProtos;
+import org.opencog.atomspace.UuidUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -37,6 +39,7 @@ public class AtomSpaceRouteConfig {
                         .to("log:atomspace-in?showAll=true&multiline=true")
                         .process((Exchange xc) -> {
                             final byte[] bytes = (byte[]) xc.getIn().getBody();
+                            log.debug("Received {} bytes", bytes.length);
                             final AtomSpaceProtos.AtomsRequest reqs = AtomSpaceProtos.AtomsRequest.parseFrom(bytes);
                             xc.getIn().setBody(reqs);
                         }).to("log:atomspace-out?showAll=true&multiline=true");
@@ -54,16 +57,20 @@ public class AtomSpaceRouteConfig {
             public void configure() throws Exception {
                 from("timer:5")
                         .process((Exchange it) -> {
-                            it.getIn().setHeader("comment", "Sending " + UUID.randomUUID());
+                            final UUID correlationId = UUID.randomUUID();
+                            it.getIn().setHeader("comment", "Sending " + correlationId);
                             final AtomSpaceProtos.AtomRequest req = AtomSpaceProtos.AtomRequest.newBuilder()
                                     .setKind(AtomSpaceProtos.AtomRequest.AtomRequestKind.NODE)
                                     .setAtomType("GeneNode")
                                     .setNodeName("something")
                                     .build();
-                            final AtomSpaceProtos.AtomsRequest reqs = AtomSpaceProtos.AtomsRequest.newBuilder().addRequests(req).build();
+                            final AtomSpaceProtos.AtomsRequest reqs = AtomSpaceProtos.AtomsRequest.newBuilder()
+                                    .setCorrelationId(ByteString.copyFrom(UuidUtils.toByteArray(correlationId)))
+                                    .addRequests(req).build();
                             it.getIn().setBody(reqs);
                         })
                         .to("zeromq:tcp://" + zmqHost + ":" + zmqPort + "?messageConvertor=org.opencog.atomspace.ProtoMessageConvertor&socketType=PUSH&topics=" + zmqTopic)
+//                        .to("zeromq:tcp://" + zmqHost + ":" + zmqPort + "?socketType=PUSH&topics=" + zmqTopic);
                         .to("log:timer-to-atomspace?showAll=true&multiline=true");
             }
         };

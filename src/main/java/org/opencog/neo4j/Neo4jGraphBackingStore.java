@@ -4,8 +4,10 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.util.concurrent.ListenableFuture;
 import org.neo4j.graphdb.*;
 import org.opencog.atomspace.*;
+import org.opencog.atomspace.Node;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -131,5 +133,10 @@ public class Neo4jGraphBackingStore implements GraphBackingStore {
     @Override
     public boolean isAtomIgnored(Handle handle) {
         return !(handle instanceof Neo4jHandle);
+    }
+
+    @Override
+    public ListenableFuture<Optional<Node>> getNodeAsync(AtomType type, String name) {
+        throw new UnsupportedOperationException();
     }
 }
