@@ -4,22 +4,40 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.MoreExecutors;
+import com.google.common.util.concurrent.SettableFuture;
 import org.neo4j.graphdb.*;
 import org.opencog.atomspace.*;
 import org.opencog.atomspace.Node;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import java.util.*;
 
 /**
  * Implements {@link GraphBackingStore} using Neo4j {@link org.neo4j.graphdb.GraphDatabaseService}.
  */
+@Transactional
 public class Neo4jGraphBackingStore implements GraphBackingStore {
 
+    @Inject
+    private PlatformTransactionManager txMgr;
     protected GraphDatabaseService db;
+    private TransactionTemplate txTemplate;
+
+    public Neo4jGraphBackingStore(GraphDatabaseService db) {
+        this.db = db;
+    }
+
+    @PostConstruct
+    public void init() {
+        txTemplate = new TransactionTemplate(txMgr);
+    }
 
     @Override
     public Optional<Link> getLink(AtomType type, List<Handle> handleSeq) {
@@ -66,11 +84,30 @@ public class Neo4jGraphBackingStore implements GraphBackingStore {
         }
     }
 
-    @Override
+    @Override //@Transactional
     public Optional<org.opencog.atomspace.Node> getNode(AtomType type, String name) {
-        final Optional<org.neo4j.graphdb.Node> graphNode = Optional.ofNullable(
-                db.findNode(DynamicLabel.label(type.getGraphLabel()), Neo4jNode.NODE_NAME, name));
-        return graphNode.map(it -> new Neo4jNode(type, name));
+        try (final Transaction tx = db.beginTx()) {
+            final Optional<org.neo4j.graphdb.Node> graphNode = Optional.ofNullable(
+                    db.findNode(DynamicLabel.label(type.getGraphLabel()), Neo4jNode.NODE_NAME, name));
+            tx.success();
+            return graphNode.map(it -> new Neo4jNode(type, name));
+        }
+//        return txTemplate.execute((status) -> {
+//        });
+    }
+
+    @Override
+    public ListenableFuture<List<Node>> getNodesAsync(List<NodeRequest> reqs) {
+        try (final Transaction tx = db.beginTx()) {
+            final ArrayList<Node> result = new ArrayList<>();
+            reqs.forEach(req -> {
+                final Optional<org.neo4j.graphdb.Node> graphNode = Optional.ofNullable(
+                        db.findNode(DynamicLabel.label(req.getType().getGraphLabel()), Neo4jNode.NODE_NAME, req.getName()));
+                result.add(graphNode.map(it -> new Neo4jNode(req.getType(), req.getName())).orElse(null));
+            });
+            tx.success();
+            return Futures.immediateFuture(Collections.unmodifiableList(result));
+        }
     }
 
     @Override

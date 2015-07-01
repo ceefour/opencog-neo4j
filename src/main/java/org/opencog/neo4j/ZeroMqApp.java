@@ -14,6 +14,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
+import org.springframework.data.neo4j.config.JtaTransactionManagerFactoryBean;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 
@@ -21,6 +25,7 @@ import javax.inject.Inject;
  * Runs {@link org.opencog.neo4j.camel.AtomSpaceRouteConfig}.
  */
 @SpringBootApplication
+@EnableTransactionManagement
 @ComponentScan(basePackageClasses = {ZeroMqApp.class, Atom.class})
 //@Configuration
 //@Import({AtomSpaceCamelConfiguration.class, AtomSpaceRouteConfig.class})
@@ -57,5 +62,16 @@ public class ZeroMqApp implements CommandLineRunner {
         log.info("Opening Neo4j database '{}'", dbDir);
         return new GraphDatabaseFactory().newEmbeddedDatabase(dbDir);//System.getProperty("user.home") + "/tmp/opencog-neo4j");
     }
+
+    @Bean
+    public Neo4jGraphBackingStore neo4jGraphBackingStore() {
+        return new Neo4jGraphBackingStore(graphDb());
+    }
+
+    @Bean
+    public JtaTransactionManagerFactoryBean transactionManager() {
+        return new JtaTransactionManagerFactoryBean(graphDb());
+    }
+
 
 }

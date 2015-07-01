@@ -8,9 +8,12 @@ import org.crsh.cli.Required;
 import org.crsh.cli.Usage;
 import org.crsh.command.BaseCommand;
 import org.crsh.command.InvocationContext;
+import org.opencog.atomspace.Atom;
 import org.opencog.atomspace.AtomType;
 import org.opencog.atomspace.GraphBackingStore;
 import org.opencog.atomspace.Node;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationContext;
@@ -24,6 +27,8 @@ import java.util.Optional;
 @Usage("Node operations")
 public class node extends BaseCommand {
 
+    private static final Logger log = LoggerFactory.getLogger(node.class);
+
     @Usage("Get node(s) by type and name")
     @Command
     public void get(@Usage("ATOM_TYPE/NODE_NAME. e.g. 'ConceptNode/GO:0000024'") @Required @Argument List<String> nodePaths,
@@ -34,7 +39,7 @@ public class node extends BaseCommand {
             final List<String> segments = Splitter.on('/').splitToList(nodePath);
             final AtomType atomType = AtomType.valueOf(CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, segments.get(0)));
             final Optional<Node> node = backingStore.getNode(atomType, segments.get(1));
-            node.ifPresent(it -> System.out.println(it));
+            node.ifPresent(it -> out.println(it));
         });
     }
 }

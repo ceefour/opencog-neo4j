@@ -17,13 +17,13 @@ public class ProtoMessageConvertor implements MessageConverter {
 
     @Override
     public byte[] convert(Exchange xc) {
-        final GeneratedMessage msg = (GeneratedMessage) xc.getIn().getBody();
+        final GeneratedMessage msg = (xc.hasOut() ? xc.getOut() : xc.getIn()).getBody(GeneratedMessage.class);
         final byte[] bytes = msg.toByteArray();
-        if (msg instanceof AtomSpaceProtos.AtomsRequest) {
-            log.debug("Converting AtomsRequest correlationId={} to {} bytes: {}",
-                    UuidUtils.fromByteArray(((AtomSpaceProtos.AtomsRequest) msg).getCorrelationId().toByteArray()),
-                    bytes.length, StandardCharsets.ISO_8859_1.decode(ByteBuffer.wrap(bytes)));
-        }
+//        if (msg instanceof AtomSpaceProtos.AtomsRequest) {
+//            log.debug("Converting AtomsRequest correlationId={} to {} bytes: {}",
+//                    UuidUtils.fromByteArray(((AtomSpaceProtos.AtomsRequest) msg).getCorrelationId().toByteArray()),
+//                    bytes.length, StandardCharsets.ISO_8859_1.decode(ByteBuffer.wrap(bytes)));
+//        }
         return bytes;
     }
 }

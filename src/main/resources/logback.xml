@@ -4,4 +4,6 @@
     <logger name="org.opencog" level="DEBUG"/>
     <logger name="org.springframework.boot.actuate" level="DEBUG"/>
     <logger name="org.crsh" level="DEBUG"/>
+    <logger name="org.apacheextras" level="DEBUG"/>
+    <logger name="org.springframework.transaction" level="DEBUG"/>
 </configuration>

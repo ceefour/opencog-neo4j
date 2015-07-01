@@ -1,5 +1,7 @@
 package org.opencog.atomspace;
 
+import com.google.common.util.concurrent.ListenableFuture;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +27,14 @@ public interface BackingStore {
      * @return
      */
     Optional<Node> getNode(AtomType type, String name);
+
+    /**
+     * Return a pointer to a node of the indicated type and name,
+     * if it exists.
+     * @param reqs
+     * @return Warning: may contain null values for each not found node.
+     */
+    ListenableFuture<List<Node>> getNodesAsync(List<NodeRequest> reqs);
 
     /**
      * Return a pointer to an Atom associated with the given
