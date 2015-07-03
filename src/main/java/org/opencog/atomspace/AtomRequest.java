@@ -14,23 +14,23 @@ public class AtomRequest implements Serializable {
         /**
          * get {@link Node} or {@link Link} by handle UUID
          */
-        UUID(AtomSpaceProtos.ZMQAtomRequestKind.UUID),
+        UUID(AtomSpaceProtos.ZMQAtomFetchKind.UUID),
         /**
          * get node by atom_type and node_name
          */
-        NODE(AtomSpaceProtos.ZMQAtomRequestKind.NODE),
+        NODE(AtomSpaceProtos.ZMQAtomFetchKind.NODE),
         /**
          * get link by atom_type and handle_seq
          */
-        LINK(AtomSpaceProtos.ZMQAtomRequestKind.LINK);
+        LINK(AtomSpaceProtos.ZMQAtomFetchKind.LINK);
 
-        private AtomSpaceProtos.ZMQAtomRequestKind protoKind;
+        private AtomSpaceProtos.ZMQAtomFetchKind protoKind;
 
-        AtomRequestKind(AtomSpaceProtos.ZMQAtomRequestKind protoKind) {
+        AtomRequestKind(AtomSpaceProtos.ZMQAtomFetchKind protoKind) {
             this.protoKind = protoKind;
         }
 
-        public AtomSpaceProtos.ZMQAtomRequestKind toProto() {
+        public AtomSpaceProtos.ZMQAtomFetchKind toProto() {
             return protoKind;
         }
     }

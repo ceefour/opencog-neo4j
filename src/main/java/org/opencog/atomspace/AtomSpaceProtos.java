@@ -219,7 +219,7 @@ public final class AtomSpaceProtos {
   /**
    * Protobuf enum {@code ZMQAtomRequestKind}
    */
-  public enum ZMQAtomRequestKind
+  public enum ZMQAtomFetchKind
       implements com.google.protobuf.ProtocolMessageEnum {
     /**
      * <code>UUID = 0;</code>
@@ -275,7 +275,7 @@ public final class AtomSpaceProtos {
 
     public final int getNumber() { return value; }
 
-    public static ZMQAtomRequestKind valueOf(int value) {
+    public static ZMQAtomFetchKind valueOf(int value) {
       switch (value) {
         case 0: return UUID;
         case 1: return NODE;
@@ -284,15 +284,15 @@ public final class AtomSpaceProtos {
       }
     }
 
-    public static com.google.protobuf.Internal.EnumLiteMap<ZMQAtomRequestKind>
+    public static com.google.protobuf.Internal.EnumLiteMap<ZMQAtomFetchKind>
         internalGetValueMap() {
       return internalValueMap;
     }
-    private static com.google.protobuf.Internal.EnumLiteMap<ZMQAtomRequestKind>
+    private static com.google.protobuf.Internal.EnumLiteMap<ZMQAtomFetchKind>
         internalValueMap =
-          new com.google.protobuf.Internal.EnumLiteMap<ZMQAtomRequestKind>() {
-            public ZMQAtomRequestKind findValueByNumber(int number) {
-              return ZMQAtomRequestKind.valueOf(number);
+          new com.google.protobuf.Internal.EnumLiteMap<ZMQAtomFetchKind>() {
+            public ZMQAtomFetchKind findValueByNumber(int number) {
+              return ZMQAtomFetchKind.valueOf(number);
             }
           };
 
@@ -309,9 +309,9 @@ public final class AtomSpaceProtos {
       return org.opencog.atomspace.AtomSpaceProtos.getDescriptor().getEnumTypes().get(2);
     }
 
-    private static final ZMQAtomRequestKind[] VALUES = values();
+    private static final ZMQAtomFetchKind[] VALUES = values();
 
-    public static ZMQAtomRequestKind valueOf(
+    public static ZMQAtomFetchKind valueOf(
         com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
       if (desc.getType() != getDescriptor()) {
         throw new java.lang.IllegalArgumentException(
@@ -323,7 +323,7 @@ public final class AtomSpaceProtos {
     private final int index;
     private final int value;
 
-    private ZMQAtomRequestKind(int index, int value) {
+    private ZMQAtomFetchKind(int index, int value) {
       this.index = index;
       this.value = value;
     }
@@ -4838,6 +4838,33 @@ public final class AtomSpaceProtos {
      * </pre>
      */
     org.opencog.atomspace.AtomSpaceProtos.ZMQTrailMessageOrBuilder getTrailOrBuilder();
+
+    // optional string atom_type_str = 11;
+    /**
+     * <code>optional string atom_type_str = 11;</code>
+     *
+     * <pre>
+     * FIXME: change to int then put a lookup table
+     * </pre>
+     */
+    boolean hasAtomTypeStr();
+    /**
+     * <code>optional string atom_type_str = 11;</code>
+     *
+     * <pre>
+     * FIXME: change to int then put a lookup table
+     * </pre>
+     */
+    java.lang.String getAtomTypeStr();
+    /**
+     * <code>optional string atom_type_str = 11;</code>
+     *
+     * <pre>
+     * FIXME: change to int then put a lookup table
+     * </pre>
+     */
+    com.google.protobuf.ByteString
+        getAtomTypeStrBytes();
   }
   /**
    * Protobuf type {@code ZMQAtomMessage}
@@ -5000,6 +5027,11 @@ public final class AtomSpaceProtos {
                 trail_ = subBuilder.buildPartial();
               }
               bitField0_ |= 0x00000080;
+              break;
+            }
+            case 90: {
+              bitField0_ |= 0x00000100;
+              atomTypeStr_ = input.readBytes();
               break;
             }
           }
@@ -5303,6 +5335,61 @@ public final class AtomSpaceProtos {
       return trail_;
     }
 
+    // optional string atom_type_str = 11;
+    public static final int ATOM_TYPE_STR_FIELD_NUMBER = 11;
+    private java.lang.Object atomTypeStr_;
+    /**
+     * <code>optional string atom_type_str = 11;</code>
+     *
+     * <pre>
+     * FIXME: change to int then put a lookup table
+     * </pre>
+     */
+    public boolean hasAtomTypeStr() {
+      return ((bitField0_ & 0x00000100) == 0x00000100);
+    }
+    /**
+     * <code>optional string atom_type_str = 11;</code>
+     *
+     * <pre>
+     * FIXME: change to int then put a lookup table
+     * </pre>
+     */
+    public java.lang.String getAtomTypeStr() {
+      java.lang.Object ref = atomTypeStr_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          atomTypeStr_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string atom_type_str = 11;</code>
+     *
+     * <pre>
+     * FIXME: change to int then put a lookup table
+     * </pre>
+     */
+    public com.google.protobuf.ByteString
+        getAtomTypeStrBytes() {
+      java.lang.Object ref = atomTypeStr_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        atomTypeStr_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private void initFields() {
       atomtype_ = org.opencog.atomspace.AtomSpaceProtos.ZMQAtomType.ZMQAtomTypeNode;
       attentionvalueholder_ = org.opencog.atomspace.AtomSpaceProtos.ZMQAttentionValueHolderMessage.getDefaultInstance();
@@ -5314,6 +5401,7 @@ public final class AtomSpaceProtos {
       name_ = "";
       outgoing_ = java.util.Collections.emptyList();
       trail_ = org.opencog.atomspace.AtomSpaceProtos.ZMQTrailMessage.getDefaultInstance();
+      atomTypeStr_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -5389,6 +5477,9 @@ public final class AtomSpaceProtos {
       if (((bitField0_ & 0x00000080) == 0x00000080)) {
         output.writeMessage(10, trail_);
       }
+      if (((bitField0_ & 0x00000100) == 0x00000100)) {
+        output.writeBytes(11, getAtomTypeStrBytes());
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -5447,6 +5538,10 @@ public final class AtomSpaceProtos {
       if (((bitField0_ & 0x00000080) == 0x00000080)) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(10, trail_);
+      }
+      if (((bitField0_ & 0x00000100) == 0x00000100)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(11, getAtomTypeStrBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -5599,6 +5694,8 @@ public final class AtomSpaceProtos {
           trailBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000200);
+        atomTypeStr_ = "";
+        bitField0_ = (bitField0_ & ~0x00000400);
         return this;
       }
 
@@ -5681,6 +5778,10 @@ public final class AtomSpaceProtos {
         } else {
           result.trail_ = trailBuilder_.build();
         }
+        if (((from_bitField0_ & 0x00000400) == 0x00000400)) {
+          to_bitField0_ |= 0x00000100;
+        }
+        result.atomTypeStr_ = atomTypeStr_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -5742,6 +5843,11 @@ public final class AtomSpaceProtos {
         }
         if (other.hasTrail()) {
           mergeTrail(other.getTrail());
+        }
+        if (other.hasAtomTypeStr()) {
+          bitField0_ |= 0x00000400;
+          atomTypeStr_ = other.atomTypeStr_;
+          onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -6582,6 +6688,104 @@ public final class AtomSpaceProtos {
         return trailBuilder_;
       }
 
+      // optional string atom_type_str = 11;
+      private java.lang.Object atomTypeStr_ = "";
+      /**
+       * <code>optional string atom_type_str = 11;</code>
+       *
+       * <pre>
+       * FIXME: change to int then put a lookup table
+       * </pre>
+       */
+      public boolean hasAtomTypeStr() {
+        return ((bitField0_ & 0x00000400) == 0x00000400);
+      }
+      /**
+       * <code>optional string atom_type_str = 11;</code>
+       *
+       * <pre>
+       * FIXME: change to int then put a lookup table
+       * </pre>
+       */
+      public java.lang.String getAtomTypeStr() {
+        java.lang.Object ref = atomTypeStr_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          atomTypeStr_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string atom_type_str = 11;</code>
+       *
+       * <pre>
+       * FIXME: change to int then put a lookup table
+       * </pre>
+       */
+      public com.google.protobuf.ByteString
+          getAtomTypeStrBytes() {
+        java.lang.Object ref = atomTypeStr_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          atomTypeStr_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string atom_type_str = 11;</code>
+       *
+       * <pre>
+       * FIXME: change to int then put a lookup table
+       * </pre>
+       */
+      public Builder setAtomTypeStr(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000400;
+        atomTypeStr_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string atom_type_str = 11;</code>
+       *
+       * <pre>
+       * FIXME: change to int then put a lookup table
+       * </pre>
+       */
+      public Builder clearAtomTypeStr() {
+        bitField0_ = (bitField0_ & ~0x00000400);
+        atomTypeStr_ = getDefaultInstance().getAtomTypeStr();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string atom_type_str = 11;</code>
+       *
+       * <pre>
+       * FIXME: change to int then put a lookup table
+       * </pre>
+       */
+      public Builder setAtomTypeStrBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000400;
+        atomTypeStr_ = value;
+        onChanged();
+        return this;
+      }
+
       // @@protoc_insertion_point(builder_scope:ZMQAtomMessage)
     }
 
@@ -6604,7 +6808,7 @@ public final class AtomSpaceProtos {
     /**
      * <code>required .ZMQAtomRequestKind kind = 1;</code>
      */
-    org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequestKind getKind();
+    ZMQAtomFetchKind getKind();
 
     // optional uint64 handle = 2;
     /**
@@ -6651,7 +6855,7 @@ public final class AtomSpaceProtos {
     /**
      * <code>optional string node_name = 4;</code>
      */
-    java.lang.String getNodeName();
+    java.lang.String getName();
     /**
      * <code>optional string node_name = 4;</code>
      */
@@ -6662,7 +6866,7 @@ public final class AtomSpaceProtos {
     /**
      * <code>repeated uint64 handle_seq = 5;</code>
      */
-    java.util.List<java.lang.Long> getHandleSeqList();
+    java.util.List<java.lang.Long> getOutgoingList();
     /**
      * <code>repeated uint64 handle_seq = 5;</code>
      */
@@ -6675,22 +6879,22 @@ public final class AtomSpaceProtos {
   /**
    * Protobuf type {@code ZMQAtomRequest}
    */
-  public static final class ZMQAtomRequest extends
+  public static final class ZMQAtomFetch extends
       com.google.protobuf.GeneratedMessage
       implements ZMQAtomRequestOrBuilder {
     // Use ZMQAtomRequest.newBuilder() to construct.
-    private ZMQAtomRequest(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+    private ZMQAtomFetch(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
       this.unknownFields = builder.getUnknownFields();
     }
-    private ZMQAtomRequest(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+    private ZMQAtomFetch(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
 
-    private static final ZMQAtomRequest defaultInstance;
-    public static ZMQAtomRequest getDefaultInstance() {
+    private static final ZMQAtomFetch defaultInstance;
+    public static ZMQAtomFetch getDefaultInstance() {
       return defaultInstance;
     }
 
-    public ZMQAtomRequest getDefaultInstanceForType() {
+    public ZMQAtomFetch getDefaultInstanceForType() {
       return defaultInstance;
     }
 
@@ -6700,9 +6904,9 @@ public final class AtomSpaceProtos {
         getUnknownFields() {
       return this.unknownFields;
     }
-    private ZMQAtomRequest(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+    private ZMQAtomFetch(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
       int mutable_bitField0_ = 0;
@@ -6725,7 +6929,7 @@ public final class AtomSpaceProtos {
             }
             case 8: {
               int rawValue = input.readEnum();
-              org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequestKind value = org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequestKind.valueOf(rawValue);
+              ZMQAtomFetchKind value = ZMQAtomFetchKind.valueOf(rawValue);
               if (value == null) {
                 unknownFields.mergeVarintField(1, rawValue);
               } else {
@@ -6794,28 +6998,28 @@ public final class AtomSpaceProtos {
         internalGetFieldAccessorTable() {
       return org.opencog.atomspace.AtomSpaceProtos.internal_static_ZMQAtomRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest.class, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest.Builder.class);
+              ZMQAtomFetch.class, ZMQAtomFetch.Builder.class);
     }
 
-    public static com.google.protobuf.Parser<ZMQAtomRequest> PARSER =
-        new com.google.protobuf.AbstractParser<ZMQAtomRequest>() {
-      public ZMQAtomRequest parsePartialFrom(
+    public static com.google.protobuf.Parser<ZMQAtomFetch> PARSER =
+        new com.google.protobuf.AbstractParser<ZMQAtomFetch>() {
+      public ZMQAtomFetch parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new ZMQAtomRequest(input, extensionRegistry);
+        return new ZMQAtomFetch(input, extensionRegistry);
       }
     };
 
     @java.lang.Override
-    public com.google.protobuf.Parser<ZMQAtomRequest> getParserForType() {
+    public com.google.protobuf.Parser<ZMQAtomFetch> getParserForType() {
       return PARSER;
     }
 
     private int bitField0_;
     // required .ZMQAtomRequestKind kind = 1;
     public static final int KIND_FIELD_NUMBER = 1;
-    private org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequestKind kind_;
+    private ZMQAtomFetchKind kind_;
     /**
      * <code>required .ZMQAtomRequestKind kind = 1;</code>
      */
@@ -6825,7 +7029,7 @@ public final class AtomSpaceProtos {
     /**
      * <code>required .ZMQAtomRequestKind kind = 1;</code>
      */
-    public org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequestKind getKind() {
+    public ZMQAtomFetchKind getKind() {
       return kind_;
     }
 
@@ -6912,7 +7116,7 @@ public final class AtomSpaceProtos {
     /**
      * <code>optional string node_name = 4;</code>
      */
-    public java.lang.String getNodeName() {
+    public java.lang.String getName() {
       java.lang.Object ref = nodeName_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
@@ -6950,7 +7154,7 @@ public final class AtomSpaceProtos {
      * <code>repeated uint64 handle_seq = 5;</code>
      */
     public java.util.List<java.lang.Long>
-        getHandleSeqList() {
+    getOutgoingList() {
       return handleSeq_;
     }
     /**
@@ -6967,7 +7171,7 @@ public final class AtomSpaceProtos {
     }
 
     private void initFields() {
-      kind_ = org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequestKind.UUID;
+      kind_ = ZMQAtomFetchKind.UUID;
       handle_ = 0L;
       atomType_ = "";
       nodeName_ = "";
@@ -7036,7 +7240,7 @@ public final class AtomSpaceProtos {
             .computeUInt64SizeNoTag(handleSeq_.get(i));
         }
         size += dataSize;
-        size += 1 * getHandleSeqList().size();
+        size += 1 * getOutgoingList().size();
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -7050,53 +7254,53 @@ public final class AtomSpaceProtos {
       return super.writeReplace();
     }
 
-    public static org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest parseFrom(
+    public static ZMQAtomFetch parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest parseFrom(
+    public static ZMQAtomFetch parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest parseFrom(byte[] data)
+    public static ZMQAtomFetch parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest parseFrom(
+    public static ZMQAtomFetch parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest parseFrom(java.io.InputStream input)
+    public static ZMQAtomFetch parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest parseFrom(
+    public static ZMQAtomFetch parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest parseDelimitedFrom(java.io.InputStream input)
+    public static ZMQAtomFetch parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest parseDelimitedFrom(
+    public static ZMQAtomFetch parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest parseFrom(
+    public static ZMQAtomFetch parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest parseFrom(
+    public static ZMQAtomFetch parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -7105,7 +7309,7 @@ public final class AtomSpaceProtos {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest prototype) {
+    public static Builder newBuilder(ZMQAtomFetch prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -7131,7 +7335,7 @@ public final class AtomSpaceProtos {
           internalGetFieldAccessorTable() {
         return org.opencog.atomspace.AtomSpaceProtos.internal_static_ZMQAtomRequest_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest.class, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest.Builder.class);
+                ZMQAtomFetch.class, ZMQAtomFetch.Builder.class);
       }
 
       // Construct using org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest.newBuilder()
@@ -7154,7 +7358,7 @@ public final class AtomSpaceProtos {
 
       public Builder clear() {
         super.clear();
-        kind_ = org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequestKind.UUID;
+        kind_ = ZMQAtomFetchKind.UUID;
         bitField0_ = (bitField0_ & ~0x00000001);
         handle_ = 0L;
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -7176,20 +7380,20 @@ public final class AtomSpaceProtos {
         return org.opencog.atomspace.AtomSpaceProtos.internal_static_ZMQAtomRequest_descriptor;
       }
 
-      public org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest getDefaultInstanceForType() {
-        return org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest.getDefaultInstance();
+      public ZMQAtomFetch getDefaultInstanceForType() {
+        return ZMQAtomFetch.getDefaultInstance();
       }
 
-      public org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest build() {
-        org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest result = buildPartial();
+      public ZMQAtomFetch build() {
+        ZMQAtomFetch result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest buildPartial() {
-        org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest result = new org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest(this);
+      public ZMQAtomFetch buildPartial() {
+        ZMQAtomFetch result = new ZMQAtomFetch(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -7219,16 +7423,16 @@ public final class AtomSpaceProtos {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest) {
-          return mergeFrom((org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest)other);
+        if (other instanceof ZMQAtomFetch) {
+          return mergeFrom((ZMQAtomFetch)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest other) {
-        if (other == org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest.getDefaultInstance()) return this;
+      public Builder mergeFrom(ZMQAtomFetch other) {
+        if (other == ZMQAtomFetch.getDefaultInstance()) return this;
         if (other.hasKind()) {
           setKind(other.getKind());
         }
@@ -7271,11 +7475,11 @@ public final class AtomSpaceProtos {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest parsedMessage = null;
+        ZMQAtomFetch parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest) e.getUnfinishedMessage();
+          parsedMessage = (ZMQAtomFetch) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -7287,7 +7491,7 @@ public final class AtomSpaceProtos {
       private int bitField0_;
 
       // required .ZMQAtomRequestKind kind = 1;
-      private org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequestKind kind_ = org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequestKind.UUID;
+      private ZMQAtomFetchKind kind_ = ZMQAtomFetchKind.UUID;
       /**
        * <code>required .ZMQAtomRequestKind kind = 1;</code>
        */
@@ -7297,13 +7501,13 @@ public final class AtomSpaceProtos {
       /**
        * <code>required .ZMQAtomRequestKind kind = 1;</code>
        */
-      public org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequestKind getKind() {
+      public ZMQAtomFetchKind getKind() {
         return kind_;
       }
       /**
        * <code>required .ZMQAtomRequestKind kind = 1;</code>
        */
-      public Builder setKind(org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequestKind value) {
+      public Builder setKind(ZMQAtomFetchKind value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -7317,7 +7521,7 @@ public final class AtomSpaceProtos {
        */
       public Builder clearKind() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        kind_ = org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequestKind.UUID;
+        kind_ = ZMQAtomFetchKind.UUID;
         onChanged();
         return this;
       }
@@ -7464,7 +7668,7 @@ public final class AtomSpaceProtos {
       /**
        * <code>optional string node_name = 4;</code>
        */
-      public java.lang.String getNodeName() {
+      public java.lang.String getName() {
         java.lang.Object ref = nodeName_;
         if (!(ref instanceof java.lang.String)) {
           java.lang.String s = ((com.google.protobuf.ByteString) ref)
@@ -7494,8 +7698,8 @@ public final class AtomSpaceProtos {
       /**
        * <code>optional string node_name = 4;</code>
        */
-      public Builder setNodeName(
-          java.lang.String value) {
+      public Builder setName(
+              java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -7509,7 +7713,7 @@ public final class AtomSpaceProtos {
        */
       public Builder clearNodeName() {
         bitField0_ = (bitField0_ & ~0x00000008);
-        nodeName_ = getDefaultInstance().getNodeName();
+        nodeName_ = getDefaultInstance().getName();
         onChanged();
         return this;
       }
@@ -7539,7 +7743,7 @@ public final class AtomSpaceProtos {
        * <code>repeated uint64 handle_seq = 5;</code>
        */
       public java.util.List<java.lang.Long>
-          getHandleSeqList() {
+      getOutgoingList() {
         return java.util.Collections.unmodifiableList(handleSeq_);
       }
       /**
@@ -7567,7 +7771,7 @@ public final class AtomSpaceProtos {
       /**
        * <code>repeated uint64 handle_seq = 5;</code>
        */
-      public Builder addHandleSeq(long value) {
+      public Builder addOutgoing(long value) {
         ensureHandleSeqIsMutable();
         handleSeq_.add(value);
         onChanged();
@@ -7576,8 +7780,8 @@ public final class AtomSpaceProtos {
       /**
        * <code>repeated uint64 handle_seq = 5;</code>
        */
-      public Builder addAllHandleSeq(
-          java.lang.Iterable<? extends java.lang.Long> values) {
+      public Builder addAllOutgoing(
+              java.lang.Iterable<? extends java.lang.Long> values) {
         ensureHandleSeqIsMutable();
         super.addAll(values, handleSeq_);
         onChanged();
@@ -7597,7 +7801,7 @@ public final class AtomSpaceProtos {
     }
 
     static {
-      defaultInstance = new ZMQAtomRequest(true);
+      defaultInstance = new ZMQAtomFetch(true);
       defaultInstance.initFields();
     }
 
@@ -7631,12 +7835,12 @@ public final class AtomSpaceProtos {
     /**
      * <code>repeated .ZMQAtomRequest requests = 3;</code>
      */
-    java.util.List<org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest> 
+    java.util.List<ZMQAtomFetch>
         getRequestsList();
     /**
      * <code>repeated .ZMQAtomRequest requests = 3;</code>
      */
-    org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest getRequests(int index);
+    ZMQAtomFetch getRequests(int index);
     /**
      * <code>repeated .ZMQAtomRequest requests = 3;</code>
      */
@@ -7721,10 +7925,10 @@ public final class AtomSpaceProtos {
             }
             case 26: {
               if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
-                requests_ = new java.util.ArrayList<org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest>();
+                requests_ = new java.util.ArrayList<ZMQAtomFetch>();
                 mutable_bitField0_ |= 0x00000004;
               }
-              requests_.add(input.readMessage(org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest.PARSER, extensionRegistry));
+              requests_.add(input.readMessage(ZMQAtomFetch.PARSER, extensionRegistry));
               break;
             }
           }
@@ -7804,11 +8008,11 @@ public final class AtomSpaceProtos {
 
     // repeated .ZMQAtomRequest requests = 3;
     public static final int REQUESTS_FIELD_NUMBER = 3;
-    private java.util.List<org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest> requests_;
+    private java.util.List<ZMQAtomFetch> requests_;
     /**
      * <code>repeated .ZMQAtomRequest requests = 3;</code>
      */
-    public java.util.List<org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest> getRequestsList() {
+    public java.util.List<ZMQAtomFetch> getRequestsList() {
       return requests_;
     }
     /**
@@ -7827,7 +8031,7 @@ public final class AtomSpaceProtos {
     /**
      * <code>repeated .ZMQAtomRequest requests = 3;</code>
      */
-    public org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest getRequests(int index) {
+    public ZMQAtomFetch getRequests(int index) {
       return requests_.get(index);
     }
     /**
@@ -8222,22 +8426,22 @@ public final class AtomSpaceProtos {
       }
 
       // repeated .ZMQAtomRequest requests = 3;
-      private java.util.List<org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest> requests_ =
+      private java.util.List<ZMQAtomFetch> requests_ =
         java.util.Collections.emptyList();
       private void ensureRequestsIsMutable() {
         if (!((bitField0_ & 0x00000004) == 0x00000004)) {
-          requests_ = new java.util.ArrayList<org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest>(requests_);
+          requests_ = new java.util.ArrayList<ZMQAtomFetch>(requests_);
           bitField0_ |= 0x00000004;
          }
       }
 
       private com.google.protobuf.RepeatedFieldBuilder<
-          org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest.Builder, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequestOrBuilder> requestsBuilder_;
+              ZMQAtomFetch, ZMQAtomFetch.Builder, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequestOrBuilder> requestsBuilder_;
 
       /**
        * <code>repeated .ZMQAtomRequest requests = 3;</code>
        */
-      public java.util.List<org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest> getRequestsList() {
+      public java.util.List<ZMQAtomFetch> getRequestsList() {
         if (requestsBuilder_ == null) {
           return java.util.Collections.unmodifiableList(requests_);
         } else {
@@ -8257,7 +8461,7 @@ public final class AtomSpaceProtos {
       /**
        * <code>repeated .ZMQAtomRequest requests = 3;</code>
        */
-      public org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest getRequests(int index) {
+      public ZMQAtomFetch getRequests(int index) {
         if (requestsBuilder_ == null) {
           return requests_.get(index);
         } else {
@@ -8268,7 +8472,7 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomRequest requests = 3;</code>
        */
       public Builder setRequests(
-          int index, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest value) {
+          int index, ZMQAtomFetch value) {
         if (requestsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -8285,7 +8489,7 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomRequest requests = 3;</code>
        */
       public Builder setRequests(
-          int index, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest.Builder builderForValue) {
+          int index, ZMQAtomFetch.Builder builderForValue) {
         if (requestsBuilder_ == null) {
           ensureRequestsIsMutable();
           requests_.set(index, builderForValue.build());
@@ -8298,7 +8502,7 @@ public final class AtomSpaceProtos {
       /**
        * <code>repeated .ZMQAtomRequest requests = 3;</code>
        */
-      public Builder addRequests(org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest value) {
+      public Builder addRequests(ZMQAtomFetch value) {
         if (requestsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -8315,7 +8519,7 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomRequest requests = 3;</code>
        */
       public Builder addRequests(
-          int index, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest value) {
+          int index, ZMQAtomFetch value) {
         if (requestsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -8332,7 +8536,7 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomRequest requests = 3;</code>
        */
       public Builder addRequests(
-          org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest.Builder builderForValue) {
+          ZMQAtomFetch.Builder builderForValue) {
         if (requestsBuilder_ == null) {
           ensureRequestsIsMutable();
           requests_.add(builderForValue.build());
@@ -8346,7 +8550,7 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomRequest requests = 3;</code>
        */
       public Builder addRequests(
-          int index, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest.Builder builderForValue) {
+          int index, ZMQAtomFetch.Builder builderForValue) {
         if (requestsBuilder_ == null) {
           ensureRequestsIsMutable();
           requests_.add(index, builderForValue.build());
@@ -8360,7 +8564,7 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomRequest requests = 3;</code>
        */
       public Builder addAllRequests(
-          java.lang.Iterable<? extends org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest> values) {
+          java.lang.Iterable<? extends ZMQAtomFetch> values) {
         if (requestsBuilder_ == null) {
           ensureRequestsIsMutable();
           super.addAll(values, requests_);
@@ -8399,7 +8603,7 @@ public final class AtomSpaceProtos {
       /**
        * <code>repeated .ZMQAtomRequest requests = 3;</code>
        */
-      public org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest.Builder getRequestsBuilder(
+      public ZMQAtomFetch.Builder getRequestsBuilder(
           int index) {
         return getRequestsFieldBuilder().getBuilder(index);
       }
@@ -8427,31 +8631,31 @@ public final class AtomSpaceProtos {
       /**
        * <code>repeated .ZMQAtomRequest requests = 3;</code>
        */
-      public org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest.Builder addRequestsBuilder() {
+      public ZMQAtomFetch.Builder addRequestsBuilder() {
         return getRequestsFieldBuilder().addBuilder(
-            org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest.getDefaultInstance());
+            ZMQAtomFetch.getDefaultInstance());
       }
       /**
        * <code>repeated .ZMQAtomRequest requests = 3;</code>
        */
-      public org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest.Builder addRequestsBuilder(
+      public ZMQAtomFetch.Builder addRequestsBuilder(
           int index) {
         return getRequestsFieldBuilder().addBuilder(
-            index, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest.getDefaultInstance());
+            index, ZMQAtomFetch.getDefaultInstance());
       }
       /**
        * <code>repeated .ZMQAtomRequest requests = 3;</code>
        */
-      public java.util.List<org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest.Builder> 
+      public java.util.List<ZMQAtomFetch.Builder>
            getRequestsBuilderList() {
         return getRequestsFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilder<
-          org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest.Builder, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequestOrBuilder> 
+              ZMQAtomFetch, ZMQAtomFetch.Builder, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequestOrBuilder>
           getRequestsFieldBuilder() {
         if (requestsBuilder_ == null) {
           requestsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-              org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequest.Builder, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequestOrBuilder>(
+                  ZMQAtomFetch, ZMQAtomFetch.Builder, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomRequestOrBuilder>(
                   requests_,
                   ((bitField0_ & 0x00000004) == 0x00000004),
                   getParentForChildren(),
@@ -8475,19 +8679,19 @@ public final class AtomSpaceProtos {
   public interface ZMQReplyMessageOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // optional .ZMQAtomMessage atom = 1;
+    // optional .ZMQAtomMessage atom2 = 1;
     /**
-     * <code>optional .ZMQAtomMessage atom = 1;</code>
+     * <code>optional .ZMQAtomMessage atom2 = 1;</code>
      */
-    boolean hasAtom();
+    boolean hasAtom2();
     /**
-     * <code>optional .ZMQAtomMessage atom = 1;</code>
+     * <code>optional .ZMQAtomMessage atom2 = 1;</code>
      */
-    org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage getAtom();
+    org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage getAtom2();
     /**
-     * <code>optional .ZMQAtomMessage atom = 1;</code>
+     * <code>optional .ZMQAtomMessage atom2 = 1;</code>
      */
-    org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessageOrBuilder getAtomOrBuilder();
+    org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessageOrBuilder getAtom2OrBuilder();
 
     // optional string str = 2;
     /**
@@ -8504,26 +8708,26 @@ public final class AtomSpaceProtos {
     com.google.protobuf.ByteString
         getStrBytes();
 
-    // repeated .AtomResult results = 3;
+    // repeated .ZMQAtomMessage results = 3;
     /**
-     * <code>repeated .AtomResult results = 3;</code>
+     * <code>repeated .ZMQAtomMessage results = 3;</code>
      *
      * <pre>
      * temporary, should merge with atom
      * </pre>
      */
-    java.util.List<org.opencog.atomspace.AtomSpaceProtos.AtomResult> 
-        getResultsList();
+    java.util.List<org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage>
+    getAtomList();
     /**
-     * <code>repeated .AtomResult results = 3;</code>
+     * <code>repeated .ZMQAtomMessage results = 3;</code>
      *
      * <pre>
      * temporary, should merge with atom
      * </pre>
      */
-    org.opencog.atomspace.AtomSpaceProtos.AtomResult getResults(int index);
+    org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage getResults(int index);
     /**
-     * <code>repeated .AtomResult results = 3;</code>
+     * <code>repeated .ZMQAtomMessage results = 3;</code>
      *
      * <pre>
      * temporary, should merge with atom
@@ -8531,22 +8735,22 @@ public final class AtomSpaceProtos {
      */
     int getResultsCount();
     /**
-     * <code>repeated .AtomResult results = 3;</code>
+     * <code>repeated .ZMQAtomMessage results = 3;</code>
      *
      * <pre>
      * temporary, should merge with atom
      * </pre>
      */
-    java.util.List<? extends org.opencog.atomspace.AtomSpaceProtos.AtomResultOrBuilder> 
+    java.util.List<? extends org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessageOrBuilder>
         getResultsOrBuilderList();
     /**
-     * <code>repeated .AtomResult results = 3;</code>
+     * <code>repeated .ZMQAtomMessage results = 3;</code>
      *
      * <pre>
      * temporary, should merge with atom
      * </pre>
      */
-    org.opencog.atomspace.AtomSpaceProtos.AtomResultOrBuilder getResultsOrBuilder(
+    org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessageOrBuilder getResultsOrBuilder(
         int index);
   }
   /**
@@ -8603,12 +8807,12 @@ public final class AtomSpaceProtos {
             case 10: {
               org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.Builder subBuilder = null;
               if (((bitField0_ & 0x00000001) == 0x00000001)) {
-                subBuilder = atom_.toBuilder();
+                subBuilder = atom2_.toBuilder();
               }
-              atom_ = input.readMessage(org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.PARSER, extensionRegistry);
+              atom2_ = input.readMessage(org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.PARSER, extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom(atom_);
-                atom_ = subBuilder.buildPartial();
+                subBuilder.mergeFrom(atom2_);
+                atom2_ = subBuilder.buildPartial();
               }
               bitField0_ |= 0x00000001;
               break;
@@ -8620,10 +8824,10 @@ public final class AtomSpaceProtos {
             }
             case 26: {
               if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
-                results_ = new java.util.ArrayList<org.opencog.atomspace.AtomSpaceProtos.AtomResult>();
+                results_ = new java.util.ArrayList<org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage>();
                 mutable_bitField0_ |= 0x00000004;
               }
-              results_.add(input.readMessage(org.opencog.atomspace.AtomSpaceProtos.AtomResult.PARSER, extensionRegistry));
+              results_.add(input.readMessage(org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.PARSER, extensionRegistry));
               break;
             }
           }
@@ -8669,26 +8873,26 @@ public final class AtomSpaceProtos {
     }
 
     private int bitField0_;
-    // optional .ZMQAtomMessage atom = 1;
-    public static final int ATOM_FIELD_NUMBER = 1;
-    private org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage atom_;
+    // optional .ZMQAtomMessage atom2 = 1;
+    public static final int ATOM2_FIELD_NUMBER = 1;
+    private org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage atom2_;
     /**
-     * <code>optional .ZMQAtomMessage atom = 1;</code>
+     * <code>optional .ZMQAtomMessage atom2 = 1;</code>
      */
-    public boolean hasAtom() {
+    public boolean hasAtom2() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>optional .ZMQAtomMessage atom = 1;</code>
+     * <code>optional .ZMQAtomMessage atom2 = 1;</code>
      */
-    public org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage getAtom() {
-      return atom_;
+    public org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage getAtom2() {
+      return atom2_;
     }
     /**
-     * <code>optional .ZMQAtomMessage atom = 1;</code>
+     * <code>optional .ZMQAtomMessage atom2 = 1;</code>
      */
-    public org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessageOrBuilder getAtomOrBuilder() {
-      return atom_;
+    public org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessageOrBuilder getAtom2OrBuilder() {
+      return atom2_;
     }
 
     // optional string str = 2;
@@ -8708,7 +8912,7 @@ public final class AtomSpaceProtos {
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        com.google.protobuf.ByteString bs = 
+        com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
@@ -8724,7 +8928,7 @@ public final class AtomSpaceProtos {
         getStrBytes() {
       java.lang.Object ref = str_;
       if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
+        com.google.protobuf.ByteString b =
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         str_ = b;
@@ -8734,32 +8938,32 @@ public final class AtomSpaceProtos {
       }
     }
 
-    // repeated .AtomResult results = 3;
+    // repeated .ZMQAtomMessage results = 3;
     public static final int RESULTS_FIELD_NUMBER = 3;
-    private java.util.List<org.opencog.atomspace.AtomSpaceProtos.AtomResult> results_;
+    private java.util.List<org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage> results_;
     /**
-     * <code>repeated .AtomResult results = 3;</code>
+     * <code>repeated .ZMQAtomMessage results = 3;</code>
      *
      * <pre>
      * temporary, should merge with atom
      * </pre>
      */
-    public java.util.List<org.opencog.atomspace.AtomSpaceProtos.AtomResult> getResultsList() {
+    public java.util.List<org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage> getAtomList() {
       return results_;
     }
     /**
-     * <code>repeated .AtomResult results = 3;</code>
+     * <code>repeated .ZMQAtomMessage results = 3;</code>
      *
      * <pre>
      * temporary, should merge with atom
      * </pre>
      */
-    public java.util.List<? extends org.opencog.atomspace.AtomSpaceProtos.AtomResultOrBuilder> 
+    public java.util.List<? extends org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessageOrBuilder>
         getResultsOrBuilderList() {
       return results_;
     }
     /**
-     * <code>repeated .AtomResult results = 3;</code>
+     * <code>repeated .ZMQAtomMessage results = 3;</code>
      *
      * <pre>
      * temporary, should merge with atom
@@ -8769,29 +8973,29 @@ public final class AtomSpaceProtos {
       return results_.size();
     }
     /**
-     * <code>repeated .AtomResult results = 3;</code>
+     * <code>repeated .ZMQAtomMessage results = 3;</code>
      *
      * <pre>
      * temporary, should merge with atom
      * </pre>
      */
-    public org.opencog.atomspace.AtomSpaceProtos.AtomResult getResults(int index) {
+    public org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage getResults(int index) {
       return results_.get(index);
     }
     /**
-     * <code>repeated .AtomResult results = 3;</code>
+     * <code>repeated .ZMQAtomMessage results = 3;</code>
      *
      * <pre>
      * temporary, should merge with atom
      * </pre>
      */
-    public org.opencog.atomspace.AtomSpaceProtos.AtomResultOrBuilder getResultsOrBuilder(
+    public org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessageOrBuilder getResultsOrBuilder(
         int index) {
       return results_.get(index);
     }
 
     private void initFields() {
-      atom_ = org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.getDefaultInstance();
+      atom2_ = org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.getDefaultInstance();
       str_ = "";
       results_ = java.util.Collections.emptyList();
     }
@@ -8800,8 +9004,8 @@ public final class AtomSpaceProtos {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
-      if (hasAtom()) {
-        if (!getAtom().isInitialized()) {
+      if (hasAtom2()) {
+        if (!getAtom2().isInitialized()) {
           memoizedIsInitialized = 0;
           return false;
         }
@@ -8820,7 +9024,7 @@ public final class AtomSpaceProtos {
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeMessage(1, atom_);
+        output.writeMessage(1, atom2_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         output.writeBytes(2, getStrBytes());
@@ -8839,7 +9043,7 @@ public final class AtomSpaceProtos {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, atom_);
+          .computeMessageSize(1, atom2_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
@@ -8957,7 +9161,7 @@ public final class AtomSpaceProtos {
       }
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-          getAtomFieldBuilder();
+          getAtom2FieldBuilder();
           getResultsFieldBuilder();
         }
       }
@@ -8967,10 +9171,10 @@ public final class AtomSpaceProtos {
 
       public Builder clear() {
         super.clear();
-        if (atomBuilder_ == null) {
-          atom_ = org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.getDefaultInstance();
+        if (atom2Builder_ == null) {
+          atom2_ = org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.getDefaultInstance();
         } else {
-          atomBuilder_.clear();
+          atom2Builder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000001);
         str_ = "";
@@ -9012,10 +9216,10 @@ public final class AtomSpaceProtos {
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
           to_bitField0_ |= 0x00000001;
         }
-        if (atomBuilder_ == null) {
-          result.atom_ = atom_;
+        if (atom2Builder_ == null) {
+          result.atom2_ = atom2_;
         } else {
-          result.atom_ = atomBuilder_.build();
+          result.atom2_ = atom2Builder_.build();
         }
         if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
           to_bitField0_ |= 0x00000002;
@@ -9046,8 +9250,8 @@ public final class AtomSpaceProtos {
 
       public Builder mergeFrom(org.opencog.atomspace.AtomSpaceProtos.ZMQReplyMessage other) {
         if (other == org.opencog.atomspace.AtomSpaceProtos.ZMQReplyMessage.getDefaultInstance()) return this;
-        if (other.hasAtom()) {
-          mergeAtom(other.getAtom());
+        if (other.hasAtom2()) {
+          mergeAtom2(other.getAtom2());
         }
         if (other.hasStr()) {
           bitField0_ |= 0x00000002;
@@ -9072,7 +9276,7 @@ public final class AtomSpaceProtos {
               resultsBuilder_ = null;
               results_ = other.results_;
               bitField0_ = (bitField0_ & ~0x00000004);
-              resultsBuilder_ = 
+              resultsBuilder_ =
                 com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
                    getResultsFieldBuilder() : null;
             } else {
@@ -9085,15 +9289,15 @@ public final class AtomSpaceProtos {
       }
 
       public final boolean isInitialized() {
-        if (hasAtom()) {
-          if (!getAtom().isInitialized()) {
-            
+        if (hasAtom2()) {
+          if (!getAtom2().isInitialized()) {
+
             return false;
           }
         }
         for (int i = 0; i < getResultsCount(); i++) {
           if (!getResults(i).isInitialized()) {
-            
+
             return false;
           }
         }
@@ -9119,121 +9323,121 @@ public final class AtomSpaceProtos {
       }
       private int bitField0_;
 
-      // optional .ZMQAtomMessage atom = 1;
-      private org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage atom_ = org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.getDefaultInstance();
+      // optional .ZMQAtomMessage atom2 = 1;
+      private org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage atom2_ = org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
-          org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.Builder, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessageOrBuilder> atomBuilder_;
+          org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.Builder, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessageOrBuilder> atom2Builder_;
       /**
-       * <code>optional .ZMQAtomMessage atom = 1;</code>
+       * <code>optional .ZMQAtomMessage atom2 = 1;</code>
        */
-      public boolean hasAtom() {
+      public boolean hasAtom2() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>optional .ZMQAtomMessage atom = 1;</code>
+       * <code>optional .ZMQAtomMessage atom2 = 1;</code>
        */
-      public org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage getAtom() {
-        if (atomBuilder_ == null) {
-          return atom_;
+      public org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage getAtom2() {
+        if (atom2Builder_ == null) {
+          return atom2_;
         } else {
-          return atomBuilder_.getMessage();
+          return atom2Builder_.getMessage();
         }
       }
       /**
-       * <code>optional .ZMQAtomMessage atom = 1;</code>
+       * <code>optional .ZMQAtomMessage atom2 = 1;</code>
        */
-      public Builder setAtom(org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage value) {
-        if (atomBuilder_ == null) {
+      public Builder setAtom2(org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage value) {
+        if (atom2Builder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          atom_ = value;
+          atom2_ = value;
           onChanged();
         } else {
-          atomBuilder_.setMessage(value);
+          atom2Builder_.setMessage(value);
         }
         bitField0_ |= 0x00000001;
         return this;
       }
       /**
-       * <code>optional .ZMQAtomMessage atom = 1;</code>
+       * <code>optional .ZMQAtomMessage atom2 = 1;</code>
        */
-      public Builder setAtom(
+      public Builder setAtom2(
           org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.Builder builderForValue) {
-        if (atomBuilder_ == null) {
-          atom_ = builderForValue.build();
+        if (atom2Builder_ == null) {
+          atom2_ = builderForValue.build();
           onChanged();
         } else {
-          atomBuilder_.setMessage(builderForValue.build());
+          atom2Builder_.setMessage(builderForValue.build());
         }
         bitField0_ |= 0x00000001;
         return this;
       }
       /**
-       * <code>optional .ZMQAtomMessage atom = 1;</code>
+       * <code>optional .ZMQAtomMessage atom2 = 1;</code>
        */
-      public Builder mergeAtom(org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage value) {
-        if (atomBuilder_ == null) {
+      public Builder mergeAtom2(org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage value) {
+        if (atom2Builder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001) &&
-              atom_ != org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.getDefaultInstance()) {
-            atom_ =
-              org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.newBuilder(atom_).mergeFrom(value).buildPartial();
+              atom2_ != org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.getDefaultInstance()) {
+            atom2_ =
+              org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.newBuilder(atom2_).mergeFrom(value).buildPartial();
           } else {
-            atom_ = value;
+            atom2_ = value;
           }
           onChanged();
         } else {
-          atomBuilder_.mergeFrom(value);
+          atom2Builder_.mergeFrom(value);
         }
         bitField0_ |= 0x00000001;
         return this;
       }
       /**
-       * <code>optional .ZMQAtomMessage atom = 1;</code>
+       * <code>optional .ZMQAtomMessage atom2 = 1;</code>
        */
-      public Builder clearAtom() {
-        if (atomBuilder_ == null) {
-          atom_ = org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.getDefaultInstance();
+      public Builder clearAtom2() {
+        if (atom2Builder_ == null) {
+          atom2_ = org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.getDefaultInstance();
           onChanged();
         } else {
-          atomBuilder_.clear();
+          atom2Builder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000001);
         return this;
       }
       /**
-       * <code>optional .ZMQAtomMessage atom = 1;</code>
+       * <code>optional .ZMQAtomMessage atom2 = 1;</code>
        */
-      public org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.Builder getAtomBuilder() {
+      public org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.Builder getAtom2Builder() {
         bitField0_ |= 0x00000001;
         onChanged();
-        return getAtomFieldBuilder().getBuilder();
+        return getAtom2FieldBuilder().getBuilder();
       }
       /**
-       * <code>optional .ZMQAtomMessage atom = 1;</code>
+       * <code>optional .ZMQAtomMessage atom2 = 1;</code>
        */
-      public org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessageOrBuilder getAtomOrBuilder() {
-        if (atomBuilder_ != null) {
-          return atomBuilder_.getMessageOrBuilder();
+      public org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessageOrBuilder getAtom2OrBuilder() {
+        if (atom2Builder_ != null) {
+          return atom2Builder_.getMessageOrBuilder();
         } else {
-          return atom_;
+          return atom2_;
         }
       }
       /**
-       * <code>optional .ZMQAtomMessage atom = 1;</code>
+       * <code>optional .ZMQAtomMessage atom2 = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.Builder, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessageOrBuilder> 
-          getAtomFieldBuilder() {
-        if (atomBuilder_ == null) {
-          atomBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+          org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.Builder, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessageOrBuilder>
+          getAtom2FieldBuilder() {
+        if (atom2Builder_ == null) {
+          atom2Builder_ = new com.google.protobuf.SingleFieldBuilder<
               org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.Builder, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessageOrBuilder>(
-                  atom_,
+                  atom2_,
                   getParentForChildren(),
                   isClean());
-          atom_ = null;
+          atom2_ = null;
         }
-        return atomBuilder_;
+        return atom2Builder_;
       }
 
       // optional string str = 2;
@@ -9265,7 +9469,7 @@ public final class AtomSpaceProtos {
           getStrBytes() {
         java.lang.Object ref = str_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString b =
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           str_ = b;
@@ -9310,27 +9514,27 @@ public final class AtomSpaceProtos {
         return this;
       }
 
-      // repeated .AtomResult results = 3;
-      private java.util.List<org.opencog.atomspace.AtomSpaceProtos.AtomResult> results_ =
+      // repeated .ZMQAtomMessage results = 3;
+      private java.util.List<org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage> results_ =
         java.util.Collections.emptyList();
       private void ensureResultsIsMutable() {
         if (!((bitField0_ & 0x00000004) == 0x00000004)) {
-          results_ = new java.util.ArrayList<org.opencog.atomspace.AtomSpaceProtos.AtomResult>(results_);
+          results_ = new java.util.ArrayList<org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage>(results_);
           bitField0_ |= 0x00000004;
          }
       }
 
       private com.google.protobuf.RepeatedFieldBuilder<
-          org.opencog.atomspace.AtomSpaceProtos.AtomResult, org.opencog.atomspace.AtomSpaceProtos.AtomResult.Builder, org.opencog.atomspace.AtomSpaceProtos.AtomResultOrBuilder> resultsBuilder_;
+          org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.Builder, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessageOrBuilder> resultsBuilder_;
 
       /**
-       * <code>repeated .AtomResult results = 3;</code>
+       * <code>repeated .ZMQAtomMessage results = 3;</code>
        *
        * <pre>
        * temporary, should merge with atom
        * </pre>
        */
-      public java.util.List<org.opencog.atomspace.AtomSpaceProtos.AtomResult> getResultsList() {
+      public java.util.List<org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage> getAtomList() {
         if (resultsBuilder_ == null) {
           return java.util.Collections.unmodifiableList(results_);
         } else {
@@ -9338,7 +9542,7 @@ public final class AtomSpaceProtos {
         }
       }
       /**
-       * <code>repeated .AtomResult results = 3;</code>
+       * <code>repeated .ZMQAtomMessage results = 3;</code>
        *
        * <pre>
        * temporary, should merge with atom
@@ -9352,13 +9556,13 @@ public final class AtomSpaceProtos {
         }
       }
       /**
-       * <code>repeated .AtomResult results = 3;</code>
+       * <code>repeated .ZMQAtomMessage results = 3;</code>
        *
        * <pre>
        * temporary, should merge with atom
        * </pre>
        */
-      public org.opencog.atomspace.AtomSpaceProtos.AtomResult getResults(int index) {
+      public org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage getResults(int index) {
         if (resultsBuilder_ == null) {
           return results_.get(index);
         } else {
@@ -9366,14 +9570,14 @@ public final class AtomSpaceProtos {
         }
       }
       /**
-       * <code>repeated .AtomResult results = 3;</code>
+       * <code>repeated .ZMQAtomMessage results = 3;</code>
        *
        * <pre>
        * temporary, should merge with atom
        * </pre>
        */
       public Builder setResults(
-          int index, org.opencog.atomspace.AtomSpaceProtos.AtomResult value) {
+          int index, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage value) {
         if (resultsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -9387,14 +9591,14 @@ public final class AtomSpaceProtos {
         return this;
       }
       /**
-       * <code>repeated .AtomResult results = 3;</code>
+       * <code>repeated .ZMQAtomMessage results = 3;</code>
        *
        * <pre>
        * temporary, should merge with atom
        * </pre>
        */
       public Builder setResults(
-          int index, org.opencog.atomspace.AtomSpaceProtos.AtomResult.Builder builderForValue) {
+          int index, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.Builder builderForValue) {
         if (resultsBuilder_ == null) {
           ensureResultsIsMutable();
           results_.set(index, builderForValue.build());
@@ -9405,13 +9609,13 @@ public final class AtomSpaceProtos {
         return this;
       }
       /**
-       * <code>repeated .AtomResult results = 3;</code>
+       * <code>repeated .ZMQAtomMessage results = 3;</code>
        *
        * <pre>
        * temporary, should merge with atom
        * </pre>
        */
-      public Builder addResults(org.opencog.atomspace.AtomSpaceProtos.AtomResult value) {
+      public Builder addAtom(org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage value) {
         if (resultsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -9425,14 +9629,14 @@ public final class AtomSpaceProtos {
         return this;
       }
       /**
-       * <code>repeated .AtomResult results = 3;</code>
+       * <code>repeated .ZMQAtomMessage results = 3;</code>
        *
        * <pre>
        * temporary, should merge with atom
        * </pre>
        */
-      public Builder addResults(
-          int index, org.opencog.atomspace.AtomSpaceProtos.AtomResult value) {
+      public Builder addAtom(
+              int index, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage value) {
         if (resultsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -9446,14 +9650,14 @@ public final class AtomSpaceProtos {
         return this;
       }
       /**
-       * <code>repeated .AtomResult results = 3;</code>
+       * <code>repeated .ZMQAtomMessage results = 3;</code>
        *
        * <pre>
        * temporary, should merge with atom
        * </pre>
        */
-      public Builder addResults(
-          org.opencog.atomspace.AtomSpaceProtos.AtomResult.Builder builderForValue) {
+      public Builder addAtom(
+              org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.Builder builderForValue) {
         if (resultsBuilder_ == null) {
           ensureResultsIsMutable();
           results_.add(builderForValue.build());
@@ -9464,14 +9668,14 @@ public final class AtomSpaceProtos {
         return this;
       }
       /**
-       * <code>repeated .AtomResult results = 3;</code>
+       * <code>repeated .ZMQAtomMessage results = 3;</code>
        *
        * <pre>
        * temporary, should merge with atom
        * </pre>
        */
-      public Builder addResults(
-          int index, org.opencog.atomspace.AtomSpaceProtos.AtomResult.Builder builderForValue) {
+      public Builder addAtom(
+              int index, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.Builder builderForValue) {
         if (resultsBuilder_ == null) {
           ensureResultsIsMutable();
           results_.add(index, builderForValue.build());
@@ -9482,14 +9686,14 @@ public final class AtomSpaceProtos {
         return this;
       }
       /**
-       * <code>repeated .AtomResult results = 3;</code>
+       * <code>repeated .ZMQAtomMessage results = 3;</code>
        *
        * <pre>
        * temporary, should merge with atom
        * </pre>
        */
-      public Builder addAllResults(
-          java.lang.Iterable<? extends org.opencog.atomspace.AtomSpaceProtos.AtomResult> values) {
+      public Builder addAllAtoms(
+              java.lang.Iterable<? extends org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage> values) {
         if (resultsBuilder_ == null) {
           ensureResultsIsMutable();
           super.addAll(values, results_);
@@ -9500,7 +9704,7 @@ public final class AtomSpaceProtos {
         return this;
       }
       /**
-       * <code>repeated .AtomResult results = 3;</code>
+       * <code>repeated .ZMQAtomMessage results = 3;</code>
        *
        * <pre>
        * temporary, should merge with atom
@@ -9517,7 +9721,7 @@ public final class AtomSpaceProtos {
         return this;
       }
       /**
-       * <code>repeated .AtomResult results = 3;</code>
+       * <code>repeated .ZMQAtomMessage results = 3;</code>
        *
        * <pre>
        * temporary, should merge with atom
@@ -9534,24 +9738,24 @@ public final class AtomSpaceProtos {
         return this;
       }
       /**
-       * <code>repeated .AtomResult results = 3;</code>
+       * <code>repeated .ZMQAtomMessage results = 3;</code>
        *
        * <pre>
        * temporary, should merge with atom
        * </pre>
        */
-      public org.opencog.atomspace.AtomSpaceProtos.AtomResult.Builder getResultsBuilder(
+      public org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.Builder getResultsBuilder(
           int index) {
         return getResultsFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .AtomResult results = 3;</code>
+       * <code>repeated .ZMQAtomMessage results = 3;</code>
        *
        * <pre>
        * temporary, should merge with atom
        * </pre>
        */
-      public org.opencog.atomspace.AtomSpaceProtos.AtomResultOrBuilder getResultsOrBuilder(
+      public org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessageOrBuilder getResultsOrBuilder(
           int index) {
         if (resultsBuilder_ == null) {
           return results_.get(index);  } else {
@@ -9559,13 +9763,13 @@ public final class AtomSpaceProtos {
         }
       }
       /**
-       * <code>repeated .AtomResult results = 3;</code>
+       * <code>repeated .ZMQAtomMessage results = 3;</code>
        *
        * <pre>
        * temporary, should merge with atom
        * </pre>
        */
-      public java.util.List<? extends org.opencog.atomspace.AtomSpaceProtos.AtomResultOrBuilder> 
+      public java.util.List<? extends org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessageOrBuilder>
            getResultsOrBuilderList() {
         if (resultsBuilder_ != null) {
           return resultsBuilder_.getMessageOrBuilderList();
@@ -9574,45 +9778,45 @@ public final class AtomSpaceProtos {
         }
       }
       /**
-       * <code>repeated .AtomResult results = 3;</code>
+       * <code>repeated .ZMQAtomMessage results = 3;</code>
        *
        * <pre>
        * temporary, should merge with atom
        * </pre>
        */
-      public org.opencog.atomspace.AtomSpaceProtos.AtomResult.Builder addResultsBuilder() {
+      public org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.Builder addResultsBuilder() {
         return getResultsFieldBuilder().addBuilder(
-            org.opencog.atomspace.AtomSpaceProtos.AtomResult.getDefaultInstance());
+            org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.getDefaultInstance());
       }
       /**
-       * <code>repeated .AtomResult results = 3;</code>
+       * <code>repeated .ZMQAtomMessage results = 3;</code>
        *
        * <pre>
        * temporary, should merge with atom
        * </pre>
        */
-      public org.opencog.atomspace.AtomSpaceProtos.AtomResult.Builder addResultsBuilder(
+      public org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.Builder addResultsBuilder(
           int index) {
         return getResultsFieldBuilder().addBuilder(
-            index, org.opencog.atomspace.AtomSpaceProtos.AtomResult.getDefaultInstance());
+            index, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.getDefaultInstance());
       }
       /**
-       * <code>repeated .AtomResult results = 3;</code>
+       * <code>repeated .ZMQAtomMessage results = 3;</code>
        *
        * <pre>
        * temporary, should merge with atom
        * </pre>
        */
-      public java.util.List<org.opencog.atomspace.AtomSpaceProtos.AtomResult.Builder> 
+      public java.util.List<org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.Builder>
            getResultsBuilderList() {
         return getResultsFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilder<
-          org.opencog.atomspace.AtomSpaceProtos.AtomResult, org.opencog.atomspace.AtomSpaceProtos.AtomResult.Builder, org.opencog.atomspace.AtomSpaceProtos.AtomResultOrBuilder> 
+          org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.Builder, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessageOrBuilder>
           getResultsFieldBuilder() {
         if (resultsBuilder_ == null) {
           resultsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-              org.opencog.atomspace.AtomSpaceProtos.AtomResult, org.opencog.atomspace.AtomSpaceProtos.AtomResult.Builder, org.opencog.atomspace.AtomSpaceProtos.AtomResultOrBuilder>(
+              org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.Builder, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessageOrBuilder>(
                   results_,
                   ((bitField0_ & 0x00000004) == 0x00000004),
                   getParentForChildren(),
@@ -9631,966 +9835,6 @@ public final class AtomSpaceProtos {
     }
 
     // @@protoc_insertion_point(class_scope:ZMQReplyMessage)
-  }
-
-  public interface AtomResultOrBuilder
-      extends com.google.protobuf.MessageOrBuilder {
-
-    // required .ZMQAtomType kind = 1;
-    /**
-     * <code>required .ZMQAtomType kind = 1;</code>
-     */
-    boolean hasKind();
-    /**
-     * <code>required .ZMQAtomType kind = 1;</code>
-     */
-    org.opencog.atomspace.AtomSpaceProtos.ZMQAtomType getKind();
-
-    // optional fixed64 uuid = 2;
-    /**
-     * <code>optional fixed64 uuid = 2;</code>
-     */
-    boolean hasUuid();
-    /**
-     * <code>optional fixed64 uuid = 2;</code>
-     */
-    long getUuid();
-
-    // optional string atom_type = 3;
-    /**
-     * <code>optional string atom_type = 3;</code>
-     */
-    boolean hasAtomType();
-    /**
-     * <code>optional string atom_type = 3;</code>
-     */
-    java.lang.String getAtomType();
-    /**
-     * <code>optional string atom_type = 3;</code>
-     */
-    com.google.protobuf.ByteString
-        getAtomTypeBytes();
-
-    // optional string node_name = 4;
-    /**
-     * <code>optional string node_name = 4;</code>
-     */
-    boolean hasNodeName();
-    /**
-     * <code>optional string node_name = 4;</code>
-     */
-    java.lang.String getNodeName();
-    /**
-     * <code>optional string node_name = 4;</code>
-     */
-    com.google.protobuf.ByteString
-        getNodeNameBytes();
-
-    // repeated fixed64 outgoing_set = 5;
-    /**
-     * <code>repeated fixed64 outgoing_set = 5;</code>
-     */
-    java.util.List<java.lang.Long> getOutgoingSetList();
-    /**
-     * <code>repeated fixed64 outgoing_set = 5;</code>
-     */
-    int getOutgoingSetCount();
-    /**
-     * <code>repeated fixed64 outgoing_set = 5;</code>
-     */
-    long getOutgoingSet(int index);
-  }
-  /**
-   * Protobuf type {@code AtomResult}
-   */
-  public static final class AtomResult extends
-      com.google.protobuf.GeneratedMessage
-      implements AtomResultOrBuilder {
-    // Use AtomResult.newBuilder() to construct.
-    private AtomResult(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
-      super(builder);
-      this.unknownFields = builder.getUnknownFields();
-    }
-    private AtomResult(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
-
-    private static final AtomResult defaultInstance;
-    public static AtomResult getDefaultInstance() {
-      return defaultInstance;
-    }
-
-    public AtomResult getDefaultInstanceForType() {
-      return defaultInstance;
-    }
-
-    private final com.google.protobuf.UnknownFieldSet unknownFields;
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-        getUnknownFields() {
-      return this.unknownFields;
-    }
-    private AtomResult(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      initFields();
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-            case 8: {
-              int rawValue = input.readEnum();
-              org.opencog.atomspace.AtomSpaceProtos.ZMQAtomType value = org.opencog.atomspace.AtomSpaceProtos.ZMQAtomType.valueOf(rawValue);
-              if (value == null) {
-                unknownFields.mergeVarintField(1, rawValue);
-              } else {
-                bitField0_ |= 0x00000001;
-                kind_ = value;
-              }
-              break;
-            }
-            case 17: {
-              bitField0_ |= 0x00000002;
-              uuid_ = input.readFixed64();
-              break;
-            }
-            case 26: {
-              bitField0_ |= 0x00000004;
-              atomType_ = input.readBytes();
-              break;
-            }
-            case 34: {
-              bitField0_ |= 0x00000008;
-              nodeName_ = input.readBytes();
-              break;
-            }
-            case 41: {
-              if (!((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
-                outgoingSet_ = new java.util.ArrayList<java.lang.Long>();
-                mutable_bitField0_ |= 0x00000010;
-              }
-              outgoingSet_.add(input.readFixed64());
-              break;
-            }
-            case 42: {
-              int length = input.readRawVarint32();
-              int limit = input.pushLimit(length);
-              if (!((mutable_bitField0_ & 0x00000010) == 0x00000010) && input.getBytesUntilLimit() > 0) {
-                outgoingSet_ = new java.util.ArrayList<java.lang.Long>();
-                mutable_bitField0_ |= 0x00000010;
-              }
-              while (input.getBytesUntilLimit() > 0) {
-                outgoingSet_.add(input.readFixed64());
-              }
-              input.popLimit(limit);
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e.getMessage()).setUnfinishedMessage(this);
-      } finally {
-        if (((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
-          outgoingSet_ = java.util.Collections.unmodifiableList(outgoingSet_);
-        }
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return org.opencog.atomspace.AtomSpaceProtos.internal_static_AtomResult_descriptor;
-    }
-
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return org.opencog.atomspace.AtomSpaceProtos.internal_static_AtomResult_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              org.opencog.atomspace.AtomSpaceProtos.AtomResult.class, org.opencog.atomspace.AtomSpaceProtos.AtomResult.Builder.class);
-    }
-
-    public static com.google.protobuf.Parser<AtomResult> PARSER =
-        new com.google.protobuf.AbstractParser<AtomResult>() {
-      public AtomResult parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new AtomResult(input, extensionRegistry);
-      }
-    };
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<AtomResult> getParserForType() {
-      return PARSER;
-    }
-
-    private int bitField0_;
-    // required .ZMQAtomType kind = 1;
-    public static final int KIND_FIELD_NUMBER = 1;
-    private org.opencog.atomspace.AtomSpaceProtos.ZMQAtomType kind_;
-    /**
-     * <code>required .ZMQAtomType kind = 1;</code>
-     */
-    public boolean hasKind() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
-    }
-    /**
-     * <code>required .ZMQAtomType kind = 1;</code>
-     */
-    public org.opencog.atomspace.AtomSpaceProtos.ZMQAtomType getKind() {
-      return kind_;
-    }
-
-    // optional fixed64 uuid = 2;
-    public static final int UUID_FIELD_NUMBER = 2;
-    private long uuid_;
-    /**
-     * <code>optional fixed64 uuid = 2;</code>
-     */
-    public boolean hasUuid() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
-    }
-    /**
-     * <code>optional fixed64 uuid = 2;</code>
-     */
-    public long getUuid() {
-      return uuid_;
-    }
-
-    // optional string atom_type = 3;
-    public static final int ATOM_TYPE_FIELD_NUMBER = 3;
-    private java.lang.Object atomType_;
-    /**
-     * <code>optional string atom_type = 3;</code>
-     */
-    public boolean hasAtomType() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
-    }
-    /**
-     * <code>optional string atom_type = 3;</code>
-     */
-    public java.lang.String getAtomType() {
-      java.lang.Object ref = atomType_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          atomType_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>optional string atom_type = 3;</code>
-     */
-    public com.google.protobuf.ByteString
-        getAtomTypeBytes() {
-      java.lang.Object ref = atomType_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        atomType_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    // optional string node_name = 4;
-    public static final int NODE_NAME_FIELD_NUMBER = 4;
-    private java.lang.Object nodeName_;
-    /**
-     * <code>optional string node_name = 4;</code>
-     */
-    public boolean hasNodeName() {
-      return ((bitField0_ & 0x00000008) == 0x00000008);
-    }
-    /**
-     * <code>optional string node_name = 4;</code>
-     */
-    public java.lang.String getNodeName() {
-      java.lang.Object ref = nodeName_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          nodeName_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>optional string node_name = 4;</code>
-     */
-    public com.google.protobuf.ByteString
-        getNodeNameBytes() {
-      java.lang.Object ref = nodeName_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        nodeName_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    // repeated fixed64 outgoing_set = 5;
-    public static final int OUTGOING_SET_FIELD_NUMBER = 5;
-    private java.util.List<java.lang.Long> outgoingSet_;
-    /**
-     * <code>repeated fixed64 outgoing_set = 5;</code>
-     */
-    public java.util.List<java.lang.Long>
-        getOutgoingSetList() {
-      return outgoingSet_;
-    }
-    /**
-     * <code>repeated fixed64 outgoing_set = 5;</code>
-     */
-    public int getOutgoingSetCount() {
-      return outgoingSet_.size();
-    }
-    /**
-     * <code>repeated fixed64 outgoing_set = 5;</code>
-     */
-    public long getOutgoingSet(int index) {
-      return outgoingSet_.get(index);
-    }
-
-    private void initFields() {
-      kind_ = org.opencog.atomspace.AtomSpaceProtos.ZMQAtomType.ZMQAtomTypeNode;
-      uuid_ = 0L;
-      atomType_ = "";
-      nodeName_ = "";
-      outgoingSet_ = java.util.Collections.emptyList();
-    }
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
-
-      if (!hasKind()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      getSerializedSize();
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeEnum(1, kind_.getNumber());
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeFixed64(2, uuid_);
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeBytes(3, getAtomTypeBytes());
-      }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        output.writeBytes(4, getNodeNameBytes());
-      }
-      for (int i = 0; i < outgoingSet_.size(); i++) {
-        output.writeFixed64(5, outgoingSet_.get(i));
-      }
-      getUnknownFields().writeTo(output);
-    }
-
-    private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
-      int size = memoizedSerializedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(1, kind_.getNumber());
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeFixed64Size(2, uuid_);
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(3, getAtomTypeBytes());
-      }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(4, getNodeNameBytes());
-      }
-      {
-        int dataSize = 0;
-        dataSize = 8 * getOutgoingSetList().size();
-        size += dataSize;
-        size += 1 * getOutgoingSetList().size();
-      }
-      size += getUnknownFields().getSerializedSize();
-      memoizedSerializedSize = size;
-      return size;
-    }
-
-    private static final long serialVersionUID = 0L;
-    @java.lang.Override
-    protected java.lang.Object writeReplace()
-        throws java.io.ObjectStreamException {
-      return super.writeReplace();
-    }
-
-    public static org.opencog.atomspace.AtomSpaceProtos.AtomResult parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static org.opencog.atomspace.AtomSpaceProtos.AtomResult parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static org.opencog.atomspace.AtomSpaceProtos.AtomResult parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static org.opencog.atomspace.AtomSpaceProtos.AtomResult parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static org.opencog.atomspace.AtomSpaceProtos.AtomResult parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static org.opencog.atomspace.AtomSpaceProtos.AtomResult parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-    public static org.opencog.atomspace.AtomSpaceProtos.AtomResult parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input);
-    }
-    public static org.opencog.atomspace.AtomSpaceProtos.AtomResult parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input, extensionRegistry);
-    }
-    public static org.opencog.atomspace.AtomSpaceProtos.AtomResult parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static org.opencog.atomspace.AtomSpaceProtos.AtomResult parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-
-    public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(org.opencog.atomspace.AtomSpaceProtos.AtomResult prototype) {
-      return newBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() { return newBuilder(this); }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code AtomResult}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements org.opencog.atomspace.AtomSpaceProtos.AtomResultOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return org.opencog.atomspace.AtomSpaceProtos.internal_static_AtomResult_descriptor;
-      }
-
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return org.opencog.atomspace.AtomSpaceProtos.internal_static_AtomResult_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                org.opencog.atomspace.AtomSpaceProtos.AtomResult.class, org.opencog.atomspace.AtomSpaceProtos.AtomResult.Builder.class);
-      }
-
-      // Construct using org.opencog.atomspace.AtomSpaceProtos.AtomResult.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-        }
-      }
-      private static Builder create() {
-        return new Builder();
-      }
-
-      public Builder clear() {
-        super.clear();
-        kind_ = org.opencog.atomspace.AtomSpaceProtos.ZMQAtomType.ZMQAtomTypeNode;
-        bitField0_ = (bitField0_ & ~0x00000001);
-        uuid_ = 0L;
-        bitField0_ = (bitField0_ & ~0x00000002);
-        atomType_ = "";
-        bitField0_ = (bitField0_ & ~0x00000004);
-        nodeName_ = "";
-        bitField0_ = (bitField0_ & ~0x00000008);
-        outgoingSet_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000010);
-        return this;
-      }
-
-      public Builder clone() {
-        return create().mergeFrom(buildPartial());
-      }
-
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return org.opencog.atomspace.AtomSpaceProtos.internal_static_AtomResult_descriptor;
-      }
-
-      public org.opencog.atomspace.AtomSpaceProtos.AtomResult getDefaultInstanceForType() {
-        return org.opencog.atomspace.AtomSpaceProtos.AtomResult.getDefaultInstance();
-      }
-
-      public org.opencog.atomspace.AtomSpaceProtos.AtomResult build() {
-        org.opencog.atomspace.AtomSpaceProtos.AtomResult result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      public org.opencog.atomspace.AtomSpaceProtos.AtomResult buildPartial() {
-        org.opencog.atomspace.AtomSpaceProtos.AtomResult result = new org.opencog.atomspace.AtomSpaceProtos.AtomResult(this);
-        int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-          to_bitField0_ |= 0x00000001;
-        }
-        result.kind_ = kind_;
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-          to_bitField0_ |= 0x00000002;
-        }
-        result.uuid_ = uuid_;
-        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
-          to_bitField0_ |= 0x00000004;
-        }
-        result.atomType_ = atomType_;
-        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
-          to_bitField0_ |= 0x00000008;
-        }
-        result.nodeName_ = nodeName_;
-        if (((bitField0_ & 0x00000010) == 0x00000010)) {
-          outgoingSet_ = java.util.Collections.unmodifiableList(outgoingSet_);
-          bitField0_ = (bitField0_ & ~0x00000010);
-        }
-        result.outgoingSet_ = outgoingSet_;
-        result.bitField0_ = to_bitField0_;
-        onBuilt();
-        return result;
-      }
-
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof org.opencog.atomspace.AtomSpaceProtos.AtomResult) {
-          return mergeFrom((org.opencog.atomspace.AtomSpaceProtos.AtomResult)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(org.opencog.atomspace.AtomSpaceProtos.AtomResult other) {
-        if (other == org.opencog.atomspace.AtomSpaceProtos.AtomResult.getDefaultInstance()) return this;
-        if (other.hasKind()) {
-          setKind(other.getKind());
-        }
-        if (other.hasUuid()) {
-          setUuid(other.getUuid());
-        }
-        if (other.hasAtomType()) {
-          bitField0_ |= 0x00000004;
-          atomType_ = other.atomType_;
-          onChanged();
-        }
-        if (other.hasNodeName()) {
-          bitField0_ |= 0x00000008;
-          nodeName_ = other.nodeName_;
-          onChanged();
-        }
-        if (!other.outgoingSet_.isEmpty()) {
-          if (outgoingSet_.isEmpty()) {
-            outgoingSet_ = other.outgoingSet_;
-            bitField0_ = (bitField0_ & ~0x00000010);
-          } else {
-            ensureOutgoingSetIsMutable();
-            outgoingSet_.addAll(other.outgoingSet_);
-          }
-          onChanged();
-        }
-        this.mergeUnknownFields(other.getUnknownFields());
-        return this;
-      }
-
-      public final boolean isInitialized() {
-        if (!hasKind()) {
-          
-          return false;
-        }
-        return true;
-      }
-
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        org.opencog.atomspace.AtomSpaceProtos.AtomResult parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (org.opencog.atomspace.AtomSpaceProtos.AtomResult) e.getUnfinishedMessage();
-          throw e;
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-      private int bitField0_;
-
-      // required .ZMQAtomType kind = 1;
-      private org.opencog.atomspace.AtomSpaceProtos.ZMQAtomType kind_ = org.opencog.atomspace.AtomSpaceProtos.ZMQAtomType.ZMQAtomTypeNode;
-      /**
-       * <code>required .ZMQAtomType kind = 1;</code>
-       */
-      public boolean hasKind() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
-      }
-      /**
-       * <code>required .ZMQAtomType kind = 1;</code>
-       */
-      public org.opencog.atomspace.AtomSpaceProtos.ZMQAtomType getKind() {
-        return kind_;
-      }
-      /**
-       * <code>required .ZMQAtomType kind = 1;</code>
-       */
-      public Builder setKind(org.opencog.atomspace.AtomSpaceProtos.ZMQAtomType value) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        bitField0_ |= 0x00000001;
-        kind_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required .ZMQAtomType kind = 1;</code>
-       */
-      public Builder clearKind() {
-        bitField0_ = (bitField0_ & ~0x00000001);
-        kind_ = org.opencog.atomspace.AtomSpaceProtos.ZMQAtomType.ZMQAtomTypeNode;
-        onChanged();
-        return this;
-      }
-
-      // optional fixed64 uuid = 2;
-      private long uuid_ ;
-      /**
-       * <code>optional fixed64 uuid = 2;</code>
-       */
-      public boolean hasUuid() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
-      }
-      /**
-       * <code>optional fixed64 uuid = 2;</code>
-       */
-      public long getUuid() {
-        return uuid_;
-      }
-      /**
-       * <code>optional fixed64 uuid = 2;</code>
-       */
-      public Builder setUuid(long value) {
-        bitField0_ |= 0x00000002;
-        uuid_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional fixed64 uuid = 2;</code>
-       */
-      public Builder clearUuid() {
-        bitField0_ = (bitField0_ & ~0x00000002);
-        uuid_ = 0L;
-        onChanged();
-        return this;
-      }
-
-      // optional string atom_type = 3;
-      private java.lang.Object atomType_ = "";
-      /**
-       * <code>optional string atom_type = 3;</code>
-       */
-      public boolean hasAtomType() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
-      }
-      /**
-       * <code>optional string atom_type = 3;</code>
-       */
-      public java.lang.String getAtomType() {
-        java.lang.Object ref = atomType_;
-        if (!(ref instanceof java.lang.String)) {
-          java.lang.String s = ((com.google.protobuf.ByteString) ref)
-              .toStringUtf8();
-          atomType_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>optional string atom_type = 3;</code>
-       */
-      public com.google.protobuf.ByteString
-          getAtomTypeBytes() {
-        java.lang.Object ref = atomType_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          atomType_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>optional string atom_type = 3;</code>
-       */
-      public Builder setAtomType(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
-        atomType_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string atom_type = 3;</code>
-       */
-      public Builder clearAtomType() {
-        bitField0_ = (bitField0_ & ~0x00000004);
-        atomType_ = getDefaultInstance().getAtomType();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string atom_type = 3;</code>
-       */
-      public Builder setAtomTypeBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
-        atomType_ = value;
-        onChanged();
-        return this;
-      }
-
-      // optional string node_name = 4;
-      private java.lang.Object nodeName_ = "";
-      /**
-       * <code>optional string node_name = 4;</code>
-       */
-      public boolean hasNodeName() {
-        return ((bitField0_ & 0x00000008) == 0x00000008);
-      }
-      /**
-       * <code>optional string node_name = 4;</code>
-       */
-      public java.lang.String getNodeName() {
-        java.lang.Object ref = nodeName_;
-        if (!(ref instanceof java.lang.String)) {
-          java.lang.String s = ((com.google.protobuf.ByteString) ref)
-              .toStringUtf8();
-          nodeName_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>optional string node_name = 4;</code>
-       */
-      public com.google.protobuf.ByteString
-          getNodeNameBytes() {
-        java.lang.Object ref = nodeName_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          nodeName_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>optional string node_name = 4;</code>
-       */
-      public Builder setNodeName(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000008;
-        nodeName_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string node_name = 4;</code>
-       */
-      public Builder clearNodeName() {
-        bitField0_ = (bitField0_ & ~0x00000008);
-        nodeName_ = getDefaultInstance().getNodeName();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string node_name = 4;</code>
-       */
-      public Builder setNodeNameBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000008;
-        nodeName_ = value;
-        onChanged();
-        return this;
-      }
-
-      // repeated fixed64 outgoing_set = 5;
-      private java.util.List<java.lang.Long> outgoingSet_ = java.util.Collections.emptyList();
-      private void ensureOutgoingSetIsMutable() {
-        if (!((bitField0_ & 0x00000010) == 0x00000010)) {
-          outgoingSet_ = new java.util.ArrayList<java.lang.Long>(outgoingSet_);
-          bitField0_ |= 0x00000010;
-         }
-      }
-      /**
-       * <code>repeated fixed64 outgoing_set = 5;</code>
-       */
-      public java.util.List<java.lang.Long>
-          getOutgoingSetList() {
-        return java.util.Collections.unmodifiableList(outgoingSet_);
-      }
-      /**
-       * <code>repeated fixed64 outgoing_set = 5;</code>
-       */
-      public int getOutgoingSetCount() {
-        return outgoingSet_.size();
-      }
-      /**
-       * <code>repeated fixed64 outgoing_set = 5;</code>
-       */
-      public long getOutgoingSet(int index) {
-        return outgoingSet_.get(index);
-      }
-      /**
-       * <code>repeated fixed64 outgoing_set = 5;</code>
-       */
-      public Builder setOutgoingSet(
-          int index, long value) {
-        ensureOutgoingSetIsMutable();
-        outgoingSet_.set(index, value);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated fixed64 outgoing_set = 5;</code>
-       */
-      public Builder addOutgoingSet(long value) {
-        ensureOutgoingSetIsMutable();
-        outgoingSet_.add(value);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated fixed64 outgoing_set = 5;</code>
-       */
-      public Builder addAllOutgoingSet(
-          java.lang.Iterable<? extends java.lang.Long> values) {
-        ensureOutgoingSetIsMutable();
-        super.addAll(values, outgoingSet_);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated fixed64 outgoing_set = 5;</code>
-       */
-      public Builder clearOutgoingSet() {
-        outgoingSet_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000010);
-        onChanged();
-        return this;
-      }
-
-      // @@protoc_insertion_point(builder_scope:AtomResult)
-    }
-
-    static {
-      defaultInstance = new AtomResult(true);
-      defaultInstance.initFields();
-    }
-
-    // @@protoc_insertion_point(class_scope:AtomResult)
   }
 
   private static com.google.protobuf.Descriptors.Descriptor
@@ -10638,11 +9882,6 @@ public final class AtomSpaceProtos {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_ZMQReplyMessage_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_AtomResult_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_AtomResult_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -10666,36 +9905,33 @@ public final class AtomSpaceProtos {
       "\013 \003(\002\"M\n\024ZMQTruthValueMessage\0225\n\020singleT" +
       "ruthValue\030\001 \003(\0132\033.ZMQSingleTruthValueMes" +
       "sage\"1\n\017ZMQTrailMessage\022\017\n\007maxSize\030\001 \002(\005" +
-      "\022\r\n\005trail\030\002 \003(\004\"\232\002\n\016ZMQAtomMessage\022\036\n\010at" +
+      "\022\r\n\005trail\030\002 \003(\004\"\261\002\n\016ZMQAtomMessage\022\036\n\010at" +
       "omtype\030\001 \002(\0162\014.ZMQAtomType\022=\n\024attentionv" +
       "alueholder\030\002 \002(\0132\037.ZMQAttentionValueHold" +
       "erMessage\022\016\n\006handle\030\003 \002(\004\022\020\n\010incoming\030\004 " +
       "\003(\004\022\014\n\004type\030\005 \002(\005\022\r\n\005flags\030\006 \001(\005\022)\n\ntrut" +
       "hValue\030\007 \001(\0132\025.ZMQTruthValueMessage\022\014\n\004n",
       "ame\030\010 \001(\t\022\020\n\010outgoing\030\t \003(\004\022\037\n\005trail\030\n \001" +
-      "(\0132\020.ZMQTrailMessage\"}\n\016ZMQAtomRequest\022!" +
-      "\n\004kind\030\001 \002(\0162\023.ZMQAtomRequestKind\022\016\n\006han" +
-      "dle\030\002 \001(\004\022\021\n\tatom_type\030\003 \001(\t\022\021\n\tnode_nam" +
-      "e\030\004 \001(\t\022\022\n\nhandle_seq\030\005 \003(\004\"j\n\021ZMQReques" +
-      "tMessage\022\"\n\010function\030\001 \002(\0162\020.ZMQFunction" +
-      "Type\022\016\n\006handle\030\002 \001(\004\022!\n\010requests\030\003 \003(\0132\017" +
-      ".ZMQAtomRequest\"[\n\017ZMQReplyMessage\022\035\n\004at" +
-      "om\030\001 \001(\0132\017.ZMQAtomMessage\022\013\n\003str\030\002 \001(\t\022\034" +
-      "\n\007results\030\003 \003(\0132\013.AtomResult\"r\n\nAtomResu",
-      "lt\022\032\n\004kind\030\001 \002(\0162\014.ZMQAtomType\022\014\n\004uuid\030\002" +
-      " \001(\006\022\021\n\tatom_type\030\003 \001(\t\022\021\n\tnode_name\030\004 \001" +
-      "(\t\022\024\n\014outgoing_set\030\005 \003(\006*\250\001\n\021ZMQTruthVal" +
-      "ueType\022\033\n\027ZMQTruthValueTypeSimple\020\000\022\032\n\026Z" +
-      "MQTruthValueTypeCount\020\001\022\031\n\025ZMQTruthValue" +
-      "TypeNull\020\002\022\037\n\033ZMQTruthValueTypeIndefinit" +
-      "e\020\003\022\036\n\032ZMQTruthValueTypeComposite\020\004*P\n\013Z" +
-      "MQAtomType\022\023\n\017ZMQAtomTypeNode\020\000\022\023\n\017ZMQAt" +
-      "omTypeLink\020\001\022\027\n\023ZMQAtomTypeNotFound\020\002*2\n" +
-      "\022ZMQAtomRequestKind\022\010\n\004UUID\020\000\022\010\n\004NODE\020\001\022",
-      "\010\n\004LINK\020\002*B\n\017ZMQFunctionType\022\016\n\nZMQgetAt" +
-      "om\020\000\022\016\n\nZMQgetName\020\001\022\017\n\013ZMQgetAtoms\020\002B*\n" +
-      "\025org.opencog.atomspaceB\017AtomSpaceProtosH" +
-      "\001"
+      "(\0132\020.ZMQTrailMessage\022\025\n\ratom_type_str\030\013 " +
+      "\001(\t\"}\n\016ZMQAtomRequest\022!\n\004kind\030\001 \002(\0162\023.ZM" +
+      "QAtomRequestKind\022\016\n\006handle\030\002 \001(\004\022\021\n\tatom" +
+      "_type\030\003 \001(\t\022\021\n\tnode_name\030\004 \001(\t\022\022\n\nhandle" +
+      "_seq\030\005 \003(\004\"j\n\021ZMQRequestMessage\022\"\n\010funct" +
+      "ion\030\001 \002(\0162\020.ZMQFunctionType\022\016\n\006handle\030\002 " +
+      "\001(\004\022!\n\010requests\030\003 \003(\0132\017.ZMQAtomRequest\"`" +
+      "\n\017ZMQReplyMessage\022\036\n\005atom2\030\001 \001(\0132\017.ZMQAt" +
+      "omMessage\022\013\n\003str\030\002 \001(\t\022 \n\007results\030\003 \003(\0132",
+      "\017.ZMQAtomMessage*\250\001\n\021ZMQTruthValueType\022\033" +
+      "\n\027ZMQTruthValueTypeSimple\020\000\022\032\n\026ZMQTruthV" +
+      "alueTypeCount\020\001\022\031\n\025ZMQTruthValueTypeNull" +
+      "\020\002\022\037\n\033ZMQTruthValueTypeIndefinite\020\003\022\036\n\032Z" +
+      "MQTruthValueTypeComposite\020\004*P\n\013ZMQAtomTy" +
+      "pe\022\023\n\017ZMQAtomTypeNode\020\000\022\023\n\017ZMQAtomTypeLi" +
+      "nk\020\001\022\027\n\023ZMQAtomTypeNotFound\020\002*2\n\022ZMQAtom" +
+      "RequestKind\022\010\n\004UUID\020\000\022\010\n\004NODE\020\001\022\010\n\004LINK\020" +
+      "\002*B\n\017ZMQFunctionType\022\016\n\nZMQgetAtom\020\000\022\016\n\n" +
+      "ZMQgetName\020\001\022\017\n\013ZMQgetAtoms\020\002B*\n\025org.ope",
+      "ncog.atomspaceB\017AtomSpaceProtosH\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -10737,7 +9973,7 @@ public final class AtomSpaceProtos {
           internal_static_ZMQAtomMessage_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_ZMQAtomMessage_descriptor,
-              new java.lang.String[] { "Atomtype", "Attentionvalueholder", "Handle", "Incoming", "Type", "Flags", "TruthValue", "Name", "Outgoing", "Trail", });
+              new java.lang.String[] { "Atomtype", "Attentionvalueholder", "Handle", "Incoming", "Type", "Flags", "TruthValue", "Name", "Outgoing", "Trail", "AtomTypeStr", });
           internal_static_ZMQAtomRequest_descriptor =
             getDescriptor().getMessageTypes().get(6);
           internal_static_ZMQAtomRequest_fieldAccessorTable = new
@@ -10755,13 +9991,7 @@ public final class AtomSpaceProtos {
           internal_static_ZMQReplyMessage_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_ZMQReplyMessage_descriptor,
-              new java.lang.String[] { "Atom", "Str", "Results", });
-          internal_static_AtomResult_descriptor =
-            getDescriptor().getMessageTypes().get(9);
-          internal_static_AtomResult_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_AtomResult_descriptor,
-              new java.lang.String[] { "Kind", "Uuid", "AtomType", "NodeName", "OutgoingSet", });
+              new java.lang.String[] { "Atom2", "Str", "Results", });
           return null;
         }
       };

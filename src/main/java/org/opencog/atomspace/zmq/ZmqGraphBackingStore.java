@@ -97,17 +97,17 @@ public class ZmqGraphBackingStore extends GraphBackingStoreBase {
 //        });
         final AtomSpaceProtos.ZMQRequestMessage protoReqs = AtomSpaceProtos.ZMQRequestMessage.newBuilder()
                 .addAllRequests(reqs.stream().map(javaReq -> {
-                    final AtomSpaceProtos.ZMQAtomRequest.Builder b = AtomSpaceProtos.ZMQAtomRequest.newBuilder()
+                    final AtomSpaceProtos.ZMQAtomFetch.Builder b = AtomSpaceProtos.ZMQAtomFetch.newBuilder()
                             .setKind(javaReq.getKind().toProto())
                             .setHandle(javaReq.getUuid());
                     if (javaReq.getType() != null) {
                         b.setAtomType(javaReq.getType().toUpperCamel());
                     }
                     if (javaReq.getName() != null) {
-                        b.setNodeName(javaReq.getName());
+                        b.setName(javaReq.getName());
                     }
                     if (javaReq.getHandleSeq() != null) {
-                        b.addAllHandleSeq(javaReq.getHandleSeq());
+                        b.addAllOutgoing(javaReq.getHandleSeq());
                     }
                     return b.build();
                 }).collect(Collectors.toList()))
@@ -120,20 +120,20 @@ public class ZmqGraphBackingStore extends GraphBackingStoreBase {
                         try {
                             atomsResult = AtomSpaceProtos.ZMQReplyMessage.parseFrom(exchange.getIn().getBody(byte[].class));
                             log.debug("Received {}", atomsResult);
-                            final List<Atom> atoms = atomsResult.getResultsList().stream().map(res -> {
-                                switch (res.getKind()) {
+                            final List<Atom> atoms = atomsResult.getAtomList().stream().map(res -> {
+                                switch (res.getAtomtype()) {
                                     case ZMQAtomTypeNotFound:
                                         return null;
                                     case ZMQAtomTypeNode:
-                                        return new Node(AtomType.forUpperCamel(res.getAtomType()), res.getNodeName());
+                                        return new Node(AtomType.forUpperCamel(res.getAtomTypeStr()), res.getName());
                                     case ZMQAtomTypeLink:
-                                        final List<GenericHandle> outgoingSet = res.getOutgoingSetList().stream()
+                                        final List<GenericHandle> outgoingSet = res.getOutgoingList().stream()
                                                 .map(it -> new GenericHandle(it))
                                                 .collect(Collectors.toList());
-                                        final Link link = new Link(AtomType.forUpperCamel(res.getAtomType()), outgoingSet);
+                                        final Link link = new Link(AtomType.forUpperCamel(res.getAtomTypeStr()), outgoingSet);
                                         return link;
                                     default:
-                                        throw new IllegalArgumentException("Unknown AtomResult kind: " + res.getKind());
+                                        throw new IllegalArgumentException("Unknown AtomResult kind: " + res.getAtomtype());
                                 }
                             }).collect(Collectors.toList());
                             log.debug("Got {} atoms: {}", atoms.size(), atoms.stream().limit(10).toArray());
