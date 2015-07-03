@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 
 import javax.annotation.Nullable;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,23 +14,23 @@ public class AtomRequest implements Serializable {
         /**
          * get {@link Node} or {@link Link} by handle UUID
          */
-        UUID(AtomSpaceProtos.AtomRequest.AtomRequestKind.UUID),
+        UUID(AtomSpaceProtos.ZMQAtomRequestKind.UUID),
         /**
          * get node by atom_type and node_name
          */
-        NODE(AtomSpaceProtos.AtomRequest.AtomRequestKind.NODE),
+        NODE(AtomSpaceProtos.ZMQAtomRequestKind.NODE),
         /**
          * get link by atom_type and handle_seq
          */
-        LINK(AtomSpaceProtos.AtomRequest.AtomRequestKind.LINK);
+        LINK(AtomSpaceProtos.ZMQAtomRequestKind.LINK);
 
-        private AtomSpaceProtos.AtomRequest.AtomRequestKind protoKind;
+        private AtomSpaceProtos.ZMQAtomRequestKind protoKind;
 
-        AtomRequestKind(AtomSpaceProtos.AtomRequest.AtomRequestKind protoKind) {
+        AtomRequestKind(AtomSpaceProtos.ZMQAtomRequestKind protoKind) {
             this.protoKind = protoKind;
         }
 
-        public AtomSpaceProtos.AtomRequest.AtomRequestKind toProto() {
+        public AtomSpaceProtos.ZMQAtomRequestKind toProto() {
             return protoKind;
         }
     }

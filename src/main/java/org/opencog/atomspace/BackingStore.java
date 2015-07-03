@@ -54,23 +54,54 @@ public interface BackingStore {
 
     /**
      * Recursively store the atom and anything in it's outgoing set.
-     * If the atom is already in storage, this will update it's
+     * If the atom is already in {@link BackingStore} storage, this will update it's
      * truth value, etc.
-     * @param handle
+     * @param handle Local {@link Node} or {@link Link} object must be provided
+     *               inside the handle.
      * @return
      */
-    String storeAtom(Handle handle);
+    Boolean storeAtom(Handle handle);
 
     /**
-     * Load <strong>all</strong> atoms of the given type, but only if they are not
-     * already in the AtomTable.  (This avoids truth value merges
-     * between truth values stored in the backend, and truth values
-     * in the atomspace.)
-     * @param atomTable
-     * @param type
+     * Recursively store the atom and anything in it's outgoing set.
+     * If the atom is already in {@link BackingStore} storage, this will update it's
+     * truth value, etc.
+     * @param handle Local {@link Node} or {@link Link} object must be provided
+     *               inside the handle.
      * @return
      */
-    String loadType(String atomTable, AtomType type);
+    ListenableFuture<Boolean> storeAtomAsync(Handle handle);
+
+    /**
+     * Recursively store the atom(s) and anything in it's outgoing set.
+     * If an atom is already in {@link BackingStore} storage, this will update it's
+     * truth value, etc.
+     * @param handles Local {@link Node} or {@link Link} object must be provided
+     *               inside the handle.
+     * @return Number of stored/updated atoms.
+     */
+    Integer storeAtoms(List<Handle> handles);
+
+    /**
+     * Recursively store the atom(s) and anything in it's outgoing set.
+     * If an atom is already in {@link BackingStore} storage, this will update it's
+     * truth value, etc.
+     * @param handles Local {@link Node} or {@link Link} object must be provided
+     *               inside the handle.
+     * @return Number of stored/updated atoms.
+     */
+    ListenableFuture<Integer> storeAtomsAsync(List<Handle> handles);
+
+    /**
+     * Load <strong>all</strong> atoms of the given {@link AtomType}, but only if they are not
+     * already in the AtomTable.  (This avoids truth value merges
+     * between truth values stored in the {@link BackingStore} backend, and truth values
+     * in the {@link AtomSpace}.)
+     * @param atomTable
+     * @param type
+     * @return Number of atoms loaded.
+     */
+    Integer loadType(String atomTable, AtomType type);
 
     /**
      * Read-write synchronization barrier.

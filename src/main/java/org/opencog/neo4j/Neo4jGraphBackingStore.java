@@ -8,7 +8,6 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import org.neo4j.graphdb.*;
 import org.opencog.atomspace.*;
-import org.opencog.atomspace.Node;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -18,12 +17,13 @@ import org.springframework.transaction.support.TransactionTemplate;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Implements {@link GraphBackingStore} using Neo4j {@link org.neo4j.graphdb.GraphDatabaseService}.
  */
 @Transactional
-public class Neo4jGraphBackingStore implements GraphBackingStore {
+public class Neo4jGraphBackingStore extends GraphBackingStoreBase {
 
     private static final Logger log = LoggerFactory.getLogger(Neo4jGraphBackingStore.class);
 
@@ -41,8 +41,7 @@ public class Neo4jGraphBackingStore implements GraphBackingStore {
         txTemplate = new TransactionTemplate(txMgr);
     }
 
-    @Override
-    public Optional<Link> getLink(AtomType type, List<Handle> handleSeq) {
+    protected Optional<Link> doGetLink(AtomType type, List<Handle> handleSeq) {
         if (type.getGraphMapping() == GraphMapping.EDGE) {
             Preconditions.checkArgument(handleSeq.size() == 2,
                     "Type " + type + " graph mapping is EDGE which supports only 2 outgoing set, but " + handleSeq.size() + " given");
@@ -86,18 +85,11 @@ public class Neo4jGraphBackingStore implements GraphBackingStore {
         }
     }
 
-    @Override //@Transactional
-    public Optional<org.opencog.atomspace.Node> getNode(AtomType type, String name) {
-        try (final Transaction tx = db.beginTx()) {
-            final Optional<org.neo4j.graphdb.Node> graphNode = Optional.ofNullable(
-                    db.findNode(DynamicLabel.label(type.getGraphLabel()), Neo4jNode.NODE_NAME, name));
-            tx.success();
-            return graphNode.map(it -> new Neo4jNode(type, name));
-        }
-//        return txTemplate.execute((status) -> {
-//        });
-    }
-
+    /**
+     * The real workhorse for all other primitive methods.
+     * @param reqs
+     * @return
+     */
     @Override
     public ListenableFuture<List<Atom>> getAtomsAsync(List<AtomRequest> reqs) {
         try (final Transaction tx = db.beginTx()) {
@@ -140,7 +132,9 @@ public class Neo4jGraphBackingStore implements GraphBackingStore {
                         result.add(graphNode.map(it -> new Neo4jNode(req.getType(), req.getName())).orElse(null));
                         break;
                     case LINK:
-                        throw new IllegalArgumentException("Unsupported request kind: " + req.getKind());
+                        final Optional<Link> foundLink = doGetLink(req.getType(), req.getHandleSeq().stream()
+                                .map(Neo4jHandle::new).collect(Collectors.toList()));
+                        result.add(foundLink.orElse(null));
                     default:
                         throw new IllegalArgumentException("Unsupported request kind: " + req.getKind());
                 }
@@ -151,55 +145,28 @@ public class Neo4jGraphBackingStore implements GraphBackingStore {
     }
 
     @Override
-    public Optional<Atom> getAtom(Handle handle) {
-        Preconditions.checkArgument(handle instanceof Neo4jHandle, "handle must be a Neo4jHandle");
-        final Neo4jHandle graphHandle = (Neo4jHandle) handle;
-        switch (graphHandle.getIdKind()) {
-            case VERTEX:
-                try {
-                    final org.neo4j.graphdb.Node graphNode = db.getNodeById(graphHandle.getVertexOrEdgeId());
-                    final Label graphLabel = graphNode.getLabels().iterator().next();
-                    if (graphLabel.name().endsWith("Link")) {
-                        final AtomType type = AtomType.forGraphLabel(graphLabel.name());
-                        return Optional.of(new Neo4jLink(type, graphNode));
-                    } else {
-                        final AtomType type = AtomType.forGraphLabel(graphLabel.name());
-                        return Optional.of(new Neo4jNode(type, (String) graphNode.getProperty(Neo4jNode.NODE_NAME)));
-                    }
-                } catch (NotFoundException e) {
-                    return Optional.empty();
-                }
-            case EDGE:
-                try {
-                    final Relationship rel = db.getRelationshipById(graphHandle.getVertexOrEdgeId());
-                    final AtomType type = AtomType.forGraphLabel(rel.getType().name());
-                    return Optional.of(new Neo4jLink(type, rel));
-                } catch (NotFoundException e) {
-                    return Optional.empty();
-                }
-
-        }
-        return null;
-    }
-
-    @Override
     public List<Handle> getIncomingSet(Handle handle) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public String storeAtom(Handle handle) {
+    public Boolean storeAtom(Handle handle) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public String loadType(String atomTable, AtomType type) {
+    public ListenableFuture<Integer> storeAtomsAsync(List<Handle> handles) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Integer loadType(String atomTable, AtomType type) {
         throw new UnsupportedOperationException();
     }
 
     @Override
     public void barrier() {
-        throw new UnsupportedOperationException();
+        // do nothing?
     }
 
     @Override
@@ -212,8 +179,4 @@ public class Neo4jGraphBackingStore implements GraphBackingStore {
         return !(handle instanceof Neo4jHandle);
     }
 
-    @Override
-    public ListenableFuture<Optional<Node>> getNodeAsync(AtomType type, String name) {
-        throw new UnsupportedOperationException();
-    }
 }

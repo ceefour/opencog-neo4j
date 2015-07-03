@@ -1,10 +1,6 @@
 package org.opencog.atomspace.zmq;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.*;
-import com.google.protobuf.ByteString;
-import com.google.protobuf.GeneratedMessage;
-import com.google.protobuf.InvalidProtocolBufferException;
 import org.apache.camel.*;
 import org.apache.camel.spi.Synchronization;
 import org.opencog.atomspace.*;
@@ -18,11 +14,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 /**
@@ -30,7 +21,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @Profile({"clientapp", "zeromqstore"})
-public class ZmqGraphBackingStore implements GraphBackingStore, AutoCloseable {
+public class ZmqGraphBackingStore extends GraphBackingStoreBase {
 
     private static final Logger log = LoggerFactory.getLogger(ZmqGraphBackingStore.class);
 
@@ -40,13 +31,13 @@ public class ZmqGraphBackingStore implements GraphBackingStore, AutoCloseable {
     private CamelContext camelContext;
     private ProducerTemplate producerTemplate;
 
-    private Map<UUID, SettableFuture<GeneratedMessage>> pendings = new ConcurrentHashMap<>();
+//    private Map<UUID, SettableFuture<GeneratedMessage>> pendings = new ConcurrentHashMap<>();
 
-    private ListeningExecutorService executorService;
+//    private ListeningExecutorService executorService;
 
     @PostConstruct
     public void init() throws Exception {
-        executorService = MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
+//        executorService = MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
         producerTemplate = camelContext.createProducerTemplate();
         final String zmqHost = env.getRequiredProperty("zeromq.host");
         final int zmqPort = env.getRequiredProperty("zeromq.port", Integer.class);
@@ -57,36 +48,22 @@ public class ZmqGraphBackingStore implements GraphBackingStore, AutoCloseable {
     @PreDestroy
     public void close() throws Exception {
         producerTemplate.stop();
-        executorService.shutdown();
-        pendings.forEach((key, value) -> value.setException(new AtomSpaceException("Request " + key + " abandoned because ZeroMQ Backing Store is shutting down.")));
-        pendings.clear();
+//        executorService.shutdown();
+//        pendings.forEach((key, value) -> value.setException(new AtomSpaceException("Request " + key + " abandoned because ZeroMQ Backing Store is shutting down.")));
+//        pendings.clear();
     }
 
-    @Handler
-    public void handleMessage(@Body AtomSpaceProtos.AtomsResult atomsResult) {
-        final UUID correlationId = UuidUtils.fromByteArray(atomsResult.getCorrelationId().toByteArray());
-        final SettableFuture<GeneratedMessage> pending = pendings.get(correlationId);
-        if (pending != null) {
-            pendings.remove(correlationId);
-            pending.set(atomsResult);
-        } else {
-            log.warn("Cannot find pending AtomsRequest with correlation id '{}'", correlationId);
-        }
-    }
-
-    @Override
-    public Optional<Link> getLink(AtomType type, List<Handle> handleSeq) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Optional<Node> getNode(AtomType type, String name) {
-        try {
-            return getNodeAsync(type, name).get();
-        } catch (Exception e) {
-            throw new AtomSpaceException(e, "Cannot get node %s/%s", type, name);
-        }
-    }
+//    @Handler
+//    public void handleMessage(@Body AtomSpaceProtos.AtomsResult atomsResult) {
+//        final UUID correlationId = UuidUtils.fromByteArray(atomsResult.getCorrelationId().toByteArray());
+//        final SettableFuture<GeneratedMessage> pending = pendings.get(correlationId);
+//        if (pending != null) {
+//            pendings.remove(correlationId);
+//            pending.set(atomsResult);
+//        } else {
+//            log.warn("Cannot find pending AtomsRequest with correlation id '{}'", correlationId);
+//        }
+//    }
 
     @Override
     public ListenableFuture<List<Atom>> getAtomsAsync(List<AtomRequest> reqs) {
@@ -118,11 +95,11 @@ public class ZmqGraphBackingStore implements GraphBackingStore, AutoCloseable {
 //                nodeFuture.setException(t);
 //            }
 //        });
-        final AtomSpaceProtos.AtomsRequest protoReqs = AtomSpaceProtos.AtomsRequest.newBuilder()
+        final AtomSpaceProtos.ZMQRequestMessage protoReqs = AtomSpaceProtos.ZMQRequestMessage.newBuilder()
                 .addAllRequests(reqs.stream().map(javaReq -> {
-                    final AtomSpaceProtos.AtomRequest.Builder b = AtomSpaceProtos.AtomRequest.newBuilder()
+                    final AtomSpaceProtos.ZMQAtomRequest.Builder b = AtomSpaceProtos.ZMQAtomRequest.newBuilder()
                             .setKind(javaReq.getKind().toProto())
-                            .setUuid(javaReq.getUuid());
+                            .setHandle(javaReq.getUuid());
                     if (javaReq.getType() != null) {
                         b.setAtomType(javaReq.getType().toUpperCamel());
                     }
@@ -139,17 +116,17 @@ public class ZmqGraphBackingStore implements GraphBackingStore, AutoCloseable {
                 protoReqs, new Synchronization() {
                     @Override
                     public void onComplete(Exchange exchange) {
-                        final AtomSpaceProtos.AtomsResult atomsResult;
+                        final AtomSpaceProtos.ZMQReplyMessage atomsResult;
                         try {
-                            atomsResult = AtomSpaceProtos.AtomsResult.parseFrom(exchange.getIn().getBody(byte[].class));
+                            atomsResult = AtomSpaceProtos.ZMQReplyMessage.parseFrom(exchange.getIn().getBody(byte[].class));
                             log.debug("Received {}", atomsResult);
                             final List<Atom> atoms = atomsResult.getResultsList().stream().map(res -> {
                                 switch (res.getKind()) {
-                                    case NOT_FOUND:
+                                    case ZMQAtomTypeNotFound:
                                         return null;
-                                    case NODE:
+                                    case ZMQAtomTypeNode:
                                         return new Node(AtomType.forUpperCamel(res.getAtomType()), res.getNodeName());
-                                    case LINK:
+                                    case ZMQAtomTypeLink:
                                         final List<GenericHandle> outgoingSet = res.getOutgoingSetList().stream()
                                                 .map(it -> new GenericHandle(it))
                                                 .collect(Collectors.toList());
@@ -176,75 +153,22 @@ public class ZmqGraphBackingStore implements GraphBackingStore, AutoCloseable {
     }
 
     @Override
-    public ListenableFuture<Optional<Node>> getNodeAsync(AtomType type, String name) {
-        return Futures.transform(getAtomsAsync(ImmutableList.of(new AtomRequest(type, name))),
-                (List<Atom> it) -> !it.isEmpty() ? Optional.of((Node) it.get(0)) : Optional.empty());
-    }
-
-    @Override
-    public Optional<Atom> getAtom(Handle handle) {
-        try {
-            return getAtomAsync(handle).get();
-        } catch (Exception e) {
-            throw new AtomSpaceException(e, "Cannot get atom %s", handle);
-        }
-    }
-
-    public ListenableFuture<Optional<Atom>> getAtomAsync(Handle handle) {
-        final SettableFuture<Optional<Atom>> atomFuture = SettableFuture.create();
-        final SettableFuture<AtomSpaceProtos.AtomsResult> msgFuture = SettableFuture.create();
-        Futures.addCallback(msgFuture, new FutureCallback<AtomSpaceProtos.AtomsResult>() {
-            @Override
-            public void onSuccess(AtomSpaceProtos.AtomsResult result) {
-                final AtomSpaceProtos.AtomResult first = result.getResults(0);
-                switch (first.getKind()) {
-                    case NOT_FOUND:
-                        atomFuture.set(Optional.empty());
-                        break;
-                    case NODE:
-                        atomFuture.set(Optional.of(new Atom(AtomType.forUpperCamel(first.getAtomType()))));
-                        break;
-                    case LINK:
-                        final List<GenericHandle> outgoingSet = first.getOutgoingSetList().stream().map(it -> new GenericHandle(it))
-                                .collect(Collectors.toList());
-                        atomFuture.set(Optional.of(new Link(AtomType.forUpperCamel(first.getAtomType()), outgoingSet)));
-                        break;
-                    default:
-                        throw new IllegalArgumentException("Unknown AtomResult kind: " + first.getKind());
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                atomFuture.setException(t);
-            }
-        });
-        final AtomSpaceProtos.AtomRequest req = AtomSpaceProtos.AtomRequest.newBuilder()
-                .setKind(AtomSpaceProtos.AtomRequest.AtomRequestKind.UUID)
-                .setUuid(handle.getUuid())
-                .build();
-        final UUID correlationId = UUID.randomUUID();
-        pendings.put(correlationId, (SettableFuture) msgFuture);
-        final AtomSpaceProtos.AtomsRequest reqs = AtomSpaceProtos.AtomsRequest.newBuilder()
-                .setCorrelationId(ByteString.copyFrom(UuidUtils.toByteArray(correlationId)))
-                .addRequests(req)
-                .build();
-        producerTemplate.sendBody(reqs);
-        return atomFuture;
-    }
-
-    @Override
     public List<Handle> getIncomingSet(Handle handle) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public String storeAtom(Handle handle) {
+    public Boolean storeAtom(Handle handle) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public String loadType(String atomTable, AtomType type) {
+    public ListenableFuture<Integer> storeAtomsAsync(List<Handle> handles) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Integer loadType(String atomTable, AtomType type) {
         throw new UnsupportedOperationException();
     }
 

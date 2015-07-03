@@ -1,5 +1,7 @@
 package org.opencog.atomspace;
 
+import com.fasterxml.jackson.databind.node.TextNode;
+
 import java.io.Serializable;
 
 /**
@@ -26,9 +28,7 @@ public class Node extends Atom implements Serializable {
 
     @Override
     public String toString() {
-        return "Node{" +
-                "type=" + getType() + ", " +
-                "name='" + name + '\'' +
-                '}';
+        return "(" + getType().toUpperCamel() + " " +
+                new TextNode(name) + ')';
     }
 }

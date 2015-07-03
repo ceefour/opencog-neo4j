@@ -9,4 +9,4 @@ Requirements:
 
 To generate, run:
 
-    protoc -I=protobuf --java_out=src/main/java protobuf/atomspace.proto
+    protoc -I=protobuf --java_out=src/main/java protobuf/ZMQMessages.proto

@@ -1,8 +1,6 @@
 package org.opencog.neo4j.camel;
 
-import com.google.common.base.Preconditions;
 import com.google.common.base.Verify;
-import com.google.protobuf.ByteString;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.opencog.atomspace.*;
@@ -46,18 +44,17 @@ public class AtomSpaceRouteConfig {
                         .process((Exchange xc) -> {
                             final byte[] bytes = xc.getIn().getBody(byte[].class);
                             log.debug("Received {} bytes", bytes.length);
-                            final AtomSpaceProtos.AtomsRequest reqs = AtomSpaceProtos.AtomsRequest.parseFrom(bytes);
+                            final AtomSpaceProtos.ZMQRequestMessage reqs = AtomSpaceProtos.ZMQRequestMessage.parseFrom(bytes);
                             xc.getIn().setBody(reqs);
                         }).to("log:atomspace-in-parsed?showAll=true&multiline=true")
                         .process((Exchange xc) -> {
-                            final AtomSpaceProtos.AtomsRequest inp = xc.getIn().getBody(AtomSpaceProtos.AtomsRequest.class);
-                            final AtomSpaceProtos.AtomsResult.Builder atomsResultb = AtomSpaceProtos.AtomsResult.newBuilder()
-                                    .setCorrelationId(inp.getCorrelationId());
+                            final AtomSpaceProtos.ZMQRequestMessage inp = xc.getIn().getBody(AtomSpaceProtos.ZMQRequestMessage.class);
+                            final AtomSpaceProtos.ZMQReplyMessage.Builder atomsResultb = AtomSpaceProtos.ZMQReplyMessage.newBuilder();
                             final List<AtomRequest> nodeRequests = inp.getRequestsList().stream()
                                     .map(it -> {
                                         switch (it.getKind()) {
                                             case UUID:
-                                                return new AtomRequest(it.getUuid());
+                                                return new AtomRequest(it.getHandle());
                                             case NODE:
                                                 return new AtomRequest(AtomType.forUpperCamel(it.getAtomType()), it.getNodeName());
                                             case LINK:
@@ -71,7 +68,7 @@ public class AtomSpaceRouteConfig {
                                 //final Optional<Node> node = neo4jBs.getNode(AtomType.forUpperCamel(req.getAtomType()), req.getNodeName());
                                 if (atom instanceof Node) {
                                     atomsResultb.addResults(AtomSpaceProtos.AtomResult.newBuilder()
-                                            .setKind(AtomSpaceProtos.AtomResult.ResultKind.NODE)
+                                            .setKind(AtomSpaceProtos.ZMQAtomType.ZMQAtomTypeNode)
                                             .setAtomType(atom.getType().toUpperCamel())
                                             .setNodeName(((Node) atom).getName())
                                             .build());
@@ -79,13 +76,13 @@ public class AtomSpaceRouteConfig {
                                     Verify.verify(((Link) atom).getOutgoingSet() != null,
                                             "Link %s outgoingSet cannot be null", atom.getType());
                                     atomsResultb.addResults(AtomSpaceProtos.AtomResult.newBuilder()
-                                            .setKind(AtomSpaceProtos.AtomResult.ResultKind.LINK)
+                                            .setKind(AtomSpaceProtos.ZMQAtomType.ZMQAtomTypeLink)
                                             .setAtomType(atom.getType().toUpperCamel())
                                             .addAllOutgoingSet(((Link) atom).getOutgoingSet().stream().map(Handle::getUuid).collect(Collectors.toList()))
                                             .build());
                                 } else {
                                     atomsResultb.addResults(AtomSpaceProtos.AtomResult.newBuilder()
-                                            .setKind(AtomSpaceProtos.AtomResult.ResultKind.NOT_FOUND).build());
+                                            .setKind(AtomSpaceProtos.ZMQAtomType.ZMQAtomTypeNotFound).build());
                                 }
                             });
                             xc.getIn().setBody(atomsResultb.build());
@@ -94,7 +91,7 @@ public class AtomSpaceRouteConfig {
                         .process(xc -> {
                             log.error("Error processing", xc.getException());
                             // FIXME: catch exception and put into protobuf
-                            xc.getIn().setBody(AtomSpaceProtos.AtomsResult.newBuilder().build());
+                            xc.getIn().setBody(AtomSpaceProtos.ZMQReplyMessage.newBuilder().build());
                         });
             }
         };
@@ -112,24 +109,23 @@ public class AtomSpaceRouteConfig {
                         .process(it -> {
                             final UUID correlationId = UUID.randomUUID();
                             it.getIn().setHeader("comment", "Sending " + correlationId);
-                            final AtomSpaceProtos.AtomRequest req1 = AtomSpaceProtos.AtomRequest.newBuilder()
-                                    .setKind(AtomSpaceProtos.AtomRequest.AtomRequestKind.NODE)
+                            final AtomSpaceProtos.ZMQAtomRequest req1 = AtomSpaceProtos.ZMQAtomRequest.newBuilder()
+                                    .setKind(AtomSpaceProtos.ZMQAtomRequestKind.NODE)
                                     .setAtomType("ConceptNode")
                                     .setNodeName("GO:0000024")
                                     .build();
-                            final AtomSpaceProtos.AtomRequest req2 = AtomSpaceProtos.AtomRequest.newBuilder()
-                                    .setKind(AtomSpaceProtos.AtomRequest.AtomRequestKind.NODE)
+                            final AtomSpaceProtos.ZMQAtomRequest req2 = AtomSpaceProtos.ZMQAtomRequest.newBuilder()
+                                    .setKind(AtomSpaceProtos.ZMQAtomRequestKind.NODE)
                                     .setAtomType("ConceptNode")
                                     .setNodeName("GO:0000025")
                                     .build();
-                            final AtomSpaceProtos.AtomsRequest reqs = AtomSpaceProtos.AtomsRequest.newBuilder()
-                                    .setCorrelationId(ByteString.copyFrom(UuidUtils.toByteArray(correlationId)))
+                            final AtomSpaceProtos.ZMQRequestMessage reqs = AtomSpaceProtos.ZMQRequestMessage.newBuilder()
                                     .addRequests(req1).addRequests(req2).build();
                             it.getIn().setBody(reqs);
                         })
                         .to("zeromq:tcp://" + zmqHost + ":" + zmqPort + "?messageConvertor=org.opencog.atomspace.ProtoMessageConvertor&socketType=REQ&topics=" + zmqTopic)
 //                        .to("zeromq:tcp://" + zmqHost + ":" + zmqPort + "?socketType=PUSH&topics=" + zmqTopic);
-                        .process(it -> it.getIn().setBody(AtomSpaceProtos.AtomsResult.parseFrom(it.getIn().getBody(byte[].class))))
+                        .process(it -> it.getIn().setBody(AtomSpaceProtos.ZMQReplyMessage.parseFrom(it.getIn().getBody(byte[].class))))
                         .to("log:timer-to-atomspace?showAll=true&multiline=true");
             }
         };
