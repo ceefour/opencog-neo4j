@@ -15,4 +15,11 @@ public class GenericHandle implements Handle {
     public long getUuid() {
         return this.uuid;
     }
+
+    @Override
+    public String toString() {
+        return "GenericHandle{" +
+                "uuid=" + uuid +
+                '}';
+    }
 }

@@ -1,5 +1,6 @@
 package org.opencog.neo4j;
 
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import org.neo4j.graphdb.*;
 import org.neo4j.graphdb.Node;
@@ -19,17 +20,24 @@ public class Neo4jLink extends Link {
     @Nullable
     private Relationship graphRel;
 
-    public Neo4jLink(AtomType type) {
-        super(type);
-    }
+//    public Neo4jLink(AtomType type) {
+//        super(type);
+//    }
 
+    /**
+     *
+     * @param type
+     * @param graphNode
+     * @see Neo4jHandle#toAtom(Node)
+     */
     public Neo4jLink(AtomType type, org.neo4j.graphdb.Node graphNode) {
-        super(type);
+        super(type, FluentIterable.from(graphNode.getRelationships(Direction.OUTGOING)).transform(it -> Neo4jHandle.forNode(it.getEndNode())).toList());
         this.graphNode = graphNode;
     }
 
     public Neo4jLink(AtomType type, org.neo4j.graphdb.Relationship graphRel) {
-        super(type);
+        super(type, ImmutableList.of(Neo4jHandle.forNode(graphRel.getStartNode()),
+            Neo4jHandle.forNode(graphRel.getEndNode())));
         this.graphRel = graphRel;
     }
 
@@ -41,5 +49,14 @@ public class Neo4jLink extends Link {
     public Neo4jLink(AtomType type, ImmutableList<Handle> outgoingSet, Node graphNode) {
         super(type, outgoingSet);
         this.graphNode = graphNode;
+    }
+
+    @Override
+    public String toString() {
+        return "Neo4jLink{" + getType() +
+                ", outgoingSet" + getOutgoingSet() +
+                ", graphNode=" + graphNode +
+                ", graphRel=" + graphRel +
+                '}';
     }
 }

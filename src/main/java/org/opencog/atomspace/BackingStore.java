@@ -34,7 +34,7 @@ public interface BackingStore {
      * @param reqs
      * @return Warning: may contain null values for each not found node.
      */
-    ListenableFuture<List<Node>> getNodesAsync(List<NodeRequest> reqs);
+    ListenableFuture<List<Atom>> getAtomsAsync(List<AtomRequest> reqs);
 
     /**
      * Return a pointer to an Atom associated with the given

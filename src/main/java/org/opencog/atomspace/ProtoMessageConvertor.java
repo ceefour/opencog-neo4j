@@ -1,5 +1,6 @@
 package org.opencog.atomspace;
 
+import com.google.common.base.Preconditions;
 import com.google.protobuf.GeneratedMessage;
 import org.apache.camel.Exchange;
 import org.apacheextras.camel.component.zeromq.MessageConverter;
@@ -17,7 +18,8 @@ public class ProtoMessageConvertor implements MessageConverter {
 
     @Override
     public byte[] convert(Exchange xc) {
-        final GeneratedMessage msg = (xc.hasOut() ? xc.getOut() : xc.getIn()).getBody(GeneratedMessage.class);
+        final GeneratedMessage msg = Preconditions.checkNotNull((xc.hasOut() ? xc.getOut() : xc.getIn()).getBody(GeneratedMessage.class),
+                "Invalid message body: Body cannot be null and must be protobuf GeneratedMessage");
         final byte[] bytes = msg.toByteArray();
 //        if (msg instanceof AtomSpaceProtos.AtomsRequest) {
 //            log.debug("Converting AtomsRequest correlationId={} to {} bytes: {}",

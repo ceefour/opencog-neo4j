@@ -1,10 +1,11 @@
 package org.opencog.neo4j.camel;
 
+import com.google.common.base.Preconditions;
+import com.google.common.base.Verify;
 import com.google.protobuf.ByteString;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.opencog.atomspace.*;
-import org.opencog.neo4j.Neo4jGraphBackingStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +16,6 @@ import org.springframework.core.env.Environment;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -53,24 +53,49 @@ public class AtomSpaceRouteConfig {
                             final AtomSpaceProtos.AtomsRequest inp = xc.getIn().getBody(AtomSpaceProtos.AtomsRequest.class);
                             final AtomSpaceProtos.AtomsResult.Builder atomsResultb = AtomSpaceProtos.AtomsResult.newBuilder()
                                     .setCorrelationId(inp.getCorrelationId());
-                            // FIXME: catch exception and put into protobuf
-                            final List<NodeRequest> nodeRequests = inp.getRequestsList().stream().map(it -> new NodeRequest(AtomType.forUpperCamel(it.getAtomType()), it.getNodeName()))
-                                    .collect(Collectors.toList());
-                            final List<Node> nodes = neo4jBs.getNodesAsync(nodeRequests).get();
-                            nodes.forEach(node -> {
+                            final List<AtomRequest> nodeRequests = inp.getRequestsList().stream()
+                                    .map(it -> {
+                                        switch (it.getKind()) {
+                                            case UUID:
+                                                return new AtomRequest(it.getUuid());
+                                            case NODE:
+                                                return new AtomRequest(AtomType.forUpperCamel(it.getAtomType()), it.getNodeName());
+                                            case LINK:
+                                                return new AtomRequest(AtomType.forUpperCamel(it.getAtomType()), it.getHandleSeqList());
+                                            default:
+                                                throw new IllegalArgumentException("Unknown request kind: " + it.getKind());
+                                        }
+                                    }).collect(Collectors.toList());
+                            final List<Atom> atoms = neo4jBs.getAtomsAsync(nodeRequests).get();
+                            atoms.forEach(atom -> {
                                 //final Optional<Node> node = neo4jBs.getNode(AtomType.forUpperCamel(req.getAtomType()), req.getNodeName());
-                                if (node != null) {
+                                if (atom instanceof Node) {
                                     atomsResultb.addResults(AtomSpaceProtos.AtomResult.newBuilder()
                                             .setKind(AtomSpaceProtos.AtomResult.ResultKind.NODE)
-                                            .setAtomType(node.getType().toUpperCamel())
-                                            .setNodeName(node.getName()).build());
+                                            .setAtomType(atom.getType().toUpperCamel())
+                                            .setNodeName(((Node) atom).getName())
+                                            .build());
+                                } else if (atom instanceof Link) {
+                                    Verify.verify(((Link) atom).getOutgoingSet() != null,
+                                            "Link %s outgoingSet cannot be null", atom.getType());
+                                    atomsResultb.addResults(AtomSpaceProtos.AtomResult.newBuilder()
+                                            .setKind(AtomSpaceProtos.AtomResult.ResultKind.LINK)
+                                            .setAtomType(atom.getType().toUpperCamel())
+                                            .addAllOutgoingSet(((Link) atom).getOutgoingSet().stream().map(Handle::getUuid).collect(Collectors.toList()))
+                                            .build());
                                 } else {
                                     atomsResultb.addResults(AtomSpaceProtos.AtomResult.newBuilder()
                                             .setKind(AtomSpaceProtos.AtomResult.ResultKind.NOT_FOUND).build());
                                 }
                             });
                             xc.getIn().setBody(atomsResultb.build());
-                        }).to("log:atomspace-replied?showAll=true&multiline=true");
+                        }).to("log:atomspace-replied?showAll=true&multiline=true")
+                        .onException(Exception.class)
+                        .process(xc -> {
+                            log.error("Error processing", xc.getException());
+                            // FIXME: catch exception and put into protobuf
+                            xc.getIn().setBody(AtomSpaceProtos.AtomsResult.newBuilder().build());
+                        });
             }
         };
     }

@@ -20,7 +20,7 @@ message AtomRequest {
 }
 
 message AtomsRequest {
-    required bytes correlation_id = 1; // 128-bit UUID
+    optional bytes correlation_id = 1; // 128-bit UUID
     repeated AtomRequest requests = 2;
 }
 
@@ -41,6 +41,6 @@ message AtomResult {
 }
 
 message AtomsResult {
-    required bytes correlation_id = 1; // 128-bit UUID
+    optional bytes correlation_id = 1; // 128-bit UUID
     repeated AtomResult results = 2;
 }

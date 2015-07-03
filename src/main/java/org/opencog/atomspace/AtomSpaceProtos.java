@@ -1086,9 +1086,9 @@ public final class AtomSpaceProtos {
   public interface AtomsRequestOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // required bytes correlation_id = 1;
+    // optional bytes correlation_id = 1;
     /**
-     * <code>required bytes correlation_id = 1;</code>
+     * <code>optional bytes correlation_id = 1;</code>
      *
      * <pre>
      * 128-bit UUID
@@ -1096,7 +1096,7 @@ public final class AtomSpaceProtos {
      */
     boolean hasCorrelationId();
     /**
-     * <code>required bytes correlation_id = 1;</code>
+     * <code>optional bytes correlation_id = 1;</code>
      *
      * <pre>
      * 128-bit UUID
@@ -1236,11 +1236,11 @@ public final class AtomSpaceProtos {
     }
 
     private int bitField0_;
-    // required bytes correlation_id = 1;
+    // optional bytes correlation_id = 1;
     public static final int CORRELATION_ID_FIELD_NUMBER = 1;
     private com.google.protobuf.ByteString correlationId_;
     /**
-     * <code>required bytes correlation_id = 1;</code>
+     * <code>optional bytes correlation_id = 1;</code>
      *
      * <pre>
      * 128-bit UUID
@@ -1250,7 +1250,7 @@ public final class AtomSpaceProtos {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>required bytes correlation_id = 1;</code>
+     * <code>optional bytes correlation_id = 1;</code>
      *
      * <pre>
      * 128-bit UUID
@@ -1305,10 +1305,6 @@ public final class AtomSpaceProtos {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
-      if (!hasCorrelationId()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
       for (int i = 0; i < getRequestsCount(); i++) {
         if (!getRequests(i).isInitialized()) {
           memoizedIsInitialized = 0;
@@ -1561,10 +1557,6 @@ public final class AtomSpaceProtos {
       }
 
       public final boolean isInitialized() {
-        if (!hasCorrelationId()) {
-          
-          return false;
-        }
         for (int i = 0; i < getRequestsCount(); i++) {
           if (!getRequests(i).isInitialized()) {
             
@@ -1593,10 +1585,10 @@ public final class AtomSpaceProtos {
       }
       private int bitField0_;
 
-      // required bytes correlation_id = 1;
+      // optional bytes correlation_id = 1;
       private com.google.protobuf.ByteString correlationId_ = com.google.protobuf.ByteString.EMPTY;
       /**
-       * <code>required bytes correlation_id = 1;</code>
+       * <code>optional bytes correlation_id = 1;</code>
        *
        * <pre>
        * 128-bit UUID
@@ -1606,7 +1598,7 @@ public final class AtomSpaceProtos {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>required bytes correlation_id = 1;</code>
+       * <code>optional bytes correlation_id = 1;</code>
        *
        * <pre>
        * 128-bit UUID
@@ -1616,7 +1608,7 @@ public final class AtomSpaceProtos {
         return correlationId_;
       }
       /**
-       * <code>required bytes correlation_id = 1;</code>
+       * <code>optional bytes correlation_id = 1;</code>
        *
        * <pre>
        * 128-bit UUID
@@ -1632,7 +1624,7 @@ public final class AtomSpaceProtos {
         return this;
       }
       /**
-       * <code>required bytes correlation_id = 1;</code>
+       * <code>optional bytes correlation_id = 1;</code>
        *
        * <pre>
        * 128-bit UUID
@@ -2974,9 +2966,9 @@ public final class AtomSpaceProtos {
   public interface AtomsResultOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // required bytes correlation_id = 1;
+    // optional bytes correlation_id = 1;
     /**
-     * <code>required bytes correlation_id = 1;</code>
+     * <code>optional bytes correlation_id = 1;</code>
      *
      * <pre>
      * 128-bit UUID
@@ -2984,7 +2976,7 @@ public final class AtomSpaceProtos {
      */
     boolean hasCorrelationId();
     /**
-     * <code>required bytes correlation_id = 1;</code>
+     * <code>optional bytes correlation_id = 1;</code>
      *
      * <pre>
      * 128-bit UUID
@@ -3124,11 +3116,11 @@ public final class AtomSpaceProtos {
     }
 
     private int bitField0_;
-    // required bytes correlation_id = 1;
+    // optional bytes correlation_id = 1;
     public static final int CORRELATION_ID_FIELD_NUMBER = 1;
     private com.google.protobuf.ByteString correlationId_;
     /**
-     * <code>required bytes correlation_id = 1;</code>
+     * <code>optional bytes correlation_id = 1;</code>
      *
      * <pre>
      * 128-bit UUID
@@ -3138,7 +3130,7 @@ public final class AtomSpaceProtos {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>required bytes correlation_id = 1;</code>
+     * <code>optional bytes correlation_id = 1;</code>
      *
      * <pre>
      * 128-bit UUID
@@ -3193,10 +3185,6 @@ public final class AtomSpaceProtos {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
-      if (!hasCorrelationId()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
       for (int i = 0; i < getResultsCount(); i++) {
         if (!getResults(i).isInitialized()) {
           memoizedIsInitialized = 0;
@@ -3449,10 +3437,6 @@ public final class AtomSpaceProtos {
       }
 
       public final boolean isInitialized() {
-        if (!hasCorrelationId()) {
-          
-          return false;
-        }
         for (int i = 0; i < getResultsCount(); i++) {
           if (!getResults(i).isInitialized()) {
             
@@ -3481,10 +3465,10 @@ public final class AtomSpaceProtos {
       }
       private int bitField0_;
 
-      // required bytes correlation_id = 1;
+      // optional bytes correlation_id = 1;
       private com.google.protobuf.ByteString correlationId_ = com.google.protobuf.ByteString.EMPTY;
       /**
-       * <code>required bytes correlation_id = 1;</code>
+       * <code>optional bytes correlation_id = 1;</code>
        *
        * <pre>
        * 128-bit UUID
@@ -3494,7 +3478,7 @@ public final class AtomSpaceProtos {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>required bytes correlation_id = 1;</code>
+       * <code>optional bytes correlation_id = 1;</code>
        *
        * <pre>
        * 128-bit UUID
@@ -3504,7 +3488,7 @@ public final class AtomSpaceProtos {
         return correlationId_;
       }
       /**
-       * <code>required bytes correlation_id = 1;</code>
+       * <code>optional bytes correlation_id = 1;</code>
        *
        * <pre>
        * 128-bit UUID
@@ -3520,7 +3504,7 @@ public final class AtomSpaceProtos {
         return this;
       }
       /**
-       * <code>required bytes correlation_id = 1;</code>
+       * <code>optional bytes correlation_id = 1;</code>
        *
        * <pre>
        * 128-bit UUID
@@ -3819,14 +3803,14 @@ public final class AtomSpaceProtos {
       "_type\030\003 \001(\t\022\021\n\tnode_name\030\004 \001(\t\022\022\n\nhandle" +
       "_seq\030\005 \003(\006\"/\n\017AtomRequestKind\022\010\n\004UUID\020\000\022" +
       "\010\n\004NODE\020\001\022\010\n\004LINK\020\002\"P\n\014AtomsRequest\022\026\n\016c" +
-      "orrelation_id\030\001 \002(\014\022(\n\010requests\030\002 \003(\0132\026." +
+      "orrelation_id\030\001 \001(\014\022(\n\010requests\030\002 \003(\0132\026." +
       "atomspace.AtomRequest\"\267\001\n\nAtomResult\022.\n\004" +
       "kind\030\001 \002(\0162 .atomspace.AtomResult.Result" +
       "Kind\022\014\n\004uuid\030\002 \001(\006\022\021\n\tatom_type\030\003 \001(\t\022\021\n",
       "\tnode_name\030\004 \001(\t\022\024\n\014outgoing_set\030\005 \003(\006\"/" +
       "\n\nResultKind\022\r\n\tNOT_FOUND\020\000\022\010\n\004NODE\020\001\022\010\n" +
       "\004LINK\020\002\"M\n\013AtomsResult\022\026\n\016correlation_id" +
-      "\030\001 \002(\014\022&\n\007results\030\002 \003(\0132\025.atomspace.Atom" +
+      "\030\001 \001(\014\022&\n\007results\030\002 \003(\0132\025.atomspace.Atom" +
       "ResultB(\n\025org.opencog.atomspaceB\017AtomSpa" +
       "ceProtos"
     };

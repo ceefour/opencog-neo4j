@@ -1,12 +1,12 @@
 package org.opencog.atomspace.zmq;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.*;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.GeneratedMessage;
 import com.google.protobuf.InvalidProtocolBufferException;
 import org.apache.camel.*;
 import org.apache.camel.spi.Synchronization;
-import org.apache.camel.support.SynchronizationAdapter;
 import org.opencog.atomspace.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,13 +89,8 @@ public class ZmqGraphBackingStore implements GraphBackingStore, AutoCloseable {
     }
 
     @Override
-    public ListenableFuture<List<Node>> getNodesAsync(List<NodeRequest> reqs) {
-        return null;
-    }
-
-    @Override
-    public ListenableFuture<Optional<Node>> getNodeAsync(AtomType type, String name) {
-        final SettableFuture<Optional<Node>> nodeFuture = SettableFuture.create();
+    public ListenableFuture<List<Atom>> getAtomsAsync(List<AtomRequest> reqs) {
+        final SettableFuture<List<Atom>> atomsFuture = SettableFuture.create();
 //        final SettableFuture<AtomSpaceProtos.AtomsResult> msgFuture = SettableFuture.create();
 //        Futures.addCallback(msgFuture, new FutureCallback<AtomSpaceProtos.AtomsResult>() {
 //            @Override
@@ -123,52 +118,67 @@ public class ZmqGraphBackingStore implements GraphBackingStore, AutoCloseable {
 //                nodeFuture.setException(t);
 //            }
 //        });
-        final AtomSpaceProtos.AtomRequest req = AtomSpaceProtos.AtomRequest.newBuilder()
-                .setKind(AtomSpaceProtos.AtomRequest.AtomRequestKind.NODE)
-                .setAtomType(type.toUpperCamel())
-                .setNodeName(name)
-                .build();
-        final UUID correlationId = UUID.randomUUID();
-//        pendings.put(correlationId, (SettableFuture) msgFuture);
-        final AtomSpaceProtos.AtomsRequest reqs = AtomSpaceProtos.AtomsRequest.newBuilder()
-                .setCorrelationId(ByteString.copyFrom(UuidUtils.toByteArray(correlationId)))
-                .addRequests(req)
+        final AtomSpaceProtos.AtomsRequest protoReqs = AtomSpaceProtos.AtomsRequest.newBuilder()
+                .addAllRequests(reqs.stream().map(javaReq -> {
+                    final AtomSpaceProtos.AtomRequest.Builder b = AtomSpaceProtos.AtomRequest.newBuilder()
+                            .setKind(javaReq.getKind().toProto())
+                            .setUuid(javaReq.getUuid());
+                    if (javaReq.getType() != null) {
+                        b.setAtomType(javaReq.getType().toUpperCamel());
+                    }
+                    if (javaReq.getName() != null) {
+                        b.setNodeName(javaReq.getName());
+                    }
+                    if (javaReq.getHandleSeq() != null) {
+                        b.addAllHandleSeq(javaReq.getHandleSeq());
+                    }
+                    return b.build();
+                }).collect(Collectors.toList()))
                 .build();
         producerTemplate.asyncCallbackRequestBody(producerTemplate.getDefaultEndpoint(),
-                reqs, new Synchronization() {
+                protoReqs, new Synchronization() {
                     @Override
                     public void onComplete(Exchange exchange) {
                         final AtomSpaceProtos.AtomsResult atomsResult;
                         try {
                             atomsResult = AtomSpaceProtos.AtomsResult.parseFrom(exchange.getIn().getBody(byte[].class));
-                            final AtomSpaceProtos.AtomResult first = atomsResult.getResults(0);
-                            switch (first.getKind()) {
-                                case NOT_FOUND:
-                                    nodeFuture.set(Optional.empty());
-                                    break;
-                                case NODE:
-                                    nodeFuture.set(Optional.of(new Node(AtomType.forUpperCamel(first.getAtomType()), first.getNodeName())));
-                                    break;
-                                case LINK:
-                                    final List<GenericHandle> outgoingSet = first.getOutgoingSetList().stream().map(it -> new GenericHandle(it))
-                                            .collect(Collectors.toList());
-                                    final Link link = new Link(AtomType.forUpperCamel(first.getAtomType()), outgoingSet);
-                                    throw new IllegalStateException("Expected node, but got link " + link);
-                                default:
-                                    throw new IllegalArgumentException("Unknown AtomResult kind: " + first.getKind());
-                            }
-                        } catch (InvalidProtocolBufferException e) {
-                            nodeFuture.setException(e);
+                            log.debug("Received {}", atomsResult);
+                            final List<Atom> atoms = atomsResult.getResultsList().stream().map(res -> {
+                                switch (res.getKind()) {
+                                    case NOT_FOUND:
+                                        return null;
+                                    case NODE:
+                                        return new Node(AtomType.forUpperCamel(res.getAtomType()), res.getNodeName());
+                                    case LINK:
+                                        final List<GenericHandle> outgoingSet = res.getOutgoingSetList().stream()
+                                                .map(it -> new GenericHandle(it))
+                                                .collect(Collectors.toList());
+                                        final Link link = new Link(AtomType.forUpperCamel(res.getAtomType()), outgoingSet);
+                                        return link;
+                                    default:
+                                        throw new IllegalArgumentException("Unknown AtomResult kind: " + res.getKind());
+                                }
+                            }).collect(Collectors.toList());
+                            log.debug("Got {} atoms: {}", atoms.size(), atoms.stream().limit(10).toArray());
+                            atomsFuture.set(atoms);
+                        } catch (Exception e) {
+                            atomsFuture.setException(e);
                         }
                     }
 
                     @Override
                     public void onFailure(Exchange exchange) {
-                        nodeFuture.setException(exchange.getException());
+                        atomsFuture.setException(exchange.getException());
                     }
                 });
 //        log.info("Request: {}", producerTemplate.requestBody(reqs));
-        return nodeFuture;
+        return atomsFuture;
+    }
+
+    @Override
+    public ListenableFuture<Optional<Node>> getNodeAsync(AtomType type, String name) {
+        return Futures.transform(getAtomsAsync(ImmutableList.of(new AtomRequest(type, name))),
+                (List<Atom> it) -> !it.isEmpty() ? Optional.of((Node) it.get(0)) : Optional.empty());
     }
 
     @Override

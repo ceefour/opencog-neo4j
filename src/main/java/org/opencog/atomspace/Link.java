@@ -12,9 +12,9 @@ public class Link extends Atom {
 
     private ImmutableList<? extends Handle> outgoingSet;
 
-    public Link(AtomType type) {
-        super(type);
-    }
+//    public Link(AtomType type) {
+//        super(type);
+//    }
 
     public Link(AtomType type, List<? extends Handle> outgoingSet) {
         super(type);
@@ -25,4 +25,11 @@ public class Link extends Atom {
         return outgoingSet;
     }
 
+    @Override
+    public String toString() {
+        return "Link{" +
+                "type=" + getType() +
+                ", outgoingSet=" + outgoingSet +
+                '}';
+    }
 }

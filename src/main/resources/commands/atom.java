@@ -7,12 +7,15 @@ import org.crsh.cli.Usage;
 import org.crsh.command.BaseCommand;
 import org.crsh.command.InvocationContext;
 import org.opencog.atomspace.Atom;
+import org.opencog.atomspace.AtomRequest;
 import org.opencog.atomspace.GenericHandle;
 import org.opencog.atomspace.GraphBackingStore;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by ceefour on 6/28/15.
@@ -20,14 +23,15 @@ import java.util.Optional;
 @Usage("Atom operations")
 public class atom extends BaseCommand {
 
-    @Usage("Get a single atom by handle UUID")
+    @Usage("Get atom(s) by handle UUID")
     @Command
-    public void get(@Usage("Atom handle UUID") @Required @Argument String uuidStr,
-                     InvocationContext context) {
+    public void get(@Usage("Atom handle UUID") @Required @Argument List<String> uuidStrs,
+                     InvocationContext context) throws Exception {
         final ConfigurableListableBeanFactory appCtx = (ConfigurableListableBeanFactory) context.getAttributes().get("spring.beanfactory");
         final GraphBackingStore backingStore = appCtx.getBean("zmqGraphBackingStore", GraphBackingStore.class);
-        final GenericHandle handle = new GenericHandle(Long.valueOf(uuidStr));
-        final Optional<Atom> atom = backingStore.getAtom(handle);
-        atom.ifPresent(it -> System.out.println(it));
+
+        final List<Atom> atoms = backingStore.getAtomsAsync(uuidStrs.stream()
+                .map(it -> new AtomRequest(Long.valueOf(it))).collect(Collectors.toList())).get();
+        atoms.forEach(it -> out.println(it));
     }
 }

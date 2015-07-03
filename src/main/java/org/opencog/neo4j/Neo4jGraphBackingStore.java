@@ -6,11 +6,11 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.MoreExecutors;
-import com.google.common.util.concurrent.SettableFuture;
 import org.neo4j.graphdb.*;
 import org.opencog.atomspace.*;
 import org.opencog.atomspace.Node;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -24,6 +24,8 @@ import java.util.*;
  */
 @Transactional
 public class Neo4jGraphBackingStore implements GraphBackingStore {
+
+    private static final Logger log = LoggerFactory.getLogger(Neo4jGraphBackingStore.class);
 
     @Inject
     private PlatformTransactionManager txMgr;
@@ -97,13 +99,51 @@ public class Neo4jGraphBackingStore implements GraphBackingStore {
     }
 
     @Override
-    public ListenableFuture<List<Node>> getNodesAsync(List<NodeRequest> reqs) {
+    public ListenableFuture<List<Atom>> getAtomsAsync(List<AtomRequest> reqs) {
         try (final Transaction tx = db.beginTx()) {
-            final ArrayList<Node> result = new ArrayList<>();
+            final ArrayList<Atom> result = new ArrayList<>();
+            // TODO: use cypher to do bulk find
             reqs.forEach(req -> {
-                final Optional<org.neo4j.graphdb.Node> graphNode = Optional.ofNullable(
-                        db.findNode(DynamicLabel.label(req.getType().getGraphLabel()), Neo4jNode.NODE_NAME, req.getName()));
-                result.add(graphNode.map(it -> new Neo4jNode(req.getType(), req.getName())).orElse(null));
+                switch (req.getKind()) {
+                    case UUID:
+                        final Neo4jHandle handle = new Neo4jHandle(req.getUuid());
+                        switch (handle.getIdKind()) {
+                            case VERTEX:
+                                try {
+                                    final org.neo4j.graphdb.Node graphNode = db.getNodeById(handle.getVertexOrEdgeId());
+                                    final Atom atom = handle.toAtom(graphNode);
+                                    log.debug("Converted {} to {}", handle, atom);
+                                    result.add(atom);
+                                } catch (NotFoundException e) {
+                                    log.trace("Node {} not found for request {}", handle.getVertexOrEdgeId(), req);
+                                    result.add(null);
+                                }
+                                break;
+                            case EDGE:
+                                try {
+                                    final Relationship graphRel = db.getRelationshipById(handle.getVertexOrEdgeId());
+                                    final Neo4jLink link = handle.toLink(graphRel);
+                                    log.debug("Converted {} to {}", handle, link);
+                                    result.add(link);
+                                } catch (NotFoundException e) {
+                                    log.trace("Relationship {} not found for request {}", handle.getVertexOrEdgeId(), req);
+                                    result.add(null);
+                                }
+                                break;
+                            default:
+                                throw new IllegalArgumentException("Unsupported ID kind: " + handle.getIdKind());
+                        }
+                        break;
+                    case NODE:
+                        final Optional<org.neo4j.graphdb.Node> graphNode = Optional.ofNullable(
+                                db.findNode(DynamicLabel.label(req.getType().getGraphLabel()), Neo4jNode.NODE_NAME, req.getName()));
+                        result.add(graphNode.map(it -> new Neo4jNode(req.getType(), req.getName())).orElse(null));
+                        break;
+                    case LINK:
+                        throw new IllegalArgumentException("Unsupported request kind: " + req.getKind());
+                    default:
+                        throw new IllegalArgumentException("Unsupported request kind: " + req.getKind());
+                }
             });
             tx.success();
             return Futures.immediateFuture(Collections.unmodifiableList(result));
