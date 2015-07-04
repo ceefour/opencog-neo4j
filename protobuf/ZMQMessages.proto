@@ -85,15 +85,26 @@ message ZMQAtomFetch {
 }
 
 enum ZMQFunctionType {
+    /**
+     * Get a single atom by handle UUID.
+     * @see ZMQRequestMessage#handle
+     */
     ZMQgetAtom = 0;
+    /**
+     * TODO: ?
+     */
     ZMQgetName = 1;
+    /**
+     * Get multiple atoms by UUID, atomType + node name, or atomType + outgoing set.
+     * @see ZMQRequestMessage#fetch
+     */
     ZMQgetAtoms = 2;
 }
 
 message ZMQRequestMessage {
     required ZMQFunctionType function = 1;
     optional uint64 handle = 2;
-    repeated ZMQAtomFetch requests = 3;
+    repeated ZMQAtomFetch fetch = 3;
 }
 
 message ZMQReplyMessage {

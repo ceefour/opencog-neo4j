@@ -50,7 +50,7 @@ public class AtomSpaceRouteConfig {
                         .process((Exchange xc) -> {
                             final AtomSpaceProtos.ZMQRequestMessage inp = xc.getIn().getBody(AtomSpaceProtos.ZMQRequestMessage.class);
                             final AtomSpaceProtos.ZMQReplyMessage.Builder atomsResultb = AtomSpaceProtos.ZMQReplyMessage.newBuilder();
-                            final List<AtomRequest> nodeRequests = inp.getRequestsList().stream()
+                            final List<AtomRequest> nodeRequests = inp.getFetchList().stream()
                                     .map(it -> {
                                         switch (it.getKind()) {
                                             case UUID:
@@ -120,7 +120,7 @@ public class AtomSpaceRouteConfig {
                                     .setName("GO:0000025")
                                     .build();
                             final AtomSpaceProtos.ZMQRequestMessage reqs = AtomSpaceProtos.ZMQRequestMessage.newBuilder()
-                                    .addRequests(req1).addRequests(req2).build();
+                                    .addFetch(req1).addFetch(req2).build();
                             it.getIn().setBody(reqs);
                         })
                         .to("zeromq:tcp://" + zmqHost + ":" + zmqPort + "?messageConvertor=org.opencog.atomspace.ProtoMessageConvertor&socketType=REQ&topics=" + zmqTopic)

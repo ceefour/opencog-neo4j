@@ -96,7 +96,7 @@ public class ZmqGraphBackingStore extends GraphBackingStoreBase {
 //            }
 //        });
         final AtomSpaceProtos.ZMQRequestMessage protoReqs = AtomSpaceProtos.ZMQRequestMessage.newBuilder()
-                .addAllRequests(reqs.stream().map(javaReq -> {
+                .addAllFetch(reqs.stream().map(javaReq -> {
                     final AtomSpaceProtos.ZMQAtomFetch.Builder b = AtomSpaceProtos.ZMQAtomFetch.newBuilder()
                             .setKind(javaReq.getKind().toProto())
                             .setHandle(javaReq.getUuid());
