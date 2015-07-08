@@ -1,5 +1,6 @@
 package org.opencog.atomspace.zmq;
 
+import com.google.common.collect.ImmutableBiMap;
 import com.google.common.util.concurrent.*;
 import org.apache.camel.*;
 import org.apache.camel.spi.Synchronization;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -95,13 +98,23 @@ public class ZmqGraphBackingStore extends GraphBackingStoreBase {
 //                nodeFuture.setException(t);
 //            }
 //        });
+
+//        final HashMap<Integer, String> atomTypeInfob = new HashMap<>();
+//        reqs.stream().filter(it -> it.getKind() == AtomRequest.AtomRequestKind.NODE || it.getKind() == AtomRequest.AtomRequestKind.LINK)
+//                .map(it -> it.getType().toUpperCamel())
+//                .distinct()
+//                .forEach(it -> atomTypeInfob.put(atomTypeInfob.size() + 1, it)); // must NOT be concurrent!
+//        final ImmutableBiMap<Integer, String> atomTypeInfos = ImmutableBiMap.copyOf(atomTypeInfob);
         final AtomSpaceProtos.ZMQRequestMessage protoReqs = AtomSpaceProtos.ZMQRequestMessage.newBuilder()
+//                .addAllAtomType(atomTypeInfos.entrySet().stream().map(it ->
+//                        AtomSpaceProtos.ZMQAtomTypeInfo.newBuilder()
+//                            .setId()))
                 .addAllFetch(reqs.stream().map(javaReq -> {
                     final AtomSpaceProtos.ZMQAtomFetch.Builder b = AtomSpaceProtos.ZMQAtomFetch.newBuilder()
                             .setKind(javaReq.getKind().toProto())
                             .setHandle(javaReq.getUuid());
                     if (javaReq.getType() != null) {
-                        b.setAtomType(javaReq.getType().toUpperCamel());
+                        b.setType(javaReq.getType().getId());
                     }
                     if (javaReq.getName() != null) {
                         b.setName(javaReq.getName());

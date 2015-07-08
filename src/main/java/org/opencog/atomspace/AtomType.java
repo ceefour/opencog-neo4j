@@ -1,9 +1,12 @@
 package org.opencog.atomspace;
 
 import com.google.common.base.CaseFormat;
+import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -36,6 +39,15 @@ public enum AtomType {
     GENE_NODE(GraphMapping.VERTEX, "opencog_GeneNode"),
     PREDICATE_NODE(GraphMapping.VERTEX, "opencog_PredicateNode"),
     PHRASE_NODE(GraphMapping.VERTEX, "opencog_PhraseNode");
+
+    static final ImmutableBiMap<Integer, AtomType> atomTypeInfos;
+
+    static {
+        final HashMap<Integer, AtomType> atomTypeInfob = new HashMap<>();
+        Arrays.stream(values())
+                .forEach(it -> atomTypeInfob.put(atomTypeInfob.size() + 1, it)); // must NOT be concurrent!
+        atomTypeInfos = ImmutableBiMap.copyOf(atomTypeInfob);
+    }
 
     private GraphMapping graphMapping;
     private String graphLabel;
@@ -82,4 +94,14 @@ public enum AtomType {
     public static AtomType forUpperCamel(String camelType) {
         return valueOf(CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, camelType));
     }
+
+    public int getId() {
+        return atomTypeInfos.inverse().get(this);
+    }
+
+    public AtomType forId(int id) {
+        return atomTypeInfos.get(id);
+    }
+
+
 }

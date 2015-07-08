@@ -79,35 +79,59 @@ enum ZMQAtomFetchKind {
 message ZMQAtomFetch {
     required ZMQAtomFetchKind kind = 1;
     optional uint64 handle = 2;
-    optional string atom_type = 3; // FIXME: change to int then put a lookup table
+    optional int32 type = 3;
     optional string name = 4;
     repeated uint64 outgoing = 5;
+    //optional string atom_type = 6; // FIXME: change to int then put a lookup table
 }
 
 enum ZMQFunctionType {
-    /**
-     * Get a single atom by handle UUID.
+    /* Get a single atom by handle UUID.
      * @see ZMQRequestMessage#handle
      */
     ZMQgetAtom = 0;
-    /**
-     * TODO: ?
+    /* TODO: ?
      */
     ZMQgetName = 1;
-    /**
-     * Get multiple atoms by UUID, atomType + node name, or atomType + outgoing set.
+    /* Get multiple atoms by UUID, atomType + node name, or atomType + outgoing set.
      * @see ZMQRequestMessage#fetch
      */
     ZMQgetAtoms = 2;
 }
 
+/* Information about atom type, it can be used for multiple purposes,
+ * but currently its used to map between atom type integer IDs and atom type names.
+ * @todo Make it graph-aware ~Hendy
+ * @see ZMQRequestMsessage#atom_type
+ */
+message ZMQAtomTypeInfo {
+    /**
+     * Integer ID for ZeroMQ purposes.
+     */
+    optional int32 id = 1;
+    /**
+     * Atom type name.
+     */
+    optional string name = 2;
+}
+
 message ZMQRequestMessage {
+    /**
+     * Determines what other parameters below mean.
+     */
     required ZMQFunctionType function = 1;
+    // For {@link ZMQFunctionType#getAtom}, handle UUID to get.
     optional uint64 handle = 2;
+    // For {@link ZMQFunctionType#getAtoms}, one or more fetch requests
+    // for UUIDs, nodes, or links (can be mixed).
     repeated ZMQAtomFetch fetch = 3;
+    // Mapping between atom type IDs to atom type names, sent by the client.
+    repeated ZMQAtomTypeInfo atom_type = 4;
 }
 
 message ZMQReplyMessage {
     repeated ZMQAtomMessage atom = 1;
     optional string str = 2;
+    // Mapping between atom type IDs to atom type names, sent by the server.
+    repeated ZMQAtomTypeInfo atom_type = 3;
 }
