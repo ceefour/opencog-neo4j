@@ -11,6 +11,7 @@ import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.QueryExecutionException;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
+import org.opencog.atomspace.Atom;
 import org.opencog.atomspace.AtomType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +54,7 @@ public class ImportBio5App implements CommandLineRunner {
 
     private static final Logger log = LoggerFactory.getLogger(ImportBio5App.class);
     private static String[] args;
+    private static final Random RANDOM = new Random();
 
     public static void main(String[] args) {
         Preconditions.checkArgument(args.length >= 2, "Required arguments: input-scm output-neo4j");
@@ -192,9 +194,10 @@ public class ImportBio5App implements CommandLineRunner {
         final String typeName = ((Symbol) concept.get(0)).getName();// maintain 1:1 with OpenCog terms - .replaceFirst("Node$", "");
         final String conceptName = (String) concept.get(1);
         final String varName = varNameFor(typeName, concept);
-        final String create = String.format("MERGE (%s:opencog_%s {%s: {%s_nodeName}})",
-                varName, typeName, Neo4jNode.NODE_NAME, varName, varName, varName);
+        final String create = String.format("MERGE (%s:opencog_%s {%s: {%s_gid}, %s: {%s_nodeName}})",
+                varName, typeName, Atom.GID_PROPERTY, varName, Neo4jNode.NODE_NAME, varName);
         final ImmutableMap<String, Object> param = ImmutableMap.of(
+                varName + "_gid", RANDOM.nextLong(),
                 varName + "_nodeName", conceptName);
         return new CypherPart(varName, param, create);
     }
@@ -235,7 +238,9 @@ public class ImportBio5App implements CommandLineRunner {
         }
         customNodeToMatch(b, outDependencies, outParams);
 
-        final String create = String.format("CREATE (%s) -[:rdfs_subClassOf]-> (%s)", aVarName, bVarName);
+        final String create = String.format("CREATE (%s) -[:rdfs_subClassOf {%s: {gid}}]-> (%s)",
+                aVarName, Atom.GID_PROPERTY, bVarName);
+        outParams.put("gid", RANDOM.nextLong());
         final CypherPart part = new CypherPart(null, ImmutableMap.copyOf(outParams), create,
                 ImmutableList.copyOf(outDependencies));
         parts.relationships.add(part);
@@ -311,11 +316,12 @@ public class ImportBio5App implements CommandLineRunner {
             final String varName = "EvaluationLink_" + predicateName + "_" + RandomUtils.nextInt(1000, 10000);
             String create;
             if (stvStrength != null) {
-                create = String.format("CREATE (%s:opencog_EvaluationLink {stv_strength: %f, stv_confidence: %f})",
+                create = String.format("CREATE (%s:opencog_EvaluationLink {gid: {gid}, stv_strength: %f, stv_confidence: %f})",
                         varName, stvStrength, stvConfidence);
             } else {
-                create = String.format("CREATE (%s:opencog_EvaluationLink)", varName);
+                create = String.format("CREATE (%s:opencog_EvaluationLink {gid: {gid}})", varName);
             }
+            outParams.put("gid", RANDOM.nextLong());
             create += String.format("\n  CREATE (%s) -[:opencog_predicate]-> (%s)", varName, predicateVarName);
             // http://schema.org/position
             for (int i = 0; i < paramNames.size(); i++) {
@@ -382,11 +388,12 @@ public class ImportBio5App implements CommandLineRunner {
 
             final String create;
             if (stvStrength != null) {
-                create = String.format("CREATE (%s) -[:rdf_type {stv_strength: %f, stv_confidence: %f}]-> (%s)",
+                create = String.format("CREATE (%s) -[:rdf_type {gid: {gid}, stv_strength: %f, stv_confidence: %f}]-> (%s)",
                         geneVarName, stvStrength, stvConfidence, conceptVarName);
             } else {
-                create = String.format("CREATE (%s) -[:rdf_type]-> (%s)", geneVarName, conceptVarName);
+                create = String.format("CREATE (%s) -[:rdf_type {gid: {gid}]-> (%s)", geneVarName, conceptVarName);
             }
+            outParams.put("gid", RANDOM.nextLong());
             final CypherPart part = new CypherPart(null, ImmutableMap.copyOf(outParams), create,
                     ImmutableList.copyOf(outDependencies));
             parts.relationships.add(part);
@@ -402,10 +409,19 @@ public class ImportBio5App implements CommandLineRunner {
 
         try (final Transaction tx = graphDb.beginTx()) {
             log.info("Ensuring constraints and indexes...");
-            graphDb.execute(String.format("CREATE CONSTRAINT ON (n:%s) ASSERT n.%s IS UNIQUE", AtomType.CONCEPT_NODE.getGraphLabel(), Neo4jNode.NODE_NAME));
-            graphDb.execute(String.format("CREATE CONSTRAINT ON (n:%s) ASSERT n.%s IS UNIQUE", AtomType.GENE_NODE.getGraphLabel(), Neo4jNode.NODE_NAME));
-            graphDb.execute(String.format("CREATE CONSTRAINT ON (n:%s) ASSERT n.%s IS UNIQUE", AtomType.PREDICATE_NODE.getGraphLabel(), Neo4jNode.NODE_NAME));
-            graphDb.execute(String.format("CREATE CONSTRAINT ON (n:%s) ASSERT n.%s IS UNIQUE", AtomType.PHRASE_NODE.getGraphLabel(), Neo4jNode.NODE_NAME));
+            for (AtomType atomType : AtomType.values()) {
+                graphDb.execute(String.format("CREATE CONSTRAINT ON (n:%s) ASSERT n.%s IS UNIQUE",
+                        atomType.getGraphLabel(), Atom.GID_PROPERTY));
+            }
+
+            graphDb.execute(String.format("CREATE CONSTRAINT ON (n:%s) ASSERT n.%s IS UNIQUE",
+                    AtomType.CONCEPT_NODE.getGraphLabel(), Neo4jNode.NODE_NAME));
+            graphDb.execute(String.format("CREATE CONSTRAINT ON (n:%s) ASSERT n.%s IS UNIQUE",
+                    AtomType.GENE_NODE.getGraphLabel(), Neo4jNode.NODE_NAME));
+            graphDb.execute(String.format("CREATE CONSTRAINT ON (n:%s) ASSERT n.%s IS UNIQUE",
+                    AtomType.PREDICATE_NODE.getGraphLabel(), Neo4jNode.NODE_NAME));
+            graphDb.execute(String.format("CREATE CONSTRAINT ON (n:%s) ASSERT n.%s IS UNIQUE",
+                    AtomType.PHRASE_NODE.getGraphLabel(), Neo4jNode.NODE_NAME));
 
 //            graphDb.execute("CREATE INDEX ON :opencog_ConceptNode(prefLabel)");
 //            graphDb.execute("CREATE INDEX ON :opencog_GeneNode(prefLabel)");
