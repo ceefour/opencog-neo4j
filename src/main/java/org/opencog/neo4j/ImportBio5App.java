@@ -194,8 +194,9 @@ public class ImportBio5App implements CommandLineRunner {
         final String typeName = ((Symbol) concept.get(0)).getName();// maintain 1:1 with OpenCog terms - .replaceFirst("Node$", "");
         final String conceptName = (String) concept.get(1);
         final String varName = varNameFor(typeName, concept);
-        final String create = String.format("MERGE (%s:opencog_%s {%s: {%s_gid}, %s: {%s_nodeName}})",
-                varName, typeName, Atom.GID_PROPERTY, varName, Neo4jNode.NODE_NAME, varName);
+        final String create = String.format("" +
+                        "MERGE (%s:opencog_%s {%s: {%s_nodeName}}) ON CREATE SET %s.%s = {%s_gid}",
+                varName, typeName, Neo4jNode.NODE_NAME, varName, varName, Atom.GID_PROPERTY, varName);
         final ImmutableMap<String, Object> param = ImmutableMap.of(
                 varName + "_gid", RANDOM.nextLong(),
                 varName + "_nodeName", conceptName);
