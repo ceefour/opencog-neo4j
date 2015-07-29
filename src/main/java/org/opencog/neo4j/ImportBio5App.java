@@ -392,7 +392,7 @@ public class ImportBio5App implements CommandLineRunner {
                 create = String.format("CREATE (%s) -[:rdf_type {gid: {gid}, stv_strength: %f, stv_confidence: %f}]-> (%s)",
                         geneVarName, stvStrength, stvConfidence, conceptVarName);
             } else {
-                create = String.format("CREATE (%s) -[:rdf_type {gid: {gid}]-> (%s)", geneVarName, conceptVarName);
+                create = String.format("CREATE (%s) -[:rdf_type {gid: {gid}}]-> (%s)", geneVarName, conceptVarName);
             }
             outParams.put("gid", RANDOM.nextLong());
             final CypherPart part = new CypherPart(null, ImmutableMap.copyOf(outParams), create,
