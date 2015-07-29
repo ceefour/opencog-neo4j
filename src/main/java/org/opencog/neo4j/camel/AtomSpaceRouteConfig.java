@@ -56,9 +56,13 @@ public class AtomSpaceRouteConfig {
                                             case UUID:
                                                 return new AtomRequest(it.getHandle());
                                             case NODE:
-                                                return new AtomRequest(AtomType.forUpperCamel(it.getAtomType()), it.getName());
+                                                // FIXME: use the int<->UUID mapping
+                                                throw new UnsupportedOperationException();
+                                                //return new AtomRequest(AtomType.forUpperCamel(it.getAtomType()), it.getName());
                                             case LINK:
-                                                return new AtomRequest(AtomType.forUpperCamel(it.getAtomType()), it.getOutgoingList());
+                                                // FIXME: use the int<->UUID mapping
+                                                throw new UnsupportedOperationException();
+                                                //return new AtomRequest(AtomType.forUpperCamel(it.getAtomType()), it.getOutgoingList());
                                             default:
                                                 throw new IllegalArgumentException("Unknown request kind: " + it.getKind());
                                         }
@@ -111,12 +115,14 @@ public class AtomSpaceRouteConfig {
                             it.getIn().setHeader("comment", "Sending " + correlationId);
                             final AtomSpaceProtos.ZMQAtomFetch req1 = AtomSpaceProtos.ZMQAtomFetch.newBuilder()
                                     .setKind(AtomSpaceProtos.ZMQAtomFetchKind.NODE)
-                                    .setAtomType("ConceptNode")
+                                    // FIXME: use the int<->UUID mapping
+//                                    .setAtomType("ConceptNode")
                                     .setName("GO:0000024")
                                     .build();
                             final AtomSpaceProtos.ZMQAtomFetch req2 = AtomSpaceProtos.ZMQAtomFetch.newBuilder()
                                     .setKind(AtomSpaceProtos.ZMQAtomFetchKind.NODE)
-                                    .setAtomType("ConceptNode")
+                                    // FIXME: use the int<->UUID mapping
+//                                    .setAtomType("ConceptNode")
                                     .setName("GO:0000025")
                                     .build();
                             final AtomSpaceProtos.ZMQRequestMessage reqs = AtomSpaceProtos.ZMQRequestMessage.newBuilder()
