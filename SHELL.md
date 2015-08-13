@@ -25,3 +25,12 @@ Password is `opencog`
 ### node get
 
     node get ConceptNode/GO:0000024
+    
+    > node get ConceptNode/GO:0000024 ConceptNode/GO:0000025 ConceptNode/GO:0000026
+    (ConceptNode "GO:0000024") ; 5434235504711159139
+    (ConceptNode "GO:0000025") ; -6750899309375792365
+    (ConceptNode "GO:0000026") ; -6794468188338365771
+    
+### atom get
+
+    > atom get 5434235504711159139 -8495518123530697371 8785363810015061186 6978320295718623985 -6794468188338365771

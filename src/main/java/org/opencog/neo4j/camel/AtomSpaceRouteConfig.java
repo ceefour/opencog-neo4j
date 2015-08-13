@@ -25,6 +25,11 @@ import java.util.stream.Collectors;
 public class AtomSpaceRouteConfig {
 
     private static final Logger log = LoggerFactory.getLogger(AtomSpaceRouteConfig.class);
+    public static final AtomSpaceProtos.ZMQAttentionValueHolderMessage ATTENTIONVALUE_BLANK =
+            AtomSpaceProtos.ZMQAttentionValueHolderMessage.newBuilder()
+                .setSTI(0)
+                .setLTI(0)
+                .setVLTI(0).build();
 
     @Inject
     private Environment env;
@@ -49,47 +54,59 @@ public class AtomSpaceRouteConfig {
                         }).to("log:atomspace-in-parsed?showAll=true&multiline=true")
                         .process((Exchange xc) -> {
                             final AtomSpaceProtos.ZMQRequestMessage inp = xc.getIn().getBody(AtomSpaceProtos.ZMQRequestMessage.class);
-                            final AtomSpaceProtos.ZMQReplyMessage.Builder atomsResultb = AtomSpaceProtos.ZMQReplyMessage.newBuilder();
-                            final List<AtomRequest> nodeRequests = inp.getFetchList().stream()
-                                    .map(it -> {
-                                        switch (it.getKind()) {
-                                            case UUID:
-                                                return new AtomRequest(it.getHandle());
-                                            case NODE:
-                                                // FIXME: use the int<->UUID mapping
-                                                throw new UnsupportedOperationException();
-                                                //return new AtomRequest(AtomType.forUpperCamel(it.getAtomType()), it.getName());
-                                            case LINK:
-                                                // FIXME: use the int<->UUID mapping
-                                                throw new UnsupportedOperationException();
-                                                //return new AtomRequest(AtomType.forUpperCamel(it.getAtomType()), it.getOutgoingList());
-                                            default:
-                                                throw new IllegalArgumentException("Unknown request kind: " + it.getKind());
+                            switch (inp.getFunction()) {
+                                case ZMQgetAtoms:
+                                    final AtomSpaceProtos.ZMQReplyMessage.Builder atomsResultb = AtomSpaceProtos.ZMQReplyMessage.newBuilder();
+                                    final List<AtomRequest> nodeRequests = inp.getFetchList().stream()
+                                            .map(it -> {
+                                                switch (it.getKind()) {
+                                                    case UUID:
+                                                        return new AtomRequest(it.getHandle());
+                                                    case NODE:
+                                                        return new AtomRequest(AtomType.forId(it.getType()), it.getName());
+                                                    case LINK:
+                                                        return new AtomRequest(AtomType.forId(it.getType()), it.getOutgoingList());
+                                                    default:
+                                                        throw new IllegalArgumentException("Unknown request kind: " + it.getKind());
+                                                }
+                                            }).collect(Collectors.toList());
+                                    final List<Atom> atoms = neo4jBs.getAtomsAsync(nodeRequests).get();
+                                    atoms.forEach(atom -> {
+                                        //final Optional<Node> node = neo4jBs.getNode(AtomType.forUpperCamel(req.getAtomType()), req.getNodeName());
+                                        if (atom instanceof Node) {
+                                            atomsResultb.addAtom(AtomSpaceProtos.ZMQAtomMessage.newBuilder()
+                                                    .setHandle(atom.getUuid())
+                                                    .setAtomtype(AtomSpaceProtos.ZMQAtomType.ZMQAtomTypeNode)
+                                                            //.setAtomTypeStr(atom.getType().toUpperCamel()) // no longer needed
+                                                    .setType(atom.getType().getId())
+                                                    .setAttentionvalueholder(ATTENTIONVALUE_BLANK) // FIXME: get from atom
+                                                    .setName(((Node) atom).getName())
+                                                    .build());
+                                        } else if (atom instanceof Link) {
+                                            Verify.verify(((Link) atom).getOutgoingSet() != null,
+                                                    "Link %s outgoingSet cannot be null", atom.getType());
+                                            atomsResultb.addAtom(AtomSpaceProtos.ZMQAtomMessage.newBuilder()
+                                                    .setHandle(atom.getUuid())
+                                                    .setAtomtype(AtomSpaceProtos.ZMQAtomType.ZMQAtomTypeLink)
+                                                            //.setAtomTypeStr(atom.getType().toUpperCamel()) // no longer needed
+                                                    .setType(atom.getType().getId())
+                                                    .setAttentionvalueholder(ATTENTIONVALUE_BLANK) // FIXME: get from atom
+                                                    .addAllOutgoing(((Link) atom).getOutgoingSet().stream().map(Handle::getUuid).collect(Collectors.toList()))
+                                                    .build());
+                                        } else {
+                                            atomsResultb.addAtom(AtomSpaceProtos.ZMQAtomMessage.newBuilder()
+                                                    .setAtomtype(AtomSpaceProtos.ZMQAtomType.ZMQAtomTypeNotFound)
+                                                    .setHandle(Handle.UNDEFINED)
+                                                    .setType(0)
+                                                    .setAttentionvalueholder(ATTENTIONVALUE_BLANK) // unfortunately we have to fill this :(
+                                                    .build());
                                         }
-                                    }).collect(Collectors.toList());
-                            final List<Atom> atoms = neo4jBs.getAtomsAsync(nodeRequests).get();
-                            atoms.forEach(atom -> {
-                                //final Optional<Node> node = neo4jBs.getNode(AtomType.forUpperCamel(req.getAtomType()), req.getNodeName());
-                                if (atom instanceof Node) {
-                                    atomsResultb.addAtom(AtomSpaceProtos.ZMQAtomMessage.newBuilder()
-                                            .setAtomtype(AtomSpaceProtos.ZMQAtomType.ZMQAtomTypeNode)
-                                            .setAtomTypeStr(atom.getType().toUpperCamel())
-                                            .setName(((Node) atom).getName())
-                                            .build());
-                                } else if (atom instanceof Link) {
-                                    Verify.verify(((Link) atom).getOutgoingSet() != null,
-                                            "Link %s outgoingSet cannot be null", atom.getType());
-                                    atomsResultb.addAtom(AtomSpaceProtos.ZMQAtomMessage.newBuilder()
-                                            .setAtomtype(AtomSpaceProtos.ZMQAtomType.ZMQAtomTypeLink)
-                                            .setAtomTypeStr(atom.getType().toUpperCamel())
-                                            .addAllOutgoing(((Link) atom).getOutgoingSet().stream().map(Handle::getUuid).collect(Collectors.toList()))
-                                            .build());
-                                } else {
-                                    atomsResultb.addAtom(AtomSpaceProtos.ZMQAtomMessage.newBuilder()
-                                            .setAtomtype(AtomSpaceProtos.ZMQAtomType.ZMQAtomTypeNotFound).build());
-                                }
-                            });
-                            xc.getIn().setBody(atomsResultb.build());
+                                    });
+                                    xc.getIn().setBody(atomsResultb.build());
+                                    break;
+                                default:
+                                    throw new UnsupportedOperationException("Function not supported: " + inp.getFunction());
+                            }
                         }).to("log:atomspace-replied?showAll=true&multiline=true")
                         .onException(Exception.class)
                         .process(xc -> {

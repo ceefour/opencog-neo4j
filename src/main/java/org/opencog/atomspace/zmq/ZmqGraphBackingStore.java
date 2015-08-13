@@ -106,6 +106,7 @@ public class ZmqGraphBackingStore extends GraphBackingStoreBase {
 //                .forEach(it -> atomTypeInfob.put(atomTypeInfob.size() + 1, it)); // must NOT be concurrent!
 //        final ImmutableBiMap<Integer, String> atomTypeInfos = ImmutableBiMap.copyOf(atomTypeInfob);
         final AtomSpaceProtos.ZMQRequestMessage protoReqs = AtomSpaceProtos.ZMQRequestMessage.newBuilder()
+                .setFunction(AtomSpaceProtos.ZMQFunctionType.ZMQgetAtoms)
 //                .addAllAtomType(atomTypeInfos.entrySet().stream().map(it ->
 //                        AtomSpaceProtos.ZMQAtomTypeInfo.newBuilder()
 //                            .setId()))
@@ -138,12 +139,12 @@ public class ZmqGraphBackingStore extends GraphBackingStoreBase {
                                     case ZMQAtomTypeNotFound:
                                         return null;
                                     case ZMQAtomTypeNode:
-                                        return new Node(AtomType.forUpperCamel(res.getAtomTypeStr()), res.getName());
+                                        return new Node(res.getHandle(), AtomType.forId(res.getType()), res.getName());
                                     case ZMQAtomTypeLink:
                                         final List<GenericHandle> outgoingSet = res.getOutgoingList().stream()
                                                 .map(it -> new GenericHandle(it))
                                                 .collect(Collectors.toList());
-                                        final Link link = new Link(AtomType.forUpperCamel(res.getAtomTypeStr()), outgoingSet);
+                                        final Link link = new Link(res.getHandle(), AtomType.forId(res.getType()), outgoingSet);
                                         return link;
                                     default:
                                         throw new IllegalArgumentException("Unknown AtomResult kind: " + res.getAtomtype());

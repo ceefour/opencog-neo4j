@@ -8,6 +8,9 @@ package org.opencog.atomspace;
  * @see Link
  */
 public interface Handle {
+
+    public static final long UNDEFINED = Long.MAX_VALUE;
+
     /**
      * 64-bit numeric value.
      * @return

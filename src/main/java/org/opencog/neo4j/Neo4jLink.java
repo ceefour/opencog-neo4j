@@ -9,6 +9,7 @@ import org.opencog.atomspace.Handle;
 import org.opencog.atomspace.Link;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * Usually backed by Neo4j {@link org.neo4j.graphdb.Node} (hypernode),
@@ -25,35 +26,44 @@ public class Neo4jLink extends Link {
 //    }
 
     /**
-     *
+     * This will iterate the Link node's outgoing relationships.
      * @param type
      * @param graphNode
      * @see Neo4jHandle#toAtom(Node)
      */
     public Neo4jLink(AtomType type, org.neo4j.graphdb.Node graphNode) {
-        super(type, FluentIterable.from(graphNode.getRelationships(Direction.OUTGOING)).transform(it -> Neo4jHandle.forNode(it.getEndNode())).toList());
+        super((long) graphNode.getProperty(Neo4jNode.GID_PROPERTY),
+                type, FluentIterable.from(graphNode.getRelationships(Direction.OUTGOING)).transform(it -> Neo4jHandle.forNode(it.getEndNode())).toList());
         this.graphNode = graphNode;
     }
 
     public Neo4jLink(AtomType type, org.neo4j.graphdb.Relationship graphRel) {
-        super(type, ImmutableList.of(Neo4jHandle.forNode(graphRel.getStartNode()),
+        super((long) graphRel.getProperty(Neo4jNode.GID_PROPERTY),
+                type, ImmutableList.of(Neo4jHandle.forNode(graphRel.getStartNode()),
             Neo4jHandle.forNode(graphRel.getEndNode())));
         this.graphRel = graphRel;
     }
 
+    /**
+     * If you already have a {@link List} of {@link Handle}s, this will be more efficient than {@link #Neo4jLink(AtomType, Relationship)}.
+     * @param type
+     * @param outgoingSet
+     * @param graphRel
+     */
     public Neo4jLink(AtomType type, ImmutableList<Handle> outgoingSet, Relationship graphRel) {
-        super(type, outgoingSet);
+        super((long) graphRel.getProperty(Neo4jNode.GID_PROPERTY), type, outgoingSet);
         this.graphRel = graphRel;
     }
 
     public Neo4jLink(AtomType type, ImmutableList<Handle> outgoingSet, Node graphNode) {
-        super(type, outgoingSet);
+        super((long) graphNode.getProperty(Neo4jNode.GID_PROPERTY),
+                type, outgoingSet);
         this.graphNode = graphNode;
     }
 
     @Override
     public String toString() {
-        return "Neo4jLink{" + getType() +
+        return "Neo4jLink{" + getUuid() + ":" + getType() +
                 ", outgoingSet" + getOutgoingSet() +
                 ", graphNode=" + graphNode +
                 ", graphRel=" + graphRel +

@@ -340,7 +340,6 @@ public final class AtomSpaceProtos {
      * <code>ZMQgetAtom = 0;</code>
      *
      * <pre>
-     *
      * Get a single atom by handle UUID.
      * @see ZMQRequestMessage#handle
      * </pre>
@@ -350,7 +349,6 @@ public final class AtomSpaceProtos {
      * <code>ZMQgetName = 1;</code>
      *
      * <pre>
-     *
      * TODO: ?
      * </pre>
      */
@@ -359,7 +357,6 @@ public final class AtomSpaceProtos {
      * <code>ZMQgetAtoms = 2;</code>
      *
      * <pre>
-     *
      * Get multiple atoms by UUID, atomType + node name, or atomType + outgoing set.
      * @see ZMQRequestMessage#fetch
      * </pre>
@@ -371,7 +368,6 @@ public final class AtomSpaceProtos {
      * <code>ZMQgetAtom = 0;</code>
      *
      * <pre>
-     *
      * Get a single atom by handle UUID.
      * @see ZMQRequestMessage#handle
      * </pre>
@@ -381,7 +377,6 @@ public final class AtomSpaceProtos {
      * <code>ZMQgetName = 1;</code>
      *
      * <pre>
-     *
      * TODO: ?
      * </pre>
      */
@@ -390,7 +385,6 @@ public final class AtomSpaceProtos {
      * <code>ZMQgetAtoms = 2;</code>
      *
      * <pre>
-     *
      * Get multiple atoms by UUID, atomType + node name, or atomType + outgoing set.
      * @see ZMQRequestMessage#fetch
      * </pre>
@@ -4872,33 +4866,6 @@ public final class AtomSpaceProtos {
      * </pre>
      */
     org.opencog.atomspace.AtomSpaceProtos.ZMQTrailMessageOrBuilder getTrailOrBuilder();
-
-    // optional string atom_type_str = 11;
-    /**
-     * <code>optional string atom_type_str = 11;</code>
-     *
-     * <pre>
-     * FIXME: change to int then put a lookup table
-     * </pre>
-     */
-    boolean hasAtomTypeStr();
-    /**
-     * <code>optional string atom_type_str = 11;</code>
-     *
-     * <pre>
-     * FIXME: change to int then put a lookup table
-     * </pre>
-     */
-    java.lang.String getAtomTypeStr();
-    /**
-     * <code>optional string atom_type_str = 11;</code>
-     *
-     * <pre>
-     * FIXME: change to int then put a lookup table
-     * </pre>
-     */
-    com.google.protobuf.ByteString
-        getAtomTypeStrBytes();
   }
   /**
    * Protobuf type {@code ZMQAtomMessage}
@@ -5061,11 +5028,6 @@ public final class AtomSpaceProtos {
                 trail_ = subBuilder.buildPartial();
               }
               bitField0_ |= 0x00000080;
-              break;
-            }
-            case 90: {
-              bitField0_ |= 0x00000100;
-              atomTypeStr_ = input.readBytes();
               break;
             }
           }
@@ -5369,61 +5331,6 @@ public final class AtomSpaceProtos {
       return trail_;
     }
 
-    // optional string atom_type_str = 11;
-    public static final int ATOM_TYPE_STR_FIELD_NUMBER = 11;
-    private java.lang.Object atomTypeStr_;
-    /**
-     * <code>optional string atom_type_str = 11;</code>
-     *
-     * <pre>
-     * FIXME: change to int then put a lookup table
-     * </pre>
-     */
-    public boolean hasAtomTypeStr() {
-      return ((bitField0_ & 0x00000100) == 0x00000100);
-    }
-    /**
-     * <code>optional string atom_type_str = 11;</code>
-     *
-     * <pre>
-     * FIXME: change to int then put a lookup table
-     * </pre>
-     */
-    public java.lang.String getAtomTypeStr() {
-      java.lang.Object ref = atomTypeStr_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          atomTypeStr_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>optional string atom_type_str = 11;</code>
-     *
-     * <pre>
-     * FIXME: change to int then put a lookup table
-     * </pre>
-     */
-    public com.google.protobuf.ByteString
-        getAtomTypeStrBytes() {
-      java.lang.Object ref = atomTypeStr_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        atomTypeStr_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
     private void initFields() {
       atomtype_ = org.opencog.atomspace.AtomSpaceProtos.ZMQAtomType.ZMQAtomTypeNode;
       attentionvalueholder_ = org.opencog.atomspace.AtomSpaceProtos.ZMQAttentionValueHolderMessage.getDefaultInstance();
@@ -5435,7 +5342,6 @@ public final class AtomSpaceProtos {
       name_ = "";
       outgoing_ = java.util.Collections.emptyList();
       trail_ = org.opencog.atomspace.AtomSpaceProtos.ZMQTrailMessage.getDefaultInstance();
-      atomTypeStr_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -5511,9 +5417,6 @@ public final class AtomSpaceProtos {
       if (((bitField0_ & 0x00000080) == 0x00000080)) {
         output.writeMessage(10, trail_);
       }
-      if (((bitField0_ & 0x00000100) == 0x00000100)) {
-        output.writeBytes(11, getAtomTypeStrBytes());
-      }
       getUnknownFields().writeTo(output);
     }
 
@@ -5572,10 +5475,6 @@ public final class AtomSpaceProtos {
       if (((bitField0_ & 0x00000080) == 0x00000080)) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(10, trail_);
-      }
-      if (((bitField0_ & 0x00000100) == 0x00000100)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(11, getAtomTypeStrBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -5728,8 +5627,6 @@ public final class AtomSpaceProtos {
           trailBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000200);
-        atomTypeStr_ = "";
-        bitField0_ = (bitField0_ & ~0x00000400);
         return this;
       }
 
@@ -5812,10 +5709,6 @@ public final class AtomSpaceProtos {
         } else {
           result.trail_ = trailBuilder_.build();
         }
-        if (((from_bitField0_ & 0x00000400) == 0x00000400)) {
-          to_bitField0_ |= 0x00000100;
-        }
-        result.atomTypeStr_ = atomTypeStr_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -5877,11 +5770,6 @@ public final class AtomSpaceProtos {
         }
         if (other.hasTrail()) {
           mergeTrail(other.getTrail());
-        }
-        if (other.hasAtomTypeStr()) {
-          bitField0_ |= 0x00000400;
-          atomTypeStr_ = other.atomTypeStr_;
-          onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -6720,104 +6608,6 @@ public final class AtomSpaceProtos {
           trail_ = null;
         }
         return trailBuilder_;
-      }
-
-      // optional string atom_type_str = 11;
-      private java.lang.Object atomTypeStr_ = "";
-      /**
-       * <code>optional string atom_type_str = 11;</code>
-       *
-       * <pre>
-       * FIXME: change to int then put a lookup table
-       * </pre>
-       */
-      public boolean hasAtomTypeStr() {
-        return ((bitField0_ & 0x00000400) == 0x00000400);
-      }
-      /**
-       * <code>optional string atom_type_str = 11;</code>
-       *
-       * <pre>
-       * FIXME: change to int then put a lookup table
-       * </pre>
-       */
-      public java.lang.String getAtomTypeStr() {
-        java.lang.Object ref = atomTypeStr_;
-        if (!(ref instanceof java.lang.String)) {
-          java.lang.String s = ((com.google.protobuf.ByteString) ref)
-              .toStringUtf8();
-          atomTypeStr_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>optional string atom_type_str = 11;</code>
-       *
-       * <pre>
-       * FIXME: change to int then put a lookup table
-       * </pre>
-       */
-      public com.google.protobuf.ByteString
-          getAtomTypeStrBytes() {
-        java.lang.Object ref = atomTypeStr_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          atomTypeStr_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>optional string atom_type_str = 11;</code>
-       *
-       * <pre>
-       * FIXME: change to int then put a lookup table
-       * </pre>
-       */
-      public Builder setAtomTypeStr(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000400;
-        atomTypeStr_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string atom_type_str = 11;</code>
-       *
-       * <pre>
-       * FIXME: change to int then put a lookup table
-       * </pre>
-       */
-      public Builder clearAtomTypeStr() {
-        bitField0_ = (bitField0_ & ~0x00000400);
-        atomTypeStr_ = getDefaultInstance().getAtomTypeStr();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string atom_type_str = 11;</code>
-       *
-       * <pre>
-       * FIXME: change to int then put a lookup table
-       * </pre>
-       */
-      public Builder setAtomTypeStrBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000400;
-        atomTypeStr_ = value;
-        onChanged();
-        return this;
       }
 
       // @@protoc_insertion_point(builder_scope:ZMQAtomMessage)
@@ -7828,7 +7618,6 @@ public final class AtomSpaceProtos {
    * Protobuf type {@code ZMQAtomTypeInfo}
    *
    * <pre>
-   **
    * Information about atom type, it can be used for multiple purposes,
    * but currently its used to map between atom type integer IDs and atom type names.
    * @todo Make it graph-aware ~Hendy
@@ -8138,7 +7927,6 @@ public final class AtomSpaceProtos {
      * Protobuf type {@code ZMQAtomTypeInfo}
      *
      * <pre>
-     **
      * Information about atom type, it can be used for multiple purposes,
      * but currently its used to map between atom type integer IDs and atom type names.
      * @todo Make it graph-aware ~Hendy
@@ -8535,7 +8323,6 @@ public final class AtomSpaceProtos {
      * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
      *
      * <pre>
-     **
      * Mapping between atom type IDs to atom type names, sent by the client.
      * </pre>
      */
@@ -8545,7 +8332,6 @@ public final class AtomSpaceProtos {
      * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
      *
      * <pre>
-     **
      * Mapping between atom type IDs to atom type names, sent by the client.
      * </pre>
      */
@@ -8554,7 +8340,6 @@ public final class AtomSpaceProtos {
      * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
      *
      * <pre>
-     **
      * Mapping between atom type IDs to atom type names, sent by the client.
      * </pre>
      */
@@ -8563,7 +8348,6 @@ public final class AtomSpaceProtos {
      * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
      *
      * <pre>
-     **
      * Mapping between atom type IDs to atom type names, sent by the client.
      * </pre>
      */
@@ -8573,7 +8357,6 @@ public final class AtomSpaceProtos {
      * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
      *
      * <pre>
-     **
      * Mapping between atom type IDs to atom type names, sent by the client.
      * </pre>
      */
@@ -8827,7 +8610,6 @@ public final class AtomSpaceProtos {
      * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
      *
      * <pre>
-     **
      * Mapping between atom type IDs to atom type names, sent by the client.
      * </pre>
      */
@@ -8838,7 +8620,6 @@ public final class AtomSpaceProtos {
      * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
      *
      * <pre>
-     **
      * Mapping between atom type IDs to atom type names, sent by the client.
      * </pre>
      */
@@ -8850,7 +8631,6 @@ public final class AtomSpaceProtos {
      * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
      *
      * <pre>
-     **
      * Mapping between atom type IDs to atom type names, sent by the client.
      * </pre>
      */
@@ -8861,7 +8641,6 @@ public final class AtomSpaceProtos {
      * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
      *
      * <pre>
-     **
      * Mapping between atom type IDs to atom type names, sent by the client.
      * </pre>
      */
@@ -8872,7 +8651,6 @@ public final class AtomSpaceProtos {
      * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
      *
      * <pre>
-     **
      * Mapping between atom type IDs to atom type names, sent by the client.
      * </pre>
      */
@@ -9697,7 +9475,6 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
        *
        * <pre>
-       **
        * Mapping between atom type IDs to atom type names, sent by the client.
        * </pre>
        */
@@ -9712,7 +9489,6 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
        *
        * <pre>
-       **
        * Mapping between atom type IDs to atom type names, sent by the client.
        * </pre>
        */
@@ -9727,7 +9503,6 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
        *
        * <pre>
-       **
        * Mapping between atom type IDs to atom type names, sent by the client.
        * </pre>
        */
@@ -9742,7 +9517,6 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
        *
        * <pre>
-       **
        * Mapping between atom type IDs to atom type names, sent by the client.
        * </pre>
        */
@@ -9764,7 +9538,6 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
        *
        * <pre>
-       **
        * Mapping between atom type IDs to atom type names, sent by the client.
        * </pre>
        */
@@ -9783,7 +9556,6 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
        *
        * <pre>
-       **
        * Mapping between atom type IDs to atom type names, sent by the client.
        * </pre>
        */
@@ -9804,7 +9576,6 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
        *
        * <pre>
-       **
        * Mapping between atom type IDs to atom type names, sent by the client.
        * </pre>
        */
@@ -9826,7 +9597,6 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
        *
        * <pre>
-       **
        * Mapping between atom type IDs to atom type names, sent by the client.
        * </pre>
        */
@@ -9845,7 +9615,6 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
        *
        * <pre>
-       **
        * Mapping between atom type IDs to atom type names, sent by the client.
        * </pre>
        */
@@ -9864,7 +9633,6 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
        *
        * <pre>
-       **
        * Mapping between atom type IDs to atom type names, sent by the client.
        * </pre>
        */
@@ -9883,7 +9651,6 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
        *
        * <pre>
-       **
        * Mapping between atom type IDs to atom type names, sent by the client.
        * </pre>
        */
@@ -9901,7 +9668,6 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
        *
        * <pre>
-       **
        * Mapping between atom type IDs to atom type names, sent by the client.
        * </pre>
        */
@@ -9919,7 +9685,6 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
        *
        * <pre>
-       **
        * Mapping between atom type IDs to atom type names, sent by the client.
        * </pre>
        */
@@ -9931,7 +9696,6 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
        *
        * <pre>
-       **
        * Mapping between atom type IDs to atom type names, sent by the client.
        * </pre>
        */
@@ -9946,7 +9710,6 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
        *
        * <pre>
-       **
        * Mapping between atom type IDs to atom type names, sent by the client.
        * </pre>
        */
@@ -9962,7 +9725,6 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
        *
        * <pre>
-       **
        * Mapping between atom type IDs to atom type names, sent by the client.
        * </pre>
        */
@@ -9974,7 +9736,6 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
        *
        * <pre>
-       **
        * Mapping between atom type IDs to atom type names, sent by the client.
        * </pre>
        */
@@ -9987,7 +9748,6 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
        *
        * <pre>
-       **
        * Mapping between atom type IDs to atom type names, sent by the client.
        * </pre>
        */
@@ -10069,7 +9829,6 @@ public final class AtomSpaceProtos {
      * <code>repeated .ZMQAtomTypeInfo atom_type = 3;</code>
      *
      * <pre>
-     **
      * Mapping between atom type IDs to atom type names, sent by the server.
      * </pre>
      */
@@ -10079,7 +9838,6 @@ public final class AtomSpaceProtos {
      * <code>repeated .ZMQAtomTypeInfo atom_type = 3;</code>
      *
      * <pre>
-     **
      * Mapping between atom type IDs to atom type names, sent by the server.
      * </pre>
      */
@@ -10088,7 +9846,6 @@ public final class AtomSpaceProtos {
      * <code>repeated .ZMQAtomTypeInfo atom_type = 3;</code>
      *
      * <pre>
-     **
      * Mapping between atom type IDs to atom type names, sent by the server.
      * </pre>
      */
@@ -10097,7 +9854,6 @@ public final class AtomSpaceProtos {
      * <code>repeated .ZMQAtomTypeInfo atom_type = 3;</code>
      *
      * <pre>
-     **
      * Mapping between atom type IDs to atom type names, sent by the server.
      * </pre>
      */
@@ -10107,7 +9863,6 @@ public final class AtomSpaceProtos {
      * <code>repeated .ZMQAtomTypeInfo atom_type = 3;</code>
      *
      * <pre>
-     **
      * Mapping between atom type IDs to atom type names, sent by the server.
      * </pre>
      */
@@ -10318,7 +10073,6 @@ public final class AtomSpaceProtos {
      * <code>repeated .ZMQAtomTypeInfo atom_type = 3;</code>
      *
      * <pre>
-     **
      * Mapping between atom type IDs to atom type names, sent by the server.
      * </pre>
      */
@@ -10329,7 +10083,6 @@ public final class AtomSpaceProtos {
      * <code>repeated .ZMQAtomTypeInfo atom_type = 3;</code>
      *
      * <pre>
-     **
      * Mapping between atom type IDs to atom type names, sent by the server.
      * </pre>
      */
@@ -10341,7 +10094,6 @@ public final class AtomSpaceProtos {
      * <code>repeated .ZMQAtomTypeInfo atom_type = 3;</code>
      *
      * <pre>
-     **
      * Mapping between atom type IDs to atom type names, sent by the server.
      * </pre>
      */
@@ -10352,7 +10104,6 @@ public final class AtomSpaceProtos {
      * <code>repeated .ZMQAtomTypeInfo atom_type = 3;</code>
      *
      * <pre>
-     **
      * Mapping between atom type IDs to atom type names, sent by the server.
      * </pre>
      */
@@ -10363,7 +10114,6 @@ public final class AtomSpaceProtos {
      * <code>repeated .ZMQAtomTypeInfo atom_type = 3;</code>
      *
      * <pre>
-     **
      * Mapping between atom type IDs to atom type names, sent by the server.
      * </pre>
      */
@@ -11044,7 +10794,6 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomTypeInfo atom_type = 3;</code>
        *
        * <pre>
-       **
        * Mapping between atom type IDs to atom type names, sent by the server.
        * </pre>
        */
@@ -11059,7 +10808,6 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomTypeInfo atom_type = 3;</code>
        *
        * <pre>
-       **
        * Mapping between atom type IDs to atom type names, sent by the server.
        * </pre>
        */
@@ -11074,7 +10822,6 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomTypeInfo atom_type = 3;</code>
        *
        * <pre>
-       **
        * Mapping between atom type IDs to atom type names, sent by the server.
        * </pre>
        */
@@ -11089,7 +10836,6 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomTypeInfo atom_type = 3;</code>
        *
        * <pre>
-       **
        * Mapping between atom type IDs to atom type names, sent by the server.
        * </pre>
        */
@@ -11111,7 +10857,6 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomTypeInfo atom_type = 3;</code>
        *
        * <pre>
-       **
        * Mapping between atom type IDs to atom type names, sent by the server.
        * </pre>
        */
@@ -11130,7 +10875,6 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomTypeInfo atom_type = 3;</code>
        *
        * <pre>
-       **
        * Mapping between atom type IDs to atom type names, sent by the server.
        * </pre>
        */
@@ -11151,7 +10895,6 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomTypeInfo atom_type = 3;</code>
        *
        * <pre>
-       **
        * Mapping between atom type IDs to atom type names, sent by the server.
        * </pre>
        */
@@ -11173,7 +10916,6 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomTypeInfo atom_type = 3;</code>
        *
        * <pre>
-       **
        * Mapping between atom type IDs to atom type names, sent by the server.
        * </pre>
        */
@@ -11192,7 +10934,6 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomTypeInfo atom_type = 3;</code>
        *
        * <pre>
-       **
        * Mapping between atom type IDs to atom type names, sent by the server.
        * </pre>
        */
@@ -11211,7 +10952,6 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomTypeInfo atom_type = 3;</code>
        *
        * <pre>
-       **
        * Mapping between atom type IDs to atom type names, sent by the server.
        * </pre>
        */
@@ -11230,7 +10970,6 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomTypeInfo atom_type = 3;</code>
        *
        * <pre>
-       **
        * Mapping between atom type IDs to atom type names, sent by the server.
        * </pre>
        */
@@ -11248,7 +10987,6 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomTypeInfo atom_type = 3;</code>
        *
        * <pre>
-       **
        * Mapping between atom type IDs to atom type names, sent by the server.
        * </pre>
        */
@@ -11266,7 +11004,6 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomTypeInfo atom_type = 3;</code>
        *
        * <pre>
-       **
        * Mapping between atom type IDs to atom type names, sent by the server.
        * </pre>
        */
@@ -11278,7 +11015,6 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomTypeInfo atom_type = 3;</code>
        *
        * <pre>
-       **
        * Mapping between atom type IDs to atom type names, sent by the server.
        * </pre>
        */
@@ -11293,7 +11029,6 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomTypeInfo atom_type = 3;</code>
        *
        * <pre>
-       **
        * Mapping between atom type IDs to atom type names, sent by the server.
        * </pre>
        */
@@ -11309,7 +11044,6 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomTypeInfo atom_type = 3;</code>
        *
        * <pre>
-       **
        * Mapping between atom type IDs to atom type names, sent by the server.
        * </pre>
        */
@@ -11321,7 +11055,6 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomTypeInfo atom_type = 3;</code>
        *
        * <pre>
-       **
        * Mapping between atom type IDs to atom type names, sent by the server.
        * </pre>
        */
@@ -11334,7 +11067,6 @@ public final class AtomSpaceProtos {
        * <code>repeated .ZMQAtomTypeInfo atom_type = 3;</code>
        *
        * <pre>
-       **
        * Mapping between atom type IDs to atom type names, sent by the server.
        * </pre>
        */
@@ -11441,35 +11173,34 @@ public final class AtomSpaceProtos {
       "\013 \003(\002\"M\n\024ZMQTruthValueMessage\0225\n\020singleT" +
       "ruthValue\030\001 \003(\0132\033.ZMQSingleTruthValueMes" +
       "sage\"1\n\017ZMQTrailMessage\022\017\n\007maxSize\030\001 \002(\005" +
-      "\022\r\n\005trail\030\002 \003(\004\"\261\002\n\016ZMQAtomMessage\022\036\n\010at" +
+      "\022\r\n\005trail\030\002 \003(\004\"\232\002\n\016ZMQAtomMessage\022\036\n\010at" +
       "omtype\030\001 \002(\0162\014.ZMQAtomType\022=\n\024attentionv" +
       "alueholder\030\002 \002(\0132\037.ZMQAttentionValueHold" +
       "erMessage\022\016\n\006handle\030\003 \002(\004\022\020\n\010incoming\030\004 " +
       "\003(\004\022\014\n\004type\030\005 \002(\005\022\r\n\005flags\030\006 \001(\005\022)\n\ntrut" +
       "hValue\030\007 \001(\0132\025.ZMQTruthValueMessage\022\014\n\004n",
       "ame\030\010 \001(\t\022\020\n\010outgoing\030\t \003(\004\022\037\n\005trail\030\n \001" +
-      "(\0132\020.ZMQTrailMessage\022\025\n\ratom_type_str\030\013 " +
-      "\001(\t\"m\n\014ZMQAtomFetch\022\037\n\004kind\030\001 \002(\0162\021.ZMQA" +
-      "tomFetchKind\022\016\n\006handle\030\002 \001(\004\022\014\n\004type\030\003 \001" +
-      "(\005\022\014\n\004name\030\004 \001(\t\022\020\n\010outgoing\030\005 \003(\004\"+\n\017ZM" +
-      "QAtomTypeInfo\022\n\n\002id\030\001 \001(\005\022\014\n\004name\030\002 \001(\t\"" +
-      "\212\001\n\021ZMQRequestMessage\022\"\n\010function\030\001 \002(\0162" +
-      "\020.ZMQFunctionType\022\016\n\006handle\030\002 \001(\004\022\034\n\005fet" +
-      "ch\030\003 \003(\0132\r.ZMQAtomFetch\022#\n\tatom_type\030\004 \003" +
-      "(\0132\020.ZMQAtomTypeInfo\"b\n\017ZMQReplyMessage\022",
-      "\035\n\004atom\030\001 \003(\0132\017.ZMQAtomMessage\022\013\n\003str\030\002 " +
-      "\001(\t\022#\n\tatom_type\030\003 \003(\0132\020.ZMQAtomTypeInfo" +
-      "*\250\001\n\021ZMQTruthValueType\022\033\n\027ZMQTruthValueT" +
-      "ypeSimple\020\000\022\032\n\026ZMQTruthValueTypeCount\020\001\022" +
-      "\031\n\025ZMQTruthValueTypeNull\020\002\022\037\n\033ZMQTruthVa" +
-      "lueTypeIndefinite\020\003\022\036\n\032ZMQTruthValueType" +
-      "Composite\020\004*P\n\013ZMQAtomType\022\023\n\017ZMQAtomTyp" +
-      "eNode\020\000\022\023\n\017ZMQAtomTypeLink\020\001\022\027\n\023ZMQAtomT" +
-      "ypeNotFound\020\002*0\n\020ZMQAtomFetchKind\022\010\n\004UUI" +
-      "D\020\000\022\010\n\004NODE\020\001\022\010\n\004LINK\020\002*B\n\017ZMQFunctionTy",
-      "pe\022\016\n\nZMQgetAtom\020\000\022\016\n\nZMQgetName\020\001\022\017\n\013ZM" +
-      "QgetAtoms\020\002B*\n\025org.opencog.atomspaceB\017At" +
-      "omSpaceProtosH\001"
+      "(\0132\020.ZMQTrailMessage\"m\n\014ZMQAtomFetch\022\037\n\004" +
+      "kind\030\001 \002(\0162\021.ZMQAtomFetchKind\022\016\n\006handle\030" +
+      "\002 \001(\004\022\014\n\004type\030\003 \001(\005\022\014\n\004name\030\004 \001(\t\022\020\n\010out" +
+      "going\030\005 \003(\004\"+\n\017ZMQAtomTypeInfo\022\n\n\002id\030\001 \001" +
+      "(\005\022\014\n\004name\030\002 \001(\t\"\212\001\n\021ZMQRequestMessage\022\"" +
+      "\n\010function\030\001 \002(\0162\020.ZMQFunctionType\022\016\n\006ha" +
+      "ndle\030\002 \001(\004\022\034\n\005fetch\030\003 \003(\0132\r.ZMQAtomFetch" +
+      "\022#\n\tatom_type\030\004 \003(\0132\020.ZMQAtomTypeInfo\"b\n" +
+      "\017ZMQReplyMessage\022\035\n\004atom\030\001 \003(\0132\017.ZMQAtom",
+      "Message\022\013\n\003str\030\002 \001(\t\022#\n\tatom_type\030\003 \003(\0132" +
+      "\020.ZMQAtomTypeInfo*\250\001\n\021ZMQTruthValueType\022" +
+      "\033\n\027ZMQTruthValueTypeSimple\020\000\022\032\n\026ZMQTruth" +
+      "ValueTypeCount\020\001\022\031\n\025ZMQTruthValueTypeNul" +
+      "l\020\002\022\037\n\033ZMQTruthValueTypeIndefinite\020\003\022\036\n\032" +
+      "ZMQTruthValueTypeComposite\020\004*P\n\013ZMQAtomT" +
+      "ype\022\023\n\017ZMQAtomTypeNode\020\000\022\023\n\017ZMQAtomTypeL" +
+      "ink\020\001\022\027\n\023ZMQAtomTypeNotFound\020\002*0\n\020ZMQAto" +
+      "mFetchKind\022\010\n\004UUID\020\000\022\010\n\004NODE\020\001\022\010\n\004LINK\020\002" +
+      "*B\n\017ZMQFunctionType\022\016\n\nZMQgetAtom\020\000\022\016\n\nZ",
+      "MQgetName\020\001\022\017\n\013ZMQgetAtoms\020\002B*\n\025org.open" +
+      "cog.atomspaceB\017AtomSpaceProtosH\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -11511,7 +11242,7 @@ public final class AtomSpaceProtos {
           internal_static_ZMQAtomMessage_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_ZMQAtomMessage_descriptor,
-              new java.lang.String[] { "Atomtype", "Attentionvalueholder", "Handle", "Incoming", "Type", "Flags", "TruthValue", "Name", "Outgoing", "Trail", "AtomTypeStr", });
+              new java.lang.String[] { "Atomtype", "Attentionvalueholder", "Handle", "Incoming", "Type", "Flags", "TruthValue", "Name", "Outgoing", "Trail", });
           internal_static_ZMQAtomFetch_descriptor =
             getDescriptor().getMessageTypes().get(6);
           internal_static_ZMQAtomFetch_fieldAccessorTable = new

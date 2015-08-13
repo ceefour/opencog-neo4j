@@ -1,6 +1,9 @@
 package org.opencog.atomspace;
 
+import org.apache.commons.lang3.RandomUtils;
+
 import java.io.Serializable;
+import java.util.Random;
 
 /**
  * Represents an <a href="http://wiki.opencog.org/w/Atom">Atom</a> in the {@link AtomSpace}.
@@ -18,14 +21,27 @@ public class Atom implements Serializable {
      */
     public static final String GID_PROPERTY = "gid";
 
+    private long uuid;
     private AtomType type;
+    private static final Random RANDOM = new Random();
 
+    @Deprecated
     public Atom(AtomType type) {
+        this.uuid = Handle.UNDEFINED;
+        this.type = type;
+    }
+
+    public Atom(long uuid, AtomType type) {
+        this.uuid = uuid;
         this.type = type;
     }
 
     public AtomType getType() {
         return type;
+    }
+
+    public long getUuid() {
+        return this.uuid;
     }
 
 }

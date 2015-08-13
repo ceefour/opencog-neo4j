@@ -24,6 +24,11 @@ public class Link extends Atom {
         this.outgoingSet = ImmutableList.copyOf(outgoingSet);
     }
 
+    public Link(long uuid, AtomType type, List<? extends Handle> outgoingSet) {
+        super(uuid, type);
+        this.outgoingSet = ImmutableList.copyOf(outgoingSet);
+    }
+
     /**
      * The type and outgoing set of the link cannot be changed after the link has been inserted into the AtomSpace:
      * OpenCog atoms are <a href="http://en.wikipedia.org/wiki/Immutable_object">immutable objects.</a>

@@ -17,6 +17,7 @@ public class Neo4jHandle implements Handle {
         VERTEX,
         EDGE
     }
+    private long uuid;
     protected int graphId;
     protected IdKind idKind;
     protected long vertexOrEdgeId;
@@ -25,49 +26,54 @@ public class Neo4jHandle implements Handle {
     }
 
     public Neo4jHandle(long uuid) {
-        // most significant bit (bit 63): 0 = VERTEX, 1 = EDGE
-        // bit 48-62: graph ID (reserved)
-        // bit 0-47: vertex/edge ID
-        this.idKind = (uuid & 0x80000000) == 0 ? IdKind.VERTEX : IdKind.EDGE;
-        this.graphId = (int) ((uuid & 0x7f000000) >> 48);
-        this.vertexOrEdgeId = uuid & 0x00ffffff;
+        this.uuid = uuid;
+//        // most significant bit (bit 63): 0 = VERTEX, 1 = EDGE
+//        // bit 48-62: graph ID (reserved)
+//        // bit 0-47: vertex/edge ID
+//        this.idKind = (uuid & 0x80000000) == 0 ? IdKind.VERTEX : IdKind.EDGE;
+//        this.graphId = (int) ((uuid & 0x7f000000) >> 48);
+//        this.vertexOrEdgeId = uuid & 0x00ffffff;
     }
 
-    public Neo4jHandle(IdKind idKind, long vertexOrEdgeId) {
-        this.graphId = 0;
-        this.idKind = idKind;
-        this.vertexOrEdgeId = vertexOrEdgeId;
-    }
+//    public Neo4jHandle(IdKind idKind, long vertexOrEdgeId) {
+//        this.graphId = 0;
+//        this.idKind = idKind;
+//        this.vertexOrEdgeId = vertexOrEdgeId;
+//    }
 
     @Override
     public long getUuid() {
-        long uuid = vertexOrEdgeId |
-                (((long) graphId) << 48) |
-                (idKind == IdKind.VERTEX ? 0x80000000 : 0);
-        return uuid;
+        return this.uuid;
+//        long uuid = vertexOrEdgeId |
+//                (((long) graphId) << 48) |
+//                (idKind == IdKind.VERTEX ? 0x80000000 : 0);
+//        return uuid;
     }
 
-    public IdKind getIdKind() {
-        return idKind;
-    }
-
-    public long getVertexOrEdgeId() {
-        return vertexOrEdgeId;
-    }
+//    public IdKind getIdKind() {
+//        return idKind;
+//    }
+//
+//    public long getVertexOrEdgeId() {
+//        return vertexOrEdgeId;
+//    }
 
     public static Neo4jHandle forNode(org.neo4j.graphdb.Node graphNode) {
 //        final AtomType type = AtomType.forGraphLabel(graphNode.getLabels().iterator().next().name());
-        return new Neo4jHandle(IdKind.VERTEX, graphNode.getId());
+//        return new Neo4jHandle(IdKind.VERTEX, graphNode.getId());
+        return new Neo4jHandle((long) graphNode.getProperty(org.opencog.atomspace.Node.GID_PROPERTY));
     }
 
     public static Neo4jHandle forLink(org.neo4j.graphdb.Node graphNode) {
 //        final AtomType type = AtomType.forGraphLabel(graphNode.getLabels().iterator().next().name());
-        return new Neo4jHandle(IdKind.VERTEX, graphNode.getId());
+//        return new Neo4jHandle(IdKind.VERTEX, graphNode.getId());
+        return new Neo4jHandle((long) graphNode.getProperty(org.opencog.atomspace.Node.GID_PROPERTY));
     }
 
     public static Neo4jHandle forLink(org.neo4j.graphdb.Relationship rel) {
 //        final AtomType type = AtomType.forGraphLabel(graphNode.getLabels().iterator().next().name());
-        return new Neo4jHandle(IdKind.EDGE, rel.getId());
+//        return new Neo4jHandle(IdKind.EDGE, rel.getId());
+        return new Neo4jHandle((long) rel.getProperty(org.opencog.atomspace.Node.GID_PROPERTY));
     }
 
     /**
@@ -79,7 +85,7 @@ public class Neo4jHandle implements Handle {
     public Atom toAtom(org.neo4j.graphdb.Node graphNode) {
         final AtomType atomType = AtomType.forGraphLabel(graphNode.getLabels().iterator().next().name());
         if (atomType.getGraphMapping() == GraphMapping.VERTEX) {
-            return new Neo4jNode(atomType, (String) graphNode.getProperty(Neo4jNode.NODE_NAME));
+            return new Neo4jNode(graphNode); //atomType, (String) graphNode.getProperty(Neo4jNode.NODE_NAME));
         } else {
             return new Neo4jLink(atomType, graphNode);
         }

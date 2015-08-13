@@ -1,6 +1,7 @@
 package org.opencog.atomspace;
 
 import com.google.common.base.CaseFormat;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -96,12 +97,13 @@ public enum AtomType {
     }
 
     public int getId() {
-        return atomTypeInfos.inverse().get(this);
+        return Preconditions.checkNotNull(atomTypeInfos.inverse().get(this),
+            "Cannot find atom type '%s' in %s infos: %s", this, atomTypeInfos.size(),
+                atomTypeInfos.inverse());
     }
 
-    public AtomType forId(int id) {
+    public static AtomType forId(int id) {
         return atomTypeInfos.get(id);
     }
-
 
 }

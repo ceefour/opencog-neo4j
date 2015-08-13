@@ -14,12 +14,18 @@ public class Neo4jNode extends Node {
      */
     public static final String NODE_NAME = "nn";
 
+    @Deprecated
     public Neo4jNode(AtomType type, String name) {
         super(type, name);
     }
 
+    public Neo4jNode(long uuid, AtomType type, String name) {
+        super(uuid, type, name);
+    }
+
     public Neo4jNode(org.neo4j.graphdb.Node graphNode) {
-        super(AtomType.forGraphLabel(graphNode.getLabels().iterator().next().name()),
+        super((long) graphNode.getProperty(GID_PROPERTY),
+                AtomType.forGraphLabel(graphNode.getLabels().iterator().next().name()),
                 (String) graphNode.getProperty(NODE_NAME));
     }
 }

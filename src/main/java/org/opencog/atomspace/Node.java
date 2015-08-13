@@ -22,6 +22,11 @@ public class Node extends Atom implements Serializable {
         this.name = name;
     }
 
+    public Node(long uuid, AtomType type, String name) {
+        super(uuid, type);
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }
@@ -29,6 +34,6 @@ public class Node extends Atom implements Serializable {
     @Override
     public String toString() {
         return "(" + getType().toUpperCamel() + " " +
-                new TextNode(name) + ')';
+                new TextNode(name) + ") ; " + getUuid();
     }
 }

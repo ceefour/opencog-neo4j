@@ -64,7 +64,7 @@ message ZMQAtomMessage {
     optional string name=8; //node
     repeated uint64 outgoing=9; //link
     optional ZMQTrailMessage trail=10; //link
-    optional string atom_type_str=11; // FIXME: change to int then put a lookup table
+    //optional string atom_type_str=11; // FIXME: change to int then put a lookup table
 }
 
 enum ZMQAtomFetchKind {

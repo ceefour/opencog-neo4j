@@ -51,7 +51,7 @@ public class ZeroMqApp implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        log.info("Args: {}", args);
+        log.info("Args: {}", (Object) args);
         log.info("Joining thread, you can press Ctrl+C to shutdown application");
         Thread.currentThread().join();
     }

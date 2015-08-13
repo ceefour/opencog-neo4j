@@ -7,6 +7,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import org.neo4j.graphdb.*;
+import org.neo4j.graphdb.Node;
 import org.opencog.atomspace.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,12 +46,12 @@ public class Neo4jGraphBackingStore extends GraphBackingStoreBase {
         if (type.getGraphMapping() == GraphMapping.EDGE) {
             Preconditions.checkArgument(handleSeq.size() == 2,
                     "Type " + type + " graph mapping is EDGE which supports only 2 outgoing set, but " + handleSeq.size() + " given");
-            final String cypher = String.format("MATCH (a) -[r:%s]-> (b) WHERE id(a) = {a_id} AND id(b) = {b_id} RETURN r",
+            final String cypher = String.format("MATCH (a) -[r:%s]-> (b) WHERE a.gid = {a_gid} AND b.gid = {b_gid} RETURN r",
                     type.getGraphLabel());
-            final long a_id = ((Neo4jHandle) handleSeq.get(0)).getVertexOrEdgeId();
-            final long b_id = ((Neo4jHandle) handleSeq.get(1)).getVertexOrEdgeId();
-            final Result result = db.execute(cypher, ImmutableMap.of("a_id", a_id,
-                    "b_id", b_id));
+            final long a_gid = ((Neo4jHandle) handleSeq.get(0)).getUuid();
+            final long b_gid = ((Neo4jHandle) handleSeq.get(1)).getUuid();
+            final Result result = db.execute(cypher, ImmutableMap.of("a_gid", a_gid,
+                    "b_gid", b_gid));
             if (result.hasNext()) {
                 final Map<String, Object> row = result.next();
 //                final Neo4jHandle vertex1 = new Neo4jHandle(Neo4jHandle.IdKind.VERTEX, a_id);
@@ -68,17 +69,18 @@ public class Neo4jGraphBackingStore extends GraphBackingStoreBase {
             for (int i = 0; i < handleSeq.size(); i++) {
                 final Neo4jHandle handle = (Neo4jHandle) handleSeq.get(i);
                 matches.add( String.format("(l) %s (o%d)", i, edgeMappings.get(i).toCypher(null), i) );
-                wheres.add( String.format("id(o%d) = %d", i, handle.getVertexOrEdgeId()) );
+                wheres.add( String.format("o%d.gid = %d", i, handle.getUuid()) );
 //                returns.add("o" + i);
             }
             final String cypher = "MATCH " + Joiner.on(",\n  ").join(matches) + "\nWHERE " + Joiner.on(" AND ").join(wheres) +
                     "\nRETURN " + Joiner.on(", ").join(returns);
-            final Result result = db.execute(cypher);
-            if (result.hasNext()) {
-                final Map<String, Object> row = result.next();
-                return Optional.of(new Neo4jLink(type, ImmutableList.copyOf(handleSeq), (Relationship) row.get("l")));
-            } else {
-                return Optional.empty();
+            try (final Result result = db.execute(cypher)) {
+                if (result.hasNext()) {
+                    final Map<String, Object> row = result.next();
+                    return Optional.of(new Neo4jLink(type, ImmutableList.copyOf(handleSeq), (Relationship) row.get("l")));
+                } else {
+                    return Optional.empty();
+                }
             }
         } else {
             throw new IllegalArgumentException("Cannot get link for type " + type + " with graph mapping " + type.getGraphMapping());
@@ -98,38 +100,33 @@ public class Neo4jGraphBackingStore extends GraphBackingStoreBase {
             reqs.forEach(req -> {
                 switch (req.getKind()) {
                     case UUID:
-                        final Neo4jHandle handle = new Neo4jHandle(req.getUuid());
-                        switch (handle.getIdKind()) {
-                            case VERTEX:
-                                try {
-                                    final org.neo4j.graphdb.Node graphNode = db.getNodeById(handle.getVertexOrEdgeId());
-                                    final Atom atom = handle.toAtom(graphNode);
-                                    log.debug("Converted {} to {}", handle, atom);
+                        // for Neo4j Backing Store, links with UUIDs are always vertices (hyper-edge), due to indexing requirement
+                        final String cypher = "OPTIONAL MATCH (n {gid: {gid}}) RETURN n";
+                        try (final Result uuidResult = db.execute(cypher, ImmutableMap.of("gid", req.getUuid()))) {
+                            final Map<String, Object> mapResult = uuidResult.hasNext() ? uuidResult.next() : ImmutableMap.of();
+                            if (mapResult.get("n") != null) {
+                                final Node graphNode = (Node) mapResult.get("n");
+                                final AtomType atomType = AtomType.forGraphLabel(graphNode.getLabels().iterator().next().name());
+                                if (GraphMapping.VERTEX == atomType.getGraphMapping()) {
+                                    final Atom atom = new Neo4jNode(graphNode);
+                                    log.debug("Converted {} to {}", graphNode, atom);
                                     result.add(atom);
-                                } catch (NotFoundException e) {
-                                    log.trace("Node {} not found for request {}", handle.getVertexOrEdgeId(), req);
-                                    result.add(null);
+                                } else {
+                                    final Atom atom = new Neo4jLink(atomType, graphNode);
+                                    log.debug("Converted {} to {}", graphNode, atom);
+                                    result.add(atom);
                                 }
-                                break;
-                            case EDGE:
-                                try {
-                                    final Relationship graphRel = db.getRelationshipById(handle.getVertexOrEdgeId());
-                                    final Neo4jLink link = handle.toLink(graphRel);
-                                    log.debug("Converted {} to {}", handle, link);
-                                    result.add(link);
-                                } catch (NotFoundException e) {
-                                    log.trace("Relationship {} not found for request {}", handle.getVertexOrEdgeId(), req);
-                                    result.add(null);
-                                }
-                                break;
-                            default:
-                                throw new IllegalArgumentException("Unsupported ID kind: " + handle.getIdKind());
+                            } else {
+                                log.debug("Node/Link {} not found for request {}", req.getUuid(), req);
+                                result.add(null);                            }
                         }
                         break;
                     case NODE:
                         final Optional<org.neo4j.graphdb.Node> graphNode = Optional.ofNullable(
                                 db.findNode(DynamicLabel.label(req.getType().getGraphLabel()), Neo4jNode.NODE_NAME, req.getName()));
-                        result.add(graphNode.map(it -> new Neo4jNode(req.getType(), req.getName())).orElse(null));
+                        final Optional<Neo4jNode> openCogNode = graphNode.map(it -> new Neo4jNode(it));
+                        log.debug("Converted {} to {}", graphNode, openCogNode);
+                        result.add(openCogNode.orElse(null));
                         break;
                     case LINK:
                         final Optional<Link> foundLink = doGetLink(req.getType(), req.getHandleSeq().stream()
