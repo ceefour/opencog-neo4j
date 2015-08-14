@@ -43,6 +43,6 @@ public class Link extends Atom {
     public String toString() {
         return "(" + getType().toUpperCamel() +
                 " " + Joiner.on(' ').join(outgoingSet.stream().map(Handle::getUuid).toArray()) +
-                ')';
+                ") ; " + getUuid();
     }
 }
