@@ -16,6 +16,7 @@ import org.opencog.atomspace.AtomType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.actuate.autoconfigure.CrshAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
@@ -48,7 +49,7 @@ import java.util.stream.Collectors;
  *     <li>Bio_schemeFiles/GO_new.scm</li>
  * </ol>
  */
-@SpringBootApplication
+@SpringBootApplication(exclude = CrshAutoConfiguration.class)
 @Profile("importbio5app")
 public class ImportBio5App implements CommandLineRunner {
 

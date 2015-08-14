@@ -43,22 +43,35 @@ public class Neo4jGraphBackingStore extends GraphBackingStoreBase {
     }
 
     protected Optional<Link> doGetLink(AtomType type, List<Handle> handleSeq) {
-        if (type.getGraphMapping() == GraphMapping.EDGE) {
+        if (type.getGraphMapping() == GraphMapping.BINARY_HYPEREDGE) {
             Preconditions.checkArgument(handleSeq.size() == 2,
-                    "Type " + type + " graph mapping is EDGE which supports only 2 outgoing set, but " + handleSeq.size() + " given");
-            final String cypher = String.format("MATCH (a) -[r:%s]-> (b) WHERE a.gid = {a_gid} AND b.gid = {b_gid} RETURN r",
-                    type.getGraphLabel());
+                    "Type " + type + " graph mapping is BINARY_HYPEREDGE which supports only 2 outgoing set, but " + handleSeq.size() + " given");
+            final String cypher = String.format(
+                    "MATCH (a {gid: {a_gid}}), (b {gid: {b_gid}})\n" +
+                    "OPTIONAL MATCH (a) -[r:%s]-> (b),\n" +
+                    "(a) <-[:rdf_subject]- (l:%s) -[:rdf_object]-> (b)\n" +
+                    "RETURN r, l",
+                    type.getGraphLabel(), type.getGraphLabel());
             final long a_gid = ((Neo4jHandle) handleSeq.get(0)).getUuid();
             final long b_gid = ((Neo4jHandle) handleSeq.get(1)).getUuid();
-            final Result result = db.execute(cypher, ImmutableMap.of("a_gid", a_gid,
-                    "b_gid", b_gid));
-            if (result.hasNext()) {
-                final Map<String, Object> row = result.next();
-//                final Neo4jHandle vertex1 = new Neo4jHandle(Neo4jHandle.IdKind.VERTEX, a_id);
-//                final Neo4jHandle vertex2 = new Neo4jHandle(Neo4jHandle.IdKind.VERTEX, b_id);
-                return Optional.of(new Neo4jLink(type, ImmutableList.copyOf(handleSeq), (Relationship) row.get("r")));
-            } else {
-                return Optional.empty();
+            try (final Result result = db.execute(cypher, ImmutableMap.of("a_gid", a_gid,
+                    "b_gid", b_gid))) {
+                if (result.hasNext()) {
+                    final Map<String, Object> row = result.next();
+                    if (row.get("r") != null) { // binary edge
+                        //                final Neo4jHandle vertex1 = new Neo4jHandle(Neo4jHandle.IdKind.VERTEX, a_id);
+                        //                final Neo4jHandle vertex2 = new Neo4jHandle(Neo4jHandle.IdKind.VERTEX, b_id);
+                        return Optional.of(new Neo4jLink(type, ImmutableList.copyOf(handleSeq), (Relationship) row.get("r")));
+                    } else if (row.get("l") != null) { // binary hyperedge
+                        //                final Neo4jHandle vertex1 = new Neo4jHandle(Neo4jHandle.IdKind.VERTEX, a_id);
+                        //                final Neo4jHandle vertex2 = new Neo4jHandle(Neo4jHandle.IdKind.VERTEX, b_id);
+                        return Optional.of(new Neo4jLink(type, ImmutableList.copyOf(handleSeq), (Node) row.get("l")));
+                    } else {
+                        return Optional.empty();
+                    }
+                } else {
+                    return Optional.empty();
+                }
             }
         } else if (type.getGraphMapping() == GraphMapping.HYPEREDGE) {
             final List<EdgeMapping> edgeMappings = type.getEdgeMappings(handleSeq.size());

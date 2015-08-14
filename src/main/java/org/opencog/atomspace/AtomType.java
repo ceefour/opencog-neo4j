@@ -32,11 +32,11 @@ public enum AtomType {
     /**
      * rdfs_subClassOf relationship
      */
-    INHERITANCE_LINK(GraphMapping.EDGE, "rdfs_subClassOf"), // WARNING: impossible to link to an InheritanceLink!
+    INHERITANCE_LINK(GraphMapping.BINARY_HYPEREDGE, "rdfs_subClassOf"),
     /**
      * rdf_type relationship
      */
-    MEMBER_LINK(GraphMapping.EDGE, "rdf_type"), // WARNING: impossible to link to a MemberLink!
+    MEMBER_LINK(GraphMapping.BINARY_HYPEREDGE, "rdf_type"),
     GENE_NODE(GraphMapping.VERTEX, "opencog_GeneNode"),
     PREDICATE_NODE(GraphMapping.VERTEX, "opencog_PredicateNode"),
     PHRASE_NODE(GraphMapping.VERTEX, "opencog_PhraseNode");
