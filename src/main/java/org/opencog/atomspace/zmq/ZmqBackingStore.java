@@ -1,6 +1,5 @@
 package org.opencog.atomspace.zmq;
 
-import com.google.common.collect.ImmutableBiMap;
 import com.google.common.util.concurrent.*;
 import org.apache.camel.*;
 import org.apache.camel.spi.Synchronization;
@@ -14,8 +13,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,9 +21,9 @@ import java.util.stream.Collectors;
  */
 @Service
 @Profile({"clientapp", "zeromqstore"})
-public class ZmqGraphBackingStore extends GraphBackingStoreBase {
+public class ZmqBackingStore extends GraphBackingStoreBase {
 
-    private static final Logger log = LoggerFactory.getLogger(ZmqGraphBackingStore.class);
+    private static final Logger log = LoggerFactory.getLogger(ZmqBackingStore.class);
 
     @Inject
     private Environment env;

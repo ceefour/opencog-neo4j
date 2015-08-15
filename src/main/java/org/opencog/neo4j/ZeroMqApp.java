@@ -15,9 +15,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.data.neo4j.config.JtaTransactionManagerFactoryBean;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 
@@ -64,8 +62,8 @@ public class ZeroMqApp implements CommandLineRunner {
     }
 
     @Bean
-    public Neo4jGraphBackingStore neo4jGraphBackingStore() {
-        return new Neo4jGraphBackingStore(graphDb());
+    public Neo4jBackingStore neo4jGraphBackingStore() {
+        return new Neo4jBackingStore(graphDb());
     }
 
     @Bean

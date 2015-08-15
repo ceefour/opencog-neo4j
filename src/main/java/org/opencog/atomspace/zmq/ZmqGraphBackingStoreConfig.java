@@ -1,9 +1,5 @@
 package org.opencog.atomspace.zmq;
 
-import org.apache.camel.Exchange;
-import org.apache.camel.builder.RouteBuilder;
-import org.opencog.atomspace.AtomSpaceProtos;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
@@ -11,7 +7,7 @@ import org.springframework.core.env.Environment;
 import javax.inject.Inject;
 
 /**
- * Configures Camel to route incoming ZeroMQ messages (replies) to {@link ZmqGraphBackingStore}.
+ * Configures Camel to route incoming ZeroMQ messages (replies) to {@link ZmqBackingStore}.
  */
 @Configuration
 @Profile({"clientapp", "zeromqstore"})

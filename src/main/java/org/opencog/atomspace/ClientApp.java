@@ -1,6 +1,5 @@
 package org.opencog.atomspace;
 
-import com.google.common.collect.ImmutableMap;
 import org.crsh.console.jline.JLineProcessor;
 import org.crsh.console.jline.Terminal;
 import org.crsh.console.jline.TerminalFactory;
@@ -9,11 +8,8 @@ import org.crsh.console.jline.internal.Configuration;
 import org.crsh.shell.Shell;
 import org.crsh.shell.ShellFactory;
 import org.crsh.spring.SpringBootstrap;
-import org.crsh.standalone.CRaSH;
 import org.crsh.util.InterruptHandler;
-import org.crsh.util.Utils;
 import org.fusesource.jansi.AnsiConsole;
-import org.opencog.atomspace.zmq.ZmqGraphBackingStore;
 import org.opencog.neo4j.camel.AtomSpaceRouteConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

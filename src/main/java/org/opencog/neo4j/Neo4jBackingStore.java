@@ -24,16 +24,16 @@ import java.util.stream.Collectors;
  * Implements {@link GraphBackingStore} using Neo4j {@link org.neo4j.graphdb.GraphDatabaseService}.
  */
 @Transactional
-public class Neo4jGraphBackingStore extends GraphBackingStoreBase {
+public class Neo4jBackingStore extends GraphBackingStoreBase {
 
-    private static final Logger log = LoggerFactory.getLogger(Neo4jGraphBackingStore.class);
+    private static final Logger log = LoggerFactory.getLogger(Neo4jBackingStore.class);
 
     @Inject
     private PlatformTransactionManager txMgr;
     protected GraphDatabaseService db;
     private TransactionTemplate txTemplate;
 
-    public Neo4jGraphBackingStore(GraphDatabaseService db) {
+    public Neo4jBackingStore(GraphDatabaseService db) {
         this.db = db;
     }
 
