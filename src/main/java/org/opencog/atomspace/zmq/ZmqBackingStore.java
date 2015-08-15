@@ -169,11 +169,6 @@ public class ZmqBackingStore extends GraphBackingStoreBase {
     }
 
     @Override
-    public Boolean storeAtom(Handle handle) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public ListenableFuture<Integer> storeAtomsAsync(List<Handle> handles) {
         throw new UnsupportedOperationException();
     }

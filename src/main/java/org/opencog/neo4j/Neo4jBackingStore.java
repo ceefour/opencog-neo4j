@@ -1,5 +1,6 @@
 package org.opencog.neo4j;
 
+import clojure.lang.Symbol;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
@@ -15,6 +16,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.util.*;
@@ -192,18 +194,143 @@ public class Neo4jBackingStore extends GraphBackingStoreBase {
         }
     }
 
-    @Override
-    public List<Handle> getIncomingSet(Handle handle) {
-        throw new UnsupportedOperationException();
+    protected static class CypherPart {
+        @Nullable
+        public String varName;
+        @Nullable
+        public ImmutableMap<String, Object> param;
+        public String create;
+        /**
+         * List of MATCH dependencies.
+         */
+        public final ImmutableList<String> matchDependencies;
+
+        public CypherPart(@Nullable String varName, ImmutableMap<String, Object> param, String create) {
+            this.varName = varName;
+            this.param = param;
+            this.create = create;
+            this.matchDependencies = ImmutableList.of();
+        }
+
+        public CypherPart(@Nullable String varName, ImmutableMap<String, Object> param, String create,
+                          ImmutableList<String> matchDependencies) {
+            this.varName = varName;
+            this.param = param;
+            this.create = create;
+            this.matchDependencies = matchDependencies;
+        }
+
+        public CypherPart(String create) {
+            this.varName = null;
+            this.param = ImmutableMap.of();
+            this.create = create;
+            this.matchDependencies = ImmutableList.of();
+        }
+
+        @Override
+        public String toString() {
+            return create;
+        }
     }
 
-    @Override
-    public Boolean storeAtom(Handle handle) {
-        throw new UnsupportedOperationException();
+    protected static class CypherParts {
+        public Map<String, CypherPart> nodes = new LinkedHashMap<>();
+        public List<CypherPart> relationships = new ArrayList<>();
+
+        @Override
+        public String toString() {
+            return getAllCypher();
+        }
+
+        public String getAllCypher() {
+            return nodes.values().stream().map(CypherPart::toString).collect(Collectors.joining("\n")) + "\n\n" +
+                    relationships.stream().map(CypherPart::toString).collect(Collectors.joining("\n"));
+        }
+
+        public ImmutableMap<String, Object> getAllParams() {
+            final ImmutableMap.Builder<String, Object> paramb = ImmutableMap.builder();
+            for (CypherPart part : nodes.values()) {
+                if (part.param != null) {
+                    paramb.putAll(part.param);
+                }
+            }
+            for (CypherPart part : relationships) {
+                if (part.param != null) {
+                    paramb.putAll(part.param);
+                }
+            }
+            return paramb.build();
+        }
+    }
+
+    public static String generateId(String name) {
+        return name.replaceAll("[^A-Za-z0-9]+", "_");
+    }
+
+    public String varNameForGene(List<?> gene) {
+        final String geneName = (String) gene.get(1);
+        final String varName = "Gene_" + generateId(geneName);
+        return varName;
+    }
+
+    public String varNameForConcept(List<?> concept) {
+        final String conceptName = (String) concept.get(1);
+        final String varName = "Concept_" + generateId(conceptName);
+        return varName;
+    }
+
+    public String varNameFor(String type, org.opencog.atomspace.Node node) {
+        final String conceptName = node.getName();
+        final String varName = type + "_" + generateId(conceptName);
+        return varName;
+    }
+
+    protected CypherPart customNodeToCypher(org.opencog.atomspace.Node node) {
+        Preconditions.checkArgument(node.getUuid() != Handle.UNDEFINED,
+                "Node (%s \"%s\") must have UUID", node.getType().toUpperCamel(), node.getName());
+        final String typeName = node.getType().toUpperCamel();// maintain 1:1 with OpenCog terms - .replaceFirst("Node$", "");
+        final String conceptName = node.getName();
+        final String varName = varNameFor(typeName, node);
+        final String create = String.format("" +
+                        "MERGE (%s:%s {%s: {%s_gid}, %s: {%s_nodeName}}) ON MATCH SET %s.tv = {%s_tv}",
+                varName, node.getType().getGraphLabel(),
+                Atom.GID_PROPERTY, varName,
+                Neo4jNode.NODE_NAME, varName,
+                varName, varName);
+        final ImmutableMap<String, Object> param = ImmutableMap.of(
+                varName + "_gid", node.getUuid(),
+                varName + "_nodeName", conceptName,
+                varName + "_tv", node.getTruthValue().toArray());
+        return new CypherPart(varName, param, create);
     }
 
     @Override
     public ListenableFuture<Integer> storeAtomsAsync(List<Handle> handles) {
+        try (final Transaction tx = db.beginTx()) {
+            for (final Handle handle : handles) {
+                final Atom atom = handle.resolve().get();
+                final CypherParts parts = new CypherParts();
+                if (atom instanceof org.opencog.atomspace.Node) {
+                    final org.opencog.atomspace.Node node = (org.opencog.atomspace.Node) atom;
+                    final String varName = varNameFor(node.getType().toUpperCamel(), node);
+                    final CypherPart part = customNodeToCypher(node);
+                    parts.nodes.put(varName, part);
+                    // TODO: insert node
+                } else if (atom instanceof Link) {
+                    final Link link = (org.opencog.atomspace.Link) atom;
+                    // TODO: link
+                    throw new UnsupportedOperationException();
+                } else {
+                    throw new IllegalArgumentException("Cannot determine atom is Node or Link: " + atom);
+                }
+                db.execute(parts.getAllCypher(), parts.getAllParams());
+            }
+        }
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public List<Handle> getIncomingSet(Handle handle) {
         throw new UnsupportedOperationException();
     }
 

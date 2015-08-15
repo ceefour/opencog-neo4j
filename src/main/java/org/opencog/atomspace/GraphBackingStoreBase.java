@@ -67,7 +67,7 @@ public abstract class GraphBackingStoreBase implements GraphBackingStore, AutoCl
     }
 
     @Override
-    public Integer storeAtoms(List<Handle> handles) {
+    public final Integer storeAtoms(List<Handle> handles) {
         try {
             return storeAtomsAsync(handles).get();
         } catch (Exception e) {
@@ -77,13 +77,13 @@ public abstract class GraphBackingStoreBase implements GraphBackingStore, AutoCl
     }
 
     @Override
-    public ListenableFuture<Boolean> storeAtomAsync(Handle handle) {
+    public final ListenableFuture<Boolean> storeAtomAsync(Handle handle) {
         return Futures.transform(storeAtomsAsync(ImmutableList.of(handle)),
                 (Integer it) -> it >= 1);
     }
 
     @Override
-    public Boolean storeAtom(Handle handle) {
+    public final Boolean storeAtom(Handle handle) {
         try {
             return storeAtomAsync(handle).get();
         } catch (Exception e) {

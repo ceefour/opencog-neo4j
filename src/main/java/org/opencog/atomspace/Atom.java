@@ -20,20 +20,23 @@ public class Atom implements Serializable {
      * "gid" informally stands for "global ID".
      */
     public static final String GID_PROPERTY = "gid";
+    public static final Random RANDOM = new Random();
 
     private long uuid;
     private AtomType type;
-    private static final Random RANDOM = new Random();
+    private TruthValue truthValue;
 
     @Deprecated
     public Atom(AtomType type) {
         this.uuid = Handle.UNDEFINED;
         this.type = type;
+        this.truthValue = new TruthValue();
     }
 
     public Atom(long uuid, AtomType type) {
         this.uuid = uuid;
         this.type = type;
+        this.truthValue = new TruthValue();
     }
 
     public AtomType getType() {
@@ -44,4 +47,11 @@ public class Atom implements Serializable {
         return this.uuid;
     }
 
+    public TruthValue getTruthValue() {
+        return truthValue;
+    }
+
+    public void setTruthValue(TruthValue truthValue) {
+        this.truthValue = truthValue;
+    }
 }
