@@ -29,18 +29,18 @@ public class Neo4jLink extends Link {
      * This will iterate the Link node's outgoing relationships.
      * @param type
      * @param graphNode
-     * @see Neo4jHandle#toAtom(Node)
+     * @see Neo4jBackingStore#toAtom(Node)
      */
     public Neo4jLink(AtomType type, org.neo4j.graphdb.Node graphNode) {
         super((long) graphNode.getProperty(Neo4jNode.GID_PROPERTY),
-                type, FluentIterable.from(graphNode.getRelationships(Direction.OUTGOING)).transform(it -> Neo4jHandle.forNode(it.getEndNode())).toList());
+                type, FluentIterable.from(graphNode.getRelationships(Direction.OUTGOING)).transform(it -> Neo4jBackingStore.forNode(it.getEndNode())).toList());
         this.graphNode = graphNode;
     }
 
     public Neo4jLink(AtomType type, org.neo4j.graphdb.Relationship graphRel) {
         super((long) graphRel.getProperty(Neo4jNode.GID_PROPERTY),
-                type, ImmutableList.of(Neo4jHandle.forNode(graphRel.getStartNode()),
-            Neo4jHandle.forNode(graphRel.getEndNode())));
+                type, ImmutableList.of(Neo4jBackingStore.forNode(graphRel.getStartNode()),
+            Neo4jBackingStore.forNode(graphRel.getEndNode())));
         this.graphRel = graphRel;
     }
 

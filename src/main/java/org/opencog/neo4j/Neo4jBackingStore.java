@@ -37,6 +37,44 @@ public class Neo4jBackingStore extends GraphBackingStoreBase {
         this.db = db;
     }
 
+    public static Handle forNode(Node graphNode) {
+//        final AtomType type = AtomType.forGraphLabel(graphNode.getLabels().iterator().next().name());
+//        return new Neo4jHandle(IdKind.VERTEX, graphNode.getId());
+        return new Handle((long) graphNode.getProperty(org.opencog.atomspace.Node.GID_PROPERTY));
+    }
+
+    public static Handle forLink(Node graphNode) {
+//        final AtomType type = AtomType.forGraphLabel(graphNode.getLabels().iterator().next().name());
+//        return new Neo4jHandle(IdKind.VERTEX, graphNode.getId());
+        return new Handle((long) graphNode.getProperty(org.opencog.atomspace.Node.GID_PROPERTY));
+    }
+
+    public static Handle forLink(Relationship rel) {
+//        final AtomType type = AtomType.forGraphLabel(graphNode.getLabels().iterator().next().name());
+//        return new Neo4jHandle(IdKind.EDGE, rel.getId());
+        return new Handle((long) rel.getProperty(org.opencog.atomspace.Node.GID_PROPERTY));
+    }
+
+    /**
+     * Since a graphNode can be either an AtomSpace {@link Neo4jNode} or {@link Neo4jLink},
+     * it may return either one.
+     * @param graphNode
+     * @return
+     */
+    public static Atom toAtom(Node graphNode) {
+        final AtomType atomType = AtomType.forGraphLabel(graphNode.getLabels().iterator().next().name());
+        if (atomType.getGraphMapping() == GraphMapping.VERTEX) {
+            return new Neo4jNode(graphNode); //atomType, (String) graphNode.getProperty(Neo4jNode.NODE_NAME));
+        } else {
+            return new Neo4jLink(atomType, graphNode);
+        }
+    }
+
+    public static Neo4jLink toLink(Relationship graphRel) {
+        final AtomType atomType = AtomType.forGraphLabel(graphRel.getType().name());
+        return new Neo4jLink(atomType, graphRel);
+    }
+
     @PostConstruct
     public void init() {
         txTemplate = new TransactionTemplate(txMgr);
@@ -52,8 +90,8 @@ public class Neo4jBackingStore extends GraphBackingStoreBase {
                     "(a) <-[:rdf_subject]- (l:%s) -[:rdf_object]-> (b)\n" +
                     "RETURN r, l",
                     type.getGraphLabel(), type.getGraphLabel());
-            final long a_gid = ((Neo4jHandle) handleSeq.get(0)).getUuid();
-            final long b_gid = ((Neo4jHandle) handleSeq.get(1)).getUuid();
+            final long a_gid = handleSeq.get(0).getUuid();
+            final long b_gid = handleSeq.get(1).getUuid();
             try (final Result result = db.execute(cypher, ImmutableMap.of("a_gid", a_gid,
                     "b_gid", b_gid))) {
                 if (result.hasNext()) {
@@ -80,7 +118,7 @@ public class Neo4jBackingStore extends GraphBackingStoreBase {
             final List<String> returns = new ArrayList<>();
             returns.add("l");
             for (int i = 0; i < handleSeq.size(); i++) {
-                final Neo4jHandle handle = (Neo4jHandle) handleSeq.get(i);
+                final Handle handle = handleSeq.get(i);
                 matches.add( String.format("(l) %s (o%d)", i, edgeMappings.get(i).toCypher(null), i) );
                 wheres.add( String.format("o%d.gid = %d", i, handle.getUuid()) );
 //                returns.add("o" + i);
@@ -143,7 +181,7 @@ public class Neo4jBackingStore extends GraphBackingStoreBase {
                         break;
                     case LINK:
                         final Optional<Link> foundLink = doGetLink(req.getType(), req.getHandleSeq().stream()
-                                .map(Neo4jHandle::new).collect(Collectors.toList()));
+                                .map(Handle::new).collect(Collectors.toList()));
                         result.add(foundLink.orElse(null));
                     default:
                         throw new IllegalArgumentException("Unsupported request kind: " + req.getKind());
@@ -186,7 +224,7 @@ public class Neo4jBackingStore extends GraphBackingStoreBase {
 
     @Override
     public boolean isAtomIgnored(Handle handle) {
-        return !(handle instanceof Neo4jHandle);
+        return false;
     }
 
 }
