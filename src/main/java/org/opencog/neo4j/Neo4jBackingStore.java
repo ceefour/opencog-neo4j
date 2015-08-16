@@ -7,6 +7,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
+import org.apache.commons.lang3.RandomUtils;
 import org.neo4j.graphdb.*;
 import org.neo4j.graphdb.Node;
 import org.opencog.atomspace.*;
@@ -304,6 +305,221 @@ public class Neo4jBackingStore extends GraphBackingStoreBase {
         return new CypherPart(varName, param, create);
     }
 
+    public void uuidToMatch(String varName, long uuid,
+                            Map<String, Object> outParams, List<String> outDependencies) {
+        final String match = String.format("MATCH (%s {gid: {%s_gid}})", varName, varName);
+        outDependencies.add(match);
+        outParams.put(varName + "_gid", uuid);
+    }
+
+    /**
+     *
+     * @param relationshipType e.g. {@code rdfs_subClassOf}
+     * @param parts
+     * @param stvStrength
+     * @param stvConfidence
+     * @param stvCount
+     * @param aVarName varName for subject (must be prepared)
+     * @param bVarName varName for subject (must be prepared)
+     * @param outParams
+     * @param outDependencies
+     * @return
+     * @throws Exception
+     */
+    protected CypherPart createBinaryLinkVertex(final String relationshipType,
+                                                CypherParts parts,
+                                                Double stvStrength,
+                                                Double stvConfidence,
+                                                Double stvCount,
+                                                String aVarName, String bVarName,
+                                                Map<String, Object> outParams, List<String> outDependencies) throws Exception {
+        final String varName = relationshipType + "_" + RandomUtils.nextInt(1000, 10000);
+        String create;
+        if (stvStrength != null) {
+            create = String.format("CREATE (%s:%s {gid: {gid}, tv: {tv}})",
+                    varName, relationshipType);
+        } else {
+            create = String.format("CREATE (%s:%s {gid: {gid}})", varName, relationshipType);
+        }
+        outParams.put("gid", Atom.RANDOM.nextLong());
+        outParams.put("tv", new double[] {
+                Optional.ofNullable(stvStrength).orElse(0d), Optional.ofNullable(stvConfidence).orElse(0d),
+                Optional.ofNullable(stvCount).orElse(0d)});
+        // RDF reification, rdf:subject and rdf:object
+        create += String.format("\n  CREATE (%s) -[:rdf_subject]-> (%s)", varName, aVarName);
+        create += String.format("\n  CREATE (%s) -[:rdf_object]-> (%s)", varName, bVarName);
+
+        final CypherPart part = new CypherPart(null, ImmutableMap.copyOf(outParams), create, ImmutableList.copyOf(outDependencies));
+        parts.relationships.add(part);
+        return part;
+    }
+
+    /**
+     *
+     * @param parts
+     * @param stvStrength
+     * @param stvConfidence
+     * @param stvCount
+     * @param predicateName
+     * @param predicateType not currently used
+     * @param predicateVarName
+     * @param outParams
+     * @param outDependencies
+     * @return
+     * @throws Exception
+     */
+    protected CypherPart createEvaluationLinkVertex(CypherParts parts,
+                                                    Double stvStrength,
+                                                    Double stvConfidence,
+                                                    Double stvCount,
+                                                    String predicateName,
+                                                    String predicateType,
+                                                    String predicateVarName,
+                                                    List<String> paramNames,
+                                                    Map<String, Object> outParams, List<String> outDependencies) throws Exception {
+        final String relationshipType = "opencog_EvaluationLink";
+        final String varName = relationshipType + "_" + predicateName + "_" + RandomUtils.nextInt(1000, 10000);
+        String create;
+        if (stvStrength != null) {
+            create = String.format("CREATE (%s:%s {gid: {gid}, tv: {tv}})",
+                    varName, relationshipType);
+        } else {
+            create = String.format("CREATE (%s:%s {gid: {gid}})", varName, relationshipType);
+        }
+        outParams.put("gid", Atom.RANDOM.nextLong());
+        outParams.put("tv", new double[] {
+                Optional.ofNullable(stvStrength).orElse(0d), Optional.ofNullable(stvConfidence).orElse(0d),
+                Optional.ofNullable(stvCount).orElse(0d)});
+        create += String.format("\n  CREATE (%s) -[:opencog_predicate]-> (%s)", varName, predicateVarName);
+        // http://schema.org/position
+        for (int i = 0; i < paramNames.size(); i++) {
+            create += String.format("\n  CREATE (%s) -[:opencog_parameter {position: %d}]-> (%s)",
+                    varName, i, paramNames.get(i));
+        }
+
+        final CypherPart part = new CypherPart(null, ImmutableMap.copyOf(outParams), create, ImmutableList.copyOf(outDependencies));
+        parts.relationships.add(part);
+        return part;
+    }
+
+    /**
+     *
+     * @param parts
+     * @param stvStrength
+     * @param stvConfidence
+     * @param stvCount
+     * @param predicateName
+     * @param predicateType not currently used
+     * @param predicateVarName
+     * @param outParams
+     * @param outDependencies
+     * @return
+     * @throws Exception
+     */
+    protected CypherPart createHyperedgeVertex(CypherParts parts,
+                                               String relationshipType,
+                                                    Double stvStrength,
+                                                    Double stvConfidence,
+                                                    Double stvCount,
+                                                    List<String> paramNames,
+                                                    Map<String, Object> outParams, List<String> outDependencies) throws Exception {
+        final String varName = relationshipType + "_" + RandomUtils.nextInt(1000, 10000);
+        String create;
+        if (stvStrength != null) {
+            create = String.format("CREATE (%s:%s {gid: {gid}, tv: {tv}})",
+                    varName, relationshipType);
+        } else {
+            create = String.format("CREATE (%s:%s {gid: {gid}})", varName, relationshipType);
+        }
+        outParams.put("gid", Atom.RANDOM.nextLong());
+        outParams.put("tv", new double[] {
+                Optional.ofNullable(stvStrength).orElse(0d), Optional.ofNullable(stvConfidence).orElse(0d),
+                Optional.ofNullable(stvCount).orElse(0d)});
+        // http://schema.org/position
+        for (int i = 0; i < paramNames.size(); i++) {
+            create += String.format("\n  CREATE (%s) -[:opencog_parameter {position: %d}]-> (%s)",
+                    varName, i, paramNames.get(i));
+        }
+
+        final CypherPart part = new CypherPart(null, ImmutableMap.copyOf(outParams), create, ImmutableList.copyOf(outDependencies));
+        parts.relationships.add(part);
+        return part;
+    }
+
+    /**
+     * note that mmc4.scm + GO_annotation.scm has incorrect EvaluationLink structure, it should be
+     * either:
+     *
+     * <ol>
+     *    <li>(EvaluationLink (PredicateNode ...) (ListLink (...) (...)))</li>
+     *    <li>(EvaluationLink (stv 0.0 0.0) (PredicateNode ...) (ListLink (...) (...)))</li>
+     * </ol>
+     *
+     * i.e. PredicateNode should have no child ListLink
+     *
+     * @param parts
+     * @param top
+     * @return
+     */
+    public CypherPart evaluationToCypher(CypherParts parts, Link link) {
+        final ArrayList<String> outDependencies = new ArrayList<>();
+        final LinkedHashMap<String, Object> outParams = new LinkedHashMap<>();
+
+        @Nullable
+        Double stvStrength = link.getTruthValue().getFuzzyStrength();
+        @Nullable
+        Double stvConfidence = link.getTruthValue().getConfidence();
+        @Nullable
+        Double stvCount = link.getTruthValue().getCount();
+
+        // ensure predicate is prepared
+        final String predicateVarName = "predicate";
+        uuidToMatch(predicateVarName, link.getOutgoingSet().get(0).getUuid(), outParams, outDependencies);
+        final String predicateName = "predicate";
+
+        // ensure all params are prepared
+        try {
+            final List<String> paramNames = new ArrayList<>();
+            for (int i = 1; i < link.getOutgoingSet().size(); i++) {
+                final String paramVarName = "param" + (i - 1);
+                uuidToMatch(paramVarName, link.getOutgoingSet().get(i).getUuid(), outParams, outDependencies);
+                paramNames.add(paramVarName);
+            }
+            return createEvaluationLinkVertex(parts, stvStrength, stvConfidence, stvCount,
+                    predicateName, null, predicateVarName,
+                    paramNames, outParams, outDependencies);
+        } catch (Exception e) {
+            throw new RuntimeException("Cannot create CypherPart for " + link, e);
+        }
+    }
+
+    public CypherPart hyperedgeToCypher(CypherParts parts, Link link) {
+        final ArrayList<String> outDependencies = new ArrayList<>();
+        final LinkedHashMap<String, Object> outParams = new LinkedHashMap<>();
+
+        @Nullable
+        Double stvStrength = link.getTruthValue().getFuzzyStrength();
+        @Nullable
+        Double stvConfidence = link.getTruthValue().getConfidence();
+        @Nullable
+        Double stvCount = link.getTruthValue().getCount();
+
+        // ensure all params are prepared
+        try {
+            final List<String> paramNames = new ArrayList<>();
+            for (int i = 0; i < link.getOutgoingSet().size(); i++) {
+                final String paramVarName = "param" + i;
+                uuidToMatch(paramVarName, link.getOutgoingSet().get(i).getUuid(), outParams, outDependencies);
+                paramNames.add(paramVarName);
+            }
+            return createHyperedgeVertex(parts, link.getType().getGraphLabel(),
+                    stvStrength, stvConfidence, stvCount,
+                    paramNames, outParams, outDependencies);
+        } catch (Exception e) {
+            throw new RuntimeException("Cannot create CypherPart for " + link, e);
+        }
+    }
+
     @Override
     public ListenableFuture<Integer> storeAtomsAsync(List<Handle> handles) {
         try (final Transaction tx = db.beginTx()) {
@@ -311,22 +527,42 @@ public class Neo4jBackingStore extends GraphBackingStoreBase {
                 final Atom atom = handle.resolve().get();
                 final CypherParts parts = new CypherParts();
                 if (atom instanceof org.opencog.atomspace.Node) {
+                    log.info("Storing node {}", atom);
                     final org.opencog.atomspace.Node node = (org.opencog.atomspace.Node) atom;
                     final String varName = varNameFor(node.getType().toUpperCamel(), node);
                     final CypherPart part = customNodeToCypher(node);
                     parts.nodes.put(varName, part);
-                    // TODO: insert node
                 } else if (atom instanceof Link) {
                     final Link link = (org.opencog.atomspace.Link) atom;
-                    // TODO: link
-                    throw new UnsupportedOperationException();
+                    final ArrayList<String> outDependencies = new ArrayList<>();
+                    final LinkedHashMap<String, Object> outParams = new LinkedHashMap<>();
+                    if (GraphMapping.BINARY_HYPEREDGE == link.getType().getGraphMapping()) {
+                        log.info("Storing binary hyperedge {}", link);
+                        final String matchAB = "MATCH (a {gid: {a_gid}}), (b {gid: {b_gid}})";
+                        outDependencies.add(matchAB);
+                        outParams.put("a_gid", link.getOutgoingSet().get(0).getUuid());
+                        outParams.put("b_gid", link.getOutgoingSet().get(1).getUuid());
+                        createBinaryLinkVertex(link.getType().getGraphLabel(), parts,
+                                link.getTruthValue().getFuzzyStrength(), link.getTruthValue().getConfidence(), link.getTruthValue().getCount(),
+                                "a", "b", outParams, outDependencies);
+                    } else if (AtomType.EVALUATION_LINK == link.getType()) {
+                        log.info("Storing EvaluationLink hyperedge {}", link);
+                        evaluationToCypher(parts, link);
+                    } else if (GraphMapping.HYPEREDGE == link.getType().getGraphMapping()) {
+                        log.info("Storing hyperedge {}", link);
+                        hyperedgeToCypher(parts, link);
+                    } else {
+                        throw new IllegalArgumentException("Unsupported graph mapping: " + link.getType().getGraphMapping());
+                    }
                 } else {
                     throw new IllegalArgumentException("Cannot determine atom is Node or Link: " + atom);
                 }
                 db.execute(parts.getAllCypher(), parts.getAllParams());
             }
+            return Futures.immediateFuture(handles.size());
+        } catch (Exception e) {
+            return Futures.immediateFailedFuture(e);
         }
-        throw new UnsupportedOperationException();
     }
 
     @Override
