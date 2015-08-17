@@ -227,8 +227,8 @@ public class Neo4jBackingStore extends GraphBackingStoreBase {
             this.matchDependencies = ImmutableList.of();
         }
 
-        public String toStringWithDependencies() {
-            return (Joiner.on('\n').join(matchDependencies) + '\n' + create).trim();
+        public String getMatchDependenciesAsCypher() {
+            return Joiner.on('\n').join(matchDependencies);
         }
 
     }
@@ -243,8 +243,10 @@ public class Neo4jBackingStore extends GraphBackingStoreBase {
         }
 
         public String getAllCypher() {
-            return nodes.values().stream().map(CypherPart::toStringWithDependencies).collect(Collectors.joining("\n")) + "\n\n" +
-                    relationships.stream().map(CypherPart::toStringWithDependencies).collect(Collectors.joining("\n"));
+            return nodes.values().stream().map(CypherPart::getMatchDependenciesAsCypher).collect(Collectors.joining("\n")) + "\n\n" +
+                    relationships.stream().map(CypherPart::getMatchDependenciesAsCypher).collect(Collectors.joining("\n")) + "\n\n" +
+                    nodes.values().stream().map(CypherPart::toString).collect(Collectors.joining("\n")) + "\n\n" +
+                    relationships.stream().map(CypherPart::toString).collect(Collectors.joining("\n"));
         }
 
         public ImmutableMap<String, Object> getAllParams() {

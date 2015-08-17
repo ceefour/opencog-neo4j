@@ -134,8 +134,8 @@ public class ImportBio5App implements CommandLineRunner {
             return create;
         }
 
-        public String toStringWithDependencies() {
-            return (Joiner.on('\n').join(matchDependencies) + '\n' + create).trim();
+        public String getMatchDependenciesAsCypher() {
+            return Joiner.on('\n').join(matchDependencies);
         }
 
     }
@@ -150,8 +150,10 @@ public class ImportBio5App implements CommandLineRunner {
         }
 
         public String getAllCypher() {
-            return nodes.values().stream().map(CypherPart::toStringWithDependencies).collect(Collectors.joining("\n")) + "\n\n" +
-                    relationships.stream().map(CypherPart::toStringWithDependencies).collect(Collectors.joining("\n"));
+            return nodes.values().stream().map(CypherPart::getMatchDependenciesAsCypher).collect(Collectors.joining("\n")) + "\n\n" +
+                    relationships.stream().map(CypherPart::getMatchDependenciesAsCypher).collect(Collectors.joining("\n")) + "\n\n" +
+                    nodes.values().stream().map(CypherPart::toString).collect(Collectors.joining("\n")) + "\n\n" +
+                    relationships.stream().map(CypherPart::toString).collect(Collectors.joining("\n"));
         }
 
         public ImmutableMap<String, Object> getAllParams() {
@@ -332,7 +334,7 @@ public class ImportBio5App implements CommandLineRunner {
             final CypherPart aCypher = customNodeToCypher(a);
             parts.nodes.put(aVarName, aCypher);
         }
-        customNodeToMatch(a, outParams, outDependencies);
+        //customNodeToMatch(a, outParams, outDependencies);
 
         // ensure b is prepared
         final List<?> b = (List<?>) top.get(2);
@@ -342,7 +344,7 @@ public class ImportBio5App implements CommandLineRunner {
             final CypherPart bCypher = customNodeToCypher(b);
             parts.nodes.put(bVarName, bCypher);
         }
-        customNodeToMatch(b, outParams, outDependencies);
+        //customNodeToMatch(b, outParams, outDependencies);
 
         final String create = String.format("CREATE (%s) -[:rdfs_subClassOf {%s: {gid}}]-> (%s)",
                 aVarName, Atom.GID_PROPERTY, bVarName);
@@ -372,7 +374,7 @@ public class ImportBio5App implements CommandLineRunner {
             final CypherPart aCypher = customNodeToCypher(a);
             parts.nodes.put(aVarName, aCypher);
         }
-        customNodeToMatch(a, outParams, outDependencies);
+        //customNodeToMatch(a, outParams, outDependencies);
 
         // ensure b is prepared
         final List<?> b = (List<?>) top.get(2);
@@ -382,7 +384,7 @@ public class ImportBio5App implements CommandLineRunner {
             final CypherPart bCypher = customNodeToCypher(b);
             parts.nodes.put(bVarName, bCypher);
         }
-        customNodeToMatch(b, outParams, outDependencies);
+        //customNodeToMatch(b, outParams, outDependencies);
 
         try {
             return createBinaryLinkVertex("rdfs_subClassOf", parts, null, null, null,
@@ -439,7 +441,7 @@ public class ImportBio5App implements CommandLineRunner {
             final CypherPart predicateCypher = customNodeToCypher(predicate);
             parts.nodes.put(predicateVarName, predicateCypher);
         }
-        customNodeToMatch(predicate, outParams, outDependencies);
+        //customNodeToMatch(predicate, outParams, outDependencies);
 
         // ensure all params are prepared
         try {
@@ -453,7 +455,7 @@ public class ImportBio5App implements CommandLineRunner {
                     final CypherPart paramCypher = customNodeToCypher(param);
                     parts.nodes.put(paramVarName, paramCypher);
                 }
-                customNodeToMatch(param, outParams, outDependencies);
+                //customNodeToMatch(param, outParams, outDependencies);
 
                 paramNames.add(paramVarName);
             }
@@ -506,7 +508,7 @@ public class ImportBio5App implements CommandLineRunner {
                 final CypherPart geneCypher = customNodeToCypher(gene);
                 parts.nodes.put(geneVarName, geneCypher);
             }
-            customNodeToMatch(gene, outParams, outDependencies);
+            //customNodeToMatch(gene, outParams, outDependencies);
 
             // ensure concept is prepared
             final List<?> concept = (List<?>) top.get(memberOffset + 1);
@@ -515,7 +517,7 @@ public class ImportBio5App implements CommandLineRunner {
                 final CypherPart conceptCypher = customNodeToCypher(concept);
                 parts.nodes.put(conceptVarName, conceptCypher);
             }
-            customNodeToMatch(concept, outParams, outDependencies);
+            //customNodeToMatch(concept, outParams, outDependencies);
 
             final String create;
             if (stvStrength != null) {
@@ -572,7 +574,7 @@ public class ImportBio5App implements CommandLineRunner {
                 final CypherPart geneCypher = customNodeToCypher(gene);
                 parts.nodes.put(geneVarName, geneCypher);
             }
-            customNodeToMatch(gene, outParams, outDependencies);
+            //customNodeToMatch(gene, outParams, outDependencies);
 
             // ensure concept is prepared
             final List<?> concept = (List<?>) top.get(memberOffset + 1);
@@ -581,7 +583,7 @@ public class ImportBio5App implements CommandLineRunner {
                 final CypherPart conceptCypher = customNodeToCypher(concept);
                 parts.nodes.put(conceptVarName, conceptCypher);
             }
-            customNodeToMatch(concept, outParams, outDependencies);
+            //customNodeToMatch(concept, outParams, outDependencies);
 
             return createBinaryLinkVertex("rdf_type", parts,
                     stvStrength, stvConfidence, null,
