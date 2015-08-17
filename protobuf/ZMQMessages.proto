@@ -97,6 +97,10 @@ enum ZMQFunctionType {
      * @see ZMQRequestMessage#fetch
      */
     ZMQgetAtoms = 2;
+    /* Store multiple atoms by atomType + node name (for node), or atomType + outgoing set (for link).
+     * @see ZMQRequestMessage#fetch
+     */
+    ZMQstoreAtoms = 3;
 }
 
 /* Information about atom type, it can be used for multiple purposes,
@@ -125,8 +129,10 @@ message ZMQRequestMessage {
     // For {@link ZMQFunctionType#getAtoms}, one or more fetch requests
     // for UUIDs, nodes, or links (can be mixed).
     repeated ZMQAtomFetch fetch = 3;
+    // Atoms to be stored in the backing store.
+    repeated ZMQAtomMessage atom = 4;
     // Mapping between atom type IDs to atom type names, sent by the client.
-    repeated ZMQAtomTypeInfo atom_type = 4;
+    repeated ZMQAtomTypeInfo atom_type = 5;
 }
 
 message ZMQReplyMessage {

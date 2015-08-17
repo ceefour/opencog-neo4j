@@ -362,6 +362,15 @@ public final class AtomSpaceProtos {
      * </pre>
      */
     ZMQgetAtoms(2, 2),
+    /**
+     * <code>ZMQstoreAtoms = 3;</code>
+     *
+     * <pre>
+     * Store multiple atoms by atomType + node name (for node), or atomType + outgoing set (for link).
+     * @see ZMQRequestMessage#fetch
+     * </pre>
+     */
+    ZMQstoreAtoms(3, 3),
     ;
 
     /**
@@ -390,6 +399,15 @@ public final class AtomSpaceProtos {
      * </pre>
      */
     public static final int ZMQgetAtoms_VALUE = 2;
+    /**
+     * <code>ZMQstoreAtoms = 3;</code>
+     *
+     * <pre>
+     * Store multiple atoms by atomType + node name (for node), or atomType + outgoing set (for link).
+     * @see ZMQRequestMessage#fetch
+     * </pre>
+     */
+    public static final int ZMQstoreAtoms_VALUE = 3;
 
 
     public final int getNumber() { return value; }
@@ -399,6 +417,7 @@ public final class AtomSpaceProtos {
         case 0: return ZMQgetAtom;
         case 1: return ZMQgetName;
         case 2: return ZMQgetAtoms;
+        case 3: return ZMQstoreAtoms;
         default: return null;
       }
     }
@@ -8318,9 +8337,54 @@ public final class AtomSpaceProtos {
     org.opencog.atomspace.AtomSpaceProtos.ZMQAtomFetchOrBuilder getFetchOrBuilder(
         int index);
 
-    // repeated .ZMQAtomTypeInfo atom_type = 4;
+    // repeated .ZMQAtomMessage atom = 4;
     /**
-     * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
+     * <code>repeated .ZMQAtomMessage atom = 4;</code>
+     *
+     * <pre>
+     * Atoms to be stored in the backing store.
+     * </pre>
+     */
+    java.util.List<org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage> 
+        getAtomList();
+    /**
+     * <code>repeated .ZMQAtomMessage atom = 4;</code>
+     *
+     * <pre>
+     * Atoms to be stored in the backing store.
+     * </pre>
+     */
+    org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage getAtom(int index);
+    /**
+     * <code>repeated .ZMQAtomMessage atom = 4;</code>
+     *
+     * <pre>
+     * Atoms to be stored in the backing store.
+     * </pre>
+     */
+    int getAtomCount();
+    /**
+     * <code>repeated .ZMQAtomMessage atom = 4;</code>
+     *
+     * <pre>
+     * Atoms to be stored in the backing store.
+     * </pre>
+     */
+    java.util.List<? extends org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessageOrBuilder> 
+        getAtomOrBuilderList();
+    /**
+     * <code>repeated .ZMQAtomMessage atom = 4;</code>
+     *
+     * <pre>
+     * Atoms to be stored in the backing store.
+     * </pre>
+     */
+    org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessageOrBuilder getAtomOrBuilder(
+        int index);
+
+    // repeated .ZMQAtomTypeInfo atom_type = 5;
+    /**
+     * <code>repeated .ZMQAtomTypeInfo atom_type = 5;</code>
      *
      * <pre>
      * Mapping between atom type IDs to atom type names, sent by the client.
@@ -8329,7 +8393,7 @@ public final class AtomSpaceProtos {
     java.util.List<org.opencog.atomspace.AtomSpaceProtos.ZMQAtomTypeInfo> 
         getAtomTypeList();
     /**
-     * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
+     * <code>repeated .ZMQAtomTypeInfo atom_type = 5;</code>
      *
      * <pre>
      * Mapping between atom type IDs to atom type names, sent by the client.
@@ -8337,7 +8401,7 @@ public final class AtomSpaceProtos {
      */
     org.opencog.atomspace.AtomSpaceProtos.ZMQAtomTypeInfo getAtomType(int index);
     /**
-     * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
+     * <code>repeated .ZMQAtomTypeInfo atom_type = 5;</code>
      *
      * <pre>
      * Mapping between atom type IDs to atom type names, sent by the client.
@@ -8345,7 +8409,7 @@ public final class AtomSpaceProtos {
      */
     int getAtomTypeCount();
     /**
-     * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
+     * <code>repeated .ZMQAtomTypeInfo atom_type = 5;</code>
      *
      * <pre>
      * Mapping between atom type IDs to atom type names, sent by the client.
@@ -8354,7 +8418,7 @@ public final class AtomSpaceProtos {
     java.util.List<? extends org.opencog.atomspace.AtomSpaceProtos.ZMQAtomTypeInfoOrBuilder> 
         getAtomTypeOrBuilderList();
     /**
-     * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
+     * <code>repeated .ZMQAtomTypeInfo atom_type = 5;</code>
      *
      * <pre>
      * Mapping between atom type IDs to atom type names, sent by the client.
@@ -8440,8 +8504,16 @@ public final class AtomSpaceProtos {
             }
             case 34: {
               if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
-                atomType_ = new java.util.ArrayList<org.opencog.atomspace.AtomSpaceProtos.ZMQAtomTypeInfo>();
+                atom_ = new java.util.ArrayList<org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage>();
                 mutable_bitField0_ |= 0x00000008;
+              }
+              atom_.add(input.readMessage(org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.PARSER, extensionRegistry));
+              break;
+            }
+            case 42: {
+              if (!((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
+                atomType_ = new java.util.ArrayList<org.opencog.atomspace.AtomSpaceProtos.ZMQAtomTypeInfo>();
+                mutable_bitField0_ |= 0x00000010;
               }
               atomType_.add(input.readMessage(org.opencog.atomspace.AtomSpaceProtos.ZMQAtomTypeInfo.PARSER, extensionRegistry));
               break;
@@ -8458,6 +8530,9 @@ public final class AtomSpaceProtos {
           fetch_ = java.util.Collections.unmodifiableList(fetch_);
         }
         if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+          atom_ = java.util.Collections.unmodifiableList(atom_);
+        }
+        if (((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
           atomType_ = java.util.Collections.unmodifiableList(atomType_);
         }
         this.unknownFields = unknownFields.build();
@@ -8603,11 +8678,67 @@ public final class AtomSpaceProtos {
       return fetch_.get(index);
     }
 
-    // repeated .ZMQAtomTypeInfo atom_type = 4;
-    public static final int ATOM_TYPE_FIELD_NUMBER = 4;
+    // repeated .ZMQAtomMessage atom = 4;
+    public static final int ATOM_FIELD_NUMBER = 4;
+    private java.util.List<org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage> atom_;
+    /**
+     * <code>repeated .ZMQAtomMessage atom = 4;</code>
+     *
+     * <pre>
+     * Atoms to be stored in the backing store.
+     * </pre>
+     */
+    public java.util.List<org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage> getAtomList() {
+      return atom_;
+    }
+    /**
+     * <code>repeated .ZMQAtomMessage atom = 4;</code>
+     *
+     * <pre>
+     * Atoms to be stored in the backing store.
+     * </pre>
+     */
+    public java.util.List<? extends org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessageOrBuilder> 
+        getAtomOrBuilderList() {
+      return atom_;
+    }
+    /**
+     * <code>repeated .ZMQAtomMessage atom = 4;</code>
+     *
+     * <pre>
+     * Atoms to be stored in the backing store.
+     * </pre>
+     */
+    public int getAtomCount() {
+      return atom_.size();
+    }
+    /**
+     * <code>repeated .ZMQAtomMessage atom = 4;</code>
+     *
+     * <pre>
+     * Atoms to be stored in the backing store.
+     * </pre>
+     */
+    public org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage getAtom(int index) {
+      return atom_.get(index);
+    }
+    /**
+     * <code>repeated .ZMQAtomMessage atom = 4;</code>
+     *
+     * <pre>
+     * Atoms to be stored in the backing store.
+     * </pre>
+     */
+    public org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessageOrBuilder getAtomOrBuilder(
+        int index) {
+      return atom_.get(index);
+    }
+
+    // repeated .ZMQAtomTypeInfo atom_type = 5;
+    public static final int ATOM_TYPE_FIELD_NUMBER = 5;
     private java.util.List<org.opencog.atomspace.AtomSpaceProtos.ZMQAtomTypeInfo> atomType_;
     /**
-     * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
+     * <code>repeated .ZMQAtomTypeInfo atom_type = 5;</code>
      *
      * <pre>
      * Mapping between atom type IDs to atom type names, sent by the client.
@@ -8617,7 +8748,7 @@ public final class AtomSpaceProtos {
       return atomType_;
     }
     /**
-     * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
+     * <code>repeated .ZMQAtomTypeInfo atom_type = 5;</code>
      *
      * <pre>
      * Mapping between atom type IDs to atom type names, sent by the client.
@@ -8628,7 +8759,7 @@ public final class AtomSpaceProtos {
       return atomType_;
     }
     /**
-     * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
+     * <code>repeated .ZMQAtomTypeInfo atom_type = 5;</code>
      *
      * <pre>
      * Mapping between atom type IDs to atom type names, sent by the client.
@@ -8638,7 +8769,7 @@ public final class AtomSpaceProtos {
       return atomType_.size();
     }
     /**
-     * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
+     * <code>repeated .ZMQAtomTypeInfo atom_type = 5;</code>
      *
      * <pre>
      * Mapping between atom type IDs to atom type names, sent by the client.
@@ -8648,7 +8779,7 @@ public final class AtomSpaceProtos {
       return atomType_.get(index);
     }
     /**
-     * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
+     * <code>repeated .ZMQAtomTypeInfo atom_type = 5;</code>
      *
      * <pre>
      * Mapping between atom type IDs to atom type names, sent by the client.
@@ -8663,6 +8794,7 @@ public final class AtomSpaceProtos {
       function_ = org.opencog.atomspace.AtomSpaceProtos.ZMQFunctionType.ZMQgetAtom;
       handle_ = 0L;
       fetch_ = java.util.Collections.emptyList();
+      atom_ = java.util.Collections.emptyList();
       atomType_ = java.util.Collections.emptyList();
     }
     private byte memoizedIsInitialized = -1;
@@ -8676,6 +8808,12 @@ public final class AtomSpaceProtos {
       }
       for (int i = 0; i < getFetchCount(); i++) {
         if (!getFetch(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
+      for (int i = 0; i < getAtomCount(); i++) {
+        if (!getAtom(i).isInitialized()) {
           memoizedIsInitialized = 0;
           return false;
         }
@@ -8696,8 +8834,11 @@ public final class AtomSpaceProtos {
       for (int i = 0; i < fetch_.size(); i++) {
         output.writeMessage(3, fetch_.get(i));
       }
+      for (int i = 0; i < atom_.size(); i++) {
+        output.writeMessage(4, atom_.get(i));
+      }
       for (int i = 0; i < atomType_.size(); i++) {
-        output.writeMessage(4, atomType_.get(i));
+        output.writeMessage(5, atomType_.get(i));
       }
       getUnknownFields().writeTo(output);
     }
@@ -8720,9 +8861,13 @@ public final class AtomSpaceProtos {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(3, fetch_.get(i));
       }
+      for (int i = 0; i < atom_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(4, atom_.get(i));
+      }
       for (int i = 0; i < atomType_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(4, atomType_.get(i));
+          .computeMessageSize(5, atomType_.get(i));
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -8833,6 +8978,7 @@ public final class AtomSpaceProtos {
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
           getFetchFieldBuilder();
+          getAtomFieldBuilder();
           getAtomTypeFieldBuilder();
         }
       }
@@ -8852,9 +8998,15 @@ public final class AtomSpaceProtos {
         } else {
           fetchBuilder_.clear();
         }
+        if (atomBuilder_ == null) {
+          atom_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000008);
+        } else {
+          atomBuilder_.clear();
+        }
         if (atomTypeBuilder_ == null) {
           atomType_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000008);
+          bitField0_ = (bitField0_ & ~0x00000010);
         } else {
           atomTypeBuilder_.clear();
         }
@@ -8903,10 +9055,19 @@ public final class AtomSpaceProtos {
         } else {
           result.fetch_ = fetchBuilder_.build();
         }
-        if (atomTypeBuilder_ == null) {
+        if (atomBuilder_ == null) {
           if (((bitField0_ & 0x00000008) == 0x00000008)) {
-            atomType_ = java.util.Collections.unmodifiableList(atomType_);
+            atom_ = java.util.Collections.unmodifiableList(atom_);
             bitField0_ = (bitField0_ & ~0x00000008);
+          }
+          result.atom_ = atom_;
+        } else {
+          result.atom_ = atomBuilder_.build();
+        }
+        if (atomTypeBuilder_ == null) {
+          if (((bitField0_ & 0x00000010) == 0x00000010)) {
+            atomType_ = java.util.Collections.unmodifiableList(atomType_);
+            bitField0_ = (bitField0_ & ~0x00000010);
           }
           result.atomType_ = atomType_;
         } else {
@@ -8960,11 +9121,37 @@ public final class AtomSpaceProtos {
             }
           }
         }
+        if (atomBuilder_ == null) {
+          if (!other.atom_.isEmpty()) {
+            if (atom_.isEmpty()) {
+              atom_ = other.atom_;
+              bitField0_ = (bitField0_ & ~0x00000008);
+            } else {
+              ensureAtomIsMutable();
+              atom_.addAll(other.atom_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.atom_.isEmpty()) {
+            if (atomBuilder_.isEmpty()) {
+              atomBuilder_.dispose();
+              atomBuilder_ = null;
+              atom_ = other.atom_;
+              bitField0_ = (bitField0_ & ~0x00000008);
+              atomBuilder_ = 
+                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                   getAtomFieldBuilder() : null;
+            } else {
+              atomBuilder_.addAllMessages(other.atom_);
+            }
+          }
+        }
         if (atomTypeBuilder_ == null) {
           if (!other.atomType_.isEmpty()) {
             if (atomType_.isEmpty()) {
               atomType_ = other.atomType_;
-              bitField0_ = (bitField0_ & ~0x00000008);
+              bitField0_ = (bitField0_ & ~0x00000010);
             } else {
               ensureAtomTypeIsMutable();
               atomType_.addAll(other.atomType_);
@@ -8977,7 +9164,7 @@ public final class AtomSpaceProtos {
               atomTypeBuilder_.dispose();
               atomTypeBuilder_ = null;
               atomType_ = other.atomType_;
-              bitField0_ = (bitField0_ & ~0x00000008);
+              bitField0_ = (bitField0_ & ~0x00000010);
               atomTypeBuilder_ = 
                 com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
                    getAtomTypeFieldBuilder() : null;
@@ -8997,6 +9184,12 @@ public final class AtomSpaceProtos {
         }
         for (int i = 0; i < getFetchCount(); i++) {
           if (!getFetch(i).isInitialized()) {
+            
+            return false;
+          }
+        }
+        for (int i = 0; i < getAtomCount(); i++) {
+          if (!getAtom(i).isInitialized()) {
             
             return false;
           }
@@ -9458,13 +9651,325 @@ public final class AtomSpaceProtos {
         return fetchBuilder_;
       }
 
-      // repeated .ZMQAtomTypeInfo atom_type = 4;
+      // repeated .ZMQAtomMessage atom = 4;
+      private java.util.List<org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage> atom_ =
+        java.util.Collections.emptyList();
+      private void ensureAtomIsMutable() {
+        if (!((bitField0_ & 0x00000008) == 0x00000008)) {
+          atom_ = new java.util.ArrayList<org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage>(atom_);
+          bitField0_ |= 0x00000008;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilder<
+          org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.Builder, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessageOrBuilder> atomBuilder_;
+
+      /**
+       * <code>repeated .ZMQAtomMessage atom = 4;</code>
+       *
+       * <pre>
+       * Atoms to be stored in the backing store.
+       * </pre>
+       */
+      public java.util.List<org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage> getAtomList() {
+        if (atomBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(atom_);
+        } else {
+          return atomBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .ZMQAtomMessage atom = 4;</code>
+       *
+       * <pre>
+       * Atoms to be stored in the backing store.
+       * </pre>
+       */
+      public int getAtomCount() {
+        if (atomBuilder_ == null) {
+          return atom_.size();
+        } else {
+          return atomBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .ZMQAtomMessage atom = 4;</code>
+       *
+       * <pre>
+       * Atoms to be stored in the backing store.
+       * </pre>
+       */
+      public org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage getAtom(int index) {
+        if (atomBuilder_ == null) {
+          return atom_.get(index);
+        } else {
+          return atomBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .ZMQAtomMessage atom = 4;</code>
+       *
+       * <pre>
+       * Atoms to be stored in the backing store.
+       * </pre>
+       */
+      public Builder setAtom(
+          int index, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage value) {
+        if (atomBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureAtomIsMutable();
+          atom_.set(index, value);
+          onChanged();
+        } else {
+          atomBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ZMQAtomMessage atom = 4;</code>
+       *
+       * <pre>
+       * Atoms to be stored in the backing store.
+       * </pre>
+       */
+      public Builder setAtom(
+          int index, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.Builder builderForValue) {
+        if (atomBuilder_ == null) {
+          ensureAtomIsMutable();
+          atom_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          atomBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ZMQAtomMessage atom = 4;</code>
+       *
+       * <pre>
+       * Atoms to be stored in the backing store.
+       * </pre>
+       */
+      public Builder addAtom(org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage value) {
+        if (atomBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureAtomIsMutable();
+          atom_.add(value);
+          onChanged();
+        } else {
+          atomBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ZMQAtomMessage atom = 4;</code>
+       *
+       * <pre>
+       * Atoms to be stored in the backing store.
+       * </pre>
+       */
+      public Builder addAtom(
+          int index, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage value) {
+        if (atomBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureAtomIsMutable();
+          atom_.add(index, value);
+          onChanged();
+        } else {
+          atomBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ZMQAtomMessage atom = 4;</code>
+       *
+       * <pre>
+       * Atoms to be stored in the backing store.
+       * </pre>
+       */
+      public Builder addAtom(
+          org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.Builder builderForValue) {
+        if (atomBuilder_ == null) {
+          ensureAtomIsMutable();
+          atom_.add(builderForValue.build());
+          onChanged();
+        } else {
+          atomBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ZMQAtomMessage atom = 4;</code>
+       *
+       * <pre>
+       * Atoms to be stored in the backing store.
+       * </pre>
+       */
+      public Builder addAtom(
+          int index, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.Builder builderForValue) {
+        if (atomBuilder_ == null) {
+          ensureAtomIsMutable();
+          atom_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          atomBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ZMQAtomMessage atom = 4;</code>
+       *
+       * <pre>
+       * Atoms to be stored in the backing store.
+       * </pre>
+       */
+      public Builder addAllAtom(
+          java.lang.Iterable<? extends org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage> values) {
+        if (atomBuilder_ == null) {
+          ensureAtomIsMutable();
+          super.addAll(values, atom_);
+          onChanged();
+        } else {
+          atomBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ZMQAtomMessage atom = 4;</code>
+       *
+       * <pre>
+       * Atoms to be stored in the backing store.
+       * </pre>
+       */
+      public Builder clearAtom() {
+        if (atomBuilder_ == null) {
+          atom_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000008);
+          onChanged();
+        } else {
+          atomBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ZMQAtomMessage atom = 4;</code>
+       *
+       * <pre>
+       * Atoms to be stored in the backing store.
+       * </pre>
+       */
+      public Builder removeAtom(int index) {
+        if (atomBuilder_ == null) {
+          ensureAtomIsMutable();
+          atom_.remove(index);
+          onChanged();
+        } else {
+          atomBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ZMQAtomMessage atom = 4;</code>
+       *
+       * <pre>
+       * Atoms to be stored in the backing store.
+       * </pre>
+       */
+      public org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.Builder getAtomBuilder(
+          int index) {
+        return getAtomFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .ZMQAtomMessage atom = 4;</code>
+       *
+       * <pre>
+       * Atoms to be stored in the backing store.
+       * </pre>
+       */
+      public org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessageOrBuilder getAtomOrBuilder(
+          int index) {
+        if (atomBuilder_ == null) {
+          return atom_.get(index);  } else {
+          return atomBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .ZMQAtomMessage atom = 4;</code>
+       *
+       * <pre>
+       * Atoms to be stored in the backing store.
+       * </pre>
+       */
+      public java.util.List<? extends org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessageOrBuilder> 
+           getAtomOrBuilderList() {
+        if (atomBuilder_ != null) {
+          return atomBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(atom_);
+        }
+      }
+      /**
+       * <code>repeated .ZMQAtomMessage atom = 4;</code>
+       *
+       * <pre>
+       * Atoms to be stored in the backing store.
+       * </pre>
+       */
+      public org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.Builder addAtomBuilder() {
+        return getAtomFieldBuilder().addBuilder(
+            org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .ZMQAtomMessage atom = 4;</code>
+       *
+       * <pre>
+       * Atoms to be stored in the backing store.
+       * </pre>
+       */
+      public org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.Builder addAtomBuilder(
+          int index) {
+        return getAtomFieldBuilder().addBuilder(
+            index, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .ZMQAtomMessage atom = 4;</code>
+       *
+       * <pre>
+       * Atoms to be stored in the backing store.
+       * </pre>
+       */
+      public java.util.List<org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.Builder> 
+           getAtomBuilderList() {
+        return getAtomFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilder<
+          org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.Builder, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessageOrBuilder> 
+          getAtomFieldBuilder() {
+        if (atomBuilder_ == null) {
+          atomBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+              org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessage.Builder, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomMessageOrBuilder>(
+                  atom_,
+                  ((bitField0_ & 0x00000008) == 0x00000008),
+                  getParentForChildren(),
+                  isClean());
+          atom_ = null;
+        }
+        return atomBuilder_;
+      }
+
+      // repeated .ZMQAtomTypeInfo atom_type = 5;
       private java.util.List<org.opencog.atomspace.AtomSpaceProtos.ZMQAtomTypeInfo> atomType_ =
         java.util.Collections.emptyList();
       private void ensureAtomTypeIsMutable() {
-        if (!((bitField0_ & 0x00000008) == 0x00000008)) {
+        if (!((bitField0_ & 0x00000010) == 0x00000010)) {
           atomType_ = new java.util.ArrayList<org.opencog.atomspace.AtomSpaceProtos.ZMQAtomTypeInfo>(atomType_);
-          bitField0_ |= 0x00000008;
+          bitField0_ |= 0x00000010;
          }
       }
 
@@ -9472,7 +9977,7 @@ public final class AtomSpaceProtos {
           org.opencog.atomspace.AtomSpaceProtos.ZMQAtomTypeInfo, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomTypeInfo.Builder, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomTypeInfoOrBuilder> atomTypeBuilder_;
 
       /**
-       * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
+       * <code>repeated .ZMQAtomTypeInfo atom_type = 5;</code>
        *
        * <pre>
        * Mapping between atom type IDs to atom type names, sent by the client.
@@ -9486,7 +9991,7 @@ public final class AtomSpaceProtos {
         }
       }
       /**
-       * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
+       * <code>repeated .ZMQAtomTypeInfo atom_type = 5;</code>
        *
        * <pre>
        * Mapping between atom type IDs to atom type names, sent by the client.
@@ -9500,7 +10005,7 @@ public final class AtomSpaceProtos {
         }
       }
       /**
-       * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
+       * <code>repeated .ZMQAtomTypeInfo atom_type = 5;</code>
        *
        * <pre>
        * Mapping between atom type IDs to atom type names, sent by the client.
@@ -9514,7 +10019,7 @@ public final class AtomSpaceProtos {
         }
       }
       /**
-       * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
+       * <code>repeated .ZMQAtomTypeInfo atom_type = 5;</code>
        *
        * <pre>
        * Mapping between atom type IDs to atom type names, sent by the client.
@@ -9535,7 +10040,7 @@ public final class AtomSpaceProtos {
         return this;
       }
       /**
-       * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
+       * <code>repeated .ZMQAtomTypeInfo atom_type = 5;</code>
        *
        * <pre>
        * Mapping between atom type IDs to atom type names, sent by the client.
@@ -9553,7 +10058,7 @@ public final class AtomSpaceProtos {
         return this;
       }
       /**
-       * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
+       * <code>repeated .ZMQAtomTypeInfo atom_type = 5;</code>
        *
        * <pre>
        * Mapping between atom type IDs to atom type names, sent by the client.
@@ -9573,7 +10078,7 @@ public final class AtomSpaceProtos {
         return this;
       }
       /**
-       * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
+       * <code>repeated .ZMQAtomTypeInfo atom_type = 5;</code>
        *
        * <pre>
        * Mapping between atom type IDs to atom type names, sent by the client.
@@ -9594,7 +10099,7 @@ public final class AtomSpaceProtos {
         return this;
       }
       /**
-       * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
+       * <code>repeated .ZMQAtomTypeInfo atom_type = 5;</code>
        *
        * <pre>
        * Mapping between atom type IDs to atom type names, sent by the client.
@@ -9612,7 +10117,7 @@ public final class AtomSpaceProtos {
         return this;
       }
       /**
-       * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
+       * <code>repeated .ZMQAtomTypeInfo atom_type = 5;</code>
        *
        * <pre>
        * Mapping between atom type IDs to atom type names, sent by the client.
@@ -9630,7 +10135,7 @@ public final class AtomSpaceProtos {
         return this;
       }
       /**
-       * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
+       * <code>repeated .ZMQAtomTypeInfo atom_type = 5;</code>
        *
        * <pre>
        * Mapping between atom type IDs to atom type names, sent by the client.
@@ -9648,7 +10153,7 @@ public final class AtomSpaceProtos {
         return this;
       }
       /**
-       * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
+       * <code>repeated .ZMQAtomTypeInfo atom_type = 5;</code>
        *
        * <pre>
        * Mapping between atom type IDs to atom type names, sent by the client.
@@ -9657,7 +10162,7 @@ public final class AtomSpaceProtos {
       public Builder clearAtomType() {
         if (atomTypeBuilder_ == null) {
           atomType_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000008);
+          bitField0_ = (bitField0_ & ~0x00000010);
           onChanged();
         } else {
           atomTypeBuilder_.clear();
@@ -9665,7 +10170,7 @@ public final class AtomSpaceProtos {
         return this;
       }
       /**
-       * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
+       * <code>repeated .ZMQAtomTypeInfo atom_type = 5;</code>
        *
        * <pre>
        * Mapping between atom type IDs to atom type names, sent by the client.
@@ -9682,7 +10187,7 @@ public final class AtomSpaceProtos {
         return this;
       }
       /**
-       * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
+       * <code>repeated .ZMQAtomTypeInfo atom_type = 5;</code>
        *
        * <pre>
        * Mapping between atom type IDs to atom type names, sent by the client.
@@ -9693,7 +10198,7 @@ public final class AtomSpaceProtos {
         return getAtomTypeFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
+       * <code>repeated .ZMQAtomTypeInfo atom_type = 5;</code>
        *
        * <pre>
        * Mapping between atom type IDs to atom type names, sent by the client.
@@ -9707,7 +10212,7 @@ public final class AtomSpaceProtos {
         }
       }
       /**
-       * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
+       * <code>repeated .ZMQAtomTypeInfo atom_type = 5;</code>
        *
        * <pre>
        * Mapping between atom type IDs to atom type names, sent by the client.
@@ -9722,7 +10227,7 @@ public final class AtomSpaceProtos {
         }
       }
       /**
-       * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
+       * <code>repeated .ZMQAtomTypeInfo atom_type = 5;</code>
        *
        * <pre>
        * Mapping between atom type IDs to atom type names, sent by the client.
@@ -9733,7 +10238,7 @@ public final class AtomSpaceProtos {
             org.opencog.atomspace.AtomSpaceProtos.ZMQAtomTypeInfo.getDefaultInstance());
       }
       /**
-       * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
+       * <code>repeated .ZMQAtomTypeInfo atom_type = 5;</code>
        *
        * <pre>
        * Mapping between atom type IDs to atom type names, sent by the client.
@@ -9745,7 +10250,7 @@ public final class AtomSpaceProtos {
             index, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomTypeInfo.getDefaultInstance());
       }
       /**
-       * <code>repeated .ZMQAtomTypeInfo atom_type = 4;</code>
+       * <code>repeated .ZMQAtomTypeInfo atom_type = 5;</code>
        *
        * <pre>
        * Mapping between atom type IDs to atom type names, sent by the client.
@@ -9762,7 +10267,7 @@ public final class AtomSpaceProtos {
           atomTypeBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
               org.opencog.atomspace.AtomSpaceProtos.ZMQAtomTypeInfo, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomTypeInfo.Builder, org.opencog.atomspace.AtomSpaceProtos.ZMQAtomTypeInfoOrBuilder>(
                   atomType_,
-                  ((bitField0_ & 0x00000008) == 0x00000008),
+                  ((bitField0_ & 0x00000010) == 0x00000010),
                   getParentForChildren(),
                   isClean());
           atomType_ = null;
@@ -11184,23 +11689,25 @@ public final class AtomSpaceProtos {
       "kind\030\001 \002(\0162\021.ZMQAtomFetchKind\022\016\n\006handle\030" +
       "\002 \001(\004\022\014\n\004type\030\003 \001(\005\022\014\n\004name\030\004 \001(\t\022\020\n\010out" +
       "going\030\005 \003(\004\"+\n\017ZMQAtomTypeInfo\022\n\n\002id\030\001 \001" +
-      "(\005\022\014\n\004name\030\002 \001(\t\"\212\001\n\021ZMQRequestMessage\022\"" +
+      "(\005\022\014\n\004name\030\002 \001(\t\"\251\001\n\021ZMQRequestMessage\022\"" +
       "\n\010function\030\001 \002(\0162\020.ZMQFunctionType\022\016\n\006ha" +
       "ndle\030\002 \001(\004\022\034\n\005fetch\030\003 \003(\0132\r.ZMQAtomFetch" +
-      "\022#\n\tatom_type\030\004 \003(\0132\020.ZMQAtomTypeInfo\"b\n" +
-      "\017ZMQReplyMessage\022\035\n\004atom\030\001 \003(\0132\017.ZMQAtom",
-      "Message\022\013\n\003str\030\002 \001(\t\022#\n\tatom_type\030\003 \003(\0132" +
-      "\020.ZMQAtomTypeInfo*\250\001\n\021ZMQTruthValueType\022" +
-      "\033\n\027ZMQTruthValueTypeSimple\020\000\022\032\n\026ZMQTruth" +
-      "ValueTypeCount\020\001\022\031\n\025ZMQTruthValueTypeNul" +
-      "l\020\002\022\037\n\033ZMQTruthValueTypeIndefinite\020\003\022\036\n\032" +
-      "ZMQTruthValueTypeComposite\020\004*P\n\013ZMQAtomT" +
-      "ype\022\023\n\017ZMQAtomTypeNode\020\000\022\023\n\017ZMQAtomTypeL" +
-      "ink\020\001\022\027\n\023ZMQAtomTypeNotFound\020\002*0\n\020ZMQAto" +
-      "mFetchKind\022\010\n\004UUID\020\000\022\010\n\004NODE\020\001\022\010\n\004LINK\020\002" +
-      "*B\n\017ZMQFunctionType\022\016\n\nZMQgetAtom\020\000\022\016\n\nZ",
-      "MQgetName\020\001\022\017\n\013ZMQgetAtoms\020\002B*\n\025org.open" +
-      "cog.atomspaceB\017AtomSpaceProtosH\001"
+      "\022\035\n\004atom\030\004 \003(\0132\017.ZMQAtomMessage\022#\n\tatom_" +
+      "type\030\005 \003(\0132\020.ZMQAtomTypeInfo\"b\n\017ZMQReply",
+      "Message\022\035\n\004atom\030\001 \003(\0132\017.ZMQAtomMessage\022\013" +
+      "\n\003str\030\002 \001(\t\022#\n\tatom_type\030\003 \003(\0132\020.ZMQAtom" +
+      "TypeInfo*\250\001\n\021ZMQTruthValueType\022\033\n\027ZMQTru" +
+      "thValueTypeSimple\020\000\022\032\n\026ZMQTruthValueType" +
+      "Count\020\001\022\031\n\025ZMQTruthValueTypeNull\020\002\022\037\n\033ZM" +
+      "QTruthValueTypeIndefinite\020\003\022\036\n\032ZMQTruthV" +
+      "alueTypeComposite\020\004*P\n\013ZMQAtomType\022\023\n\017ZM" +
+      "QAtomTypeNode\020\000\022\023\n\017ZMQAtomTypeLink\020\001\022\027\n\023" +
+      "ZMQAtomTypeNotFound\020\002*0\n\020ZMQAtomFetchKin" +
+      "d\022\010\n\004UUID\020\000\022\010\n\004NODE\020\001\022\010\n\004LINK\020\002*U\n\017ZMQFu",
+      "nctionType\022\016\n\nZMQgetAtom\020\000\022\016\n\nZMQgetName" +
+      "\020\001\022\017\n\013ZMQgetAtoms\020\002\022\021\n\rZMQstoreAtoms\020\003B*" +
+      "\n\025org.opencog.atomspaceB\017AtomSpaceProtos" +
+      "H\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -11260,7 +11767,7 @@ public final class AtomSpaceProtos {
           internal_static_ZMQRequestMessage_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_ZMQRequestMessage_descriptor,
-              new java.lang.String[] { "Function", "Handle", "Fetch", "AtomType", });
+              new java.lang.String[] { "Function", "Handle", "Fetch", "Atom", "AtomType", });
           internal_static_ZMQReplyMessage_descriptor =
             getDescriptor().getMessageTypes().get(9);
           internal_static_ZMQReplyMessage_fieldAccessorTable = new

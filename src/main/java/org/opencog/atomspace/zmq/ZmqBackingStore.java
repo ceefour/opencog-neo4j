@@ -1,5 +1,6 @@
 package org.opencog.atomspace.zmq;
 
+import com.google.common.base.Verify;
 import com.google.common.util.concurrent.*;
 import org.apache.camel.*;
 import org.apache.camel.spi.Synchronization;
@@ -24,6 +25,11 @@ import java.util.stream.Collectors;
 public class ZmqBackingStore extends GraphBackingStoreBase {
 
     private static final Logger log = LoggerFactory.getLogger(ZmqBackingStore.class);
+    public static final AtomSpaceProtos.ZMQAttentionValueHolderMessage ATTENTIONVALUE_BLANK =
+            AtomSpaceProtos.ZMQAttentionValueHolderMessage.newBuilder()
+                    .setSTI(0)
+                    .setLTI(0)
+                    .setVLTI(0).build();
 
     @Inject
     private Environment env;
@@ -170,7 +176,78 @@ public class ZmqBackingStore extends GraphBackingStoreBase {
 
     @Override
     public ListenableFuture<Integer> storeAtomsAsync(List<Handle> handles) {
-        throw new UnsupportedOperationException();
+        final AtomSpaceProtos.ZMQRequestMessage.Builder reqMsgb = AtomSpaceProtos.ZMQRequestMessage.newBuilder();
+        reqMsgb.setFunction(AtomSpaceProtos.ZMQFunctionType.ZMQstoreAtoms);
+        handles.forEach(handle -> {
+            final Atom atom = handle.resolve().get();
+            //final Optional<Node> node = neo4jBs.getNode(AtomType.forUpperCamel(req.getAtomType()), req.getNodeName());
+            if (atom instanceof Node) {
+                reqMsgb.addAtom(AtomSpaceProtos.ZMQAtomMessage.newBuilder()
+                        .setHandle(atom.getUuid())
+                        .setAtomtype(AtomSpaceProtos.ZMQAtomType.ZMQAtomTypeNode)
+                                //.setAtomTypeStr(atom.getType().toUpperCamel()) // no longer needed
+                        .setType(atom.getType().getId())
+                        .setTruthValue(AtomSpaceProtos.ZMQTruthValueMessage.newBuilder()
+                                .addSingleTruthValue(AtomSpaceProtos.ZMQSingleTruthValueMessage.newBuilder()
+                                        .setTruthvaluetype(AtomSpaceProtos.ZMQTruthValueType.ZMQTruthValueTypeSimple)
+                                        .setMean((float) atom.getTruthValue().getFuzzyStrength())
+                                        .setConfidence((float) atom.getTruthValue().getConfidence())
+                                        .setCount((float) atom.getTruthValue().getCount())
+                                        .build()))
+                        .setAttentionvalueholder(ATTENTIONVALUE_BLANK) // no need to send this anyway
+                        .setName(((Node) atom).getName())
+                        .build());
+            } else if (atom instanceof Link) {
+                Verify.verify(((Link) atom).getOutgoingSet() != null,
+                        "Link %s outgoingSet cannot be null", atom.getType());
+                reqMsgb.addAtom(AtomSpaceProtos.ZMQAtomMessage.newBuilder()
+                        .setHandle(atom.getUuid())
+                        .setAtomtype(AtomSpaceProtos.ZMQAtomType.ZMQAtomTypeLink)
+                                //.setAtomTypeStr(atom.getType().toUpperCamel()) // no longer needed
+                        .setType(atom.getType().getId())
+                        .setTruthValue(AtomSpaceProtos.ZMQTruthValueMessage.newBuilder()
+                                .addSingleTruthValue(AtomSpaceProtos.ZMQSingleTruthValueMessage.newBuilder()
+                                        .setTruthvaluetype(AtomSpaceProtos.ZMQTruthValueType.ZMQTruthValueTypeSimple)
+                                        .setMean((float) atom.getTruthValue().getFuzzyStrength())
+                                        .setConfidence((float) atom.getTruthValue().getConfidence())
+                                        .setCount((float) atom.getTruthValue().getCount())
+                                        .build()))
+                        .setAttentionvalueholder(ATTENTIONVALUE_BLANK) // no need to send this anyway
+                        .addAllOutgoing(((Link) atom).getOutgoingSet().stream().map(Handle::getUuid).collect(Collectors.toList()))
+                        .build());
+            } else {
+                reqMsgb.addAtom(AtomSpaceProtos.ZMQAtomMessage.newBuilder()
+                        .setAtomtype(AtomSpaceProtos.ZMQAtomType.ZMQAtomTypeNotFound)
+                        .setHandle(Handle.UNDEFINED)
+                        .setType(0)
+                        .setAttentionvalueholder(ATTENTIONVALUE_BLANK) // unfortunately we have to fill this :(
+                        .build());
+            }
+        });
+
+        final AtomSpaceProtos.ZMQRequestMessage reqMsg = reqMsgb.build();
+        final SettableFuture<Integer> future = SettableFuture.create();
+//        log.info("Request: {}", producerTemplate.requestBody(reqMsg));
+        producerTemplate.asyncCallbackRequestBody(producerTemplate.getDefaultEndpoint(),
+                reqMsg, new Synchronization() {
+                    @Override
+                    public void onComplete(Exchange exchange) {
+                        final AtomSpaceProtos.ZMQReplyMessage replyMsg;
+                        try {
+                            replyMsg = AtomSpaceProtos.ZMQReplyMessage.parseFrom(exchange.getIn().getBody(byte[].class));
+                            log.debug("Received {}", replyMsg);
+                            future.set(handles.size());
+                        } catch (Exception e) {
+                            future.setException(e);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exchange exchange) {
+                        future.setException(exchange.getException());
+                    }
+                });
+        return future;
     }
 
     @Override
