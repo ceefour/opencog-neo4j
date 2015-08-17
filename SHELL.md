@@ -37,6 +37,6 @@ Password is `opencog`
 
 ### node/link store
 
-    node store ConceptNode/hendy ConceptNode/human
+    node store ConceptNode/human ConceptNode/mammal
     # outputs UUIDs
     link store InheritanceLink UUID1 UUID2 
