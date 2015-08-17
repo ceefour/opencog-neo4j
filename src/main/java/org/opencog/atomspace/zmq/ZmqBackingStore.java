@@ -269,4 +269,9 @@ public class ZmqBackingStore extends GraphBackingStoreBase {
     public boolean isAtomIgnored(Handle handle) {
         throw new UnsupportedOperationException();
     }
+
+    @Override
+    public ListenableFuture<Integer> storeAtomsAsyncFromAtomList(List<Atom> atoms) {
+        throw new UnsupportedOperationException();
+    }
 }

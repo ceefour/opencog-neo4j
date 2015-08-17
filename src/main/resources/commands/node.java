@@ -67,8 +67,8 @@ public class node extends BaseCommand {
             }
         }).collect(Collectors.toList());
         final Integer storedCount = backingStore.storeAtomsAsync(handles).get();
-        handles.forEach(handle -> System.out.println(handle.resolve().get()));
-        System.out.println("Stored " + storedCount + " nodes");
+        handles.forEach(handle -> out.println(handle.resolve().get()));
+        out.println("Stored " + storedCount + " nodes");
     }
 
 }

@@ -1,6 +1,7 @@
 package org.opencog.neo4j.camel;
 
 import com.google.common.base.Verify;
+import com.google.common.util.concurrent.ListenableFuture;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.opencog.atomspace.*;
@@ -54,9 +55,9 @@ public class AtomSpaceRouteConfig {
                         }).to("log:atomspace-in-parsed?showAll=true&multiline=true")
                         .process((Exchange xc) -> {
                             final AtomSpaceProtos.ZMQRequestMessage inp = xc.getIn().getBody(AtomSpaceProtos.ZMQRequestMessage.class);
+                            final AtomSpaceProtos.ZMQReplyMessage.Builder atomsResultb = AtomSpaceProtos.ZMQReplyMessage.newBuilder();
                             switch (inp.getFunction()) {
                                 case ZMQgetAtoms:
-                                    final AtomSpaceProtos.ZMQReplyMessage.Builder atomsResultb = AtomSpaceProtos.ZMQReplyMessage.newBuilder();
                                     final List<AtomRequest> nodeRequests = inp.getFetchList().stream()
                                             .map(it -> {
                                                 switch (it.getKind()) {
@@ -102,6 +103,24 @@ public class AtomSpaceRouteConfig {
                                                     .build());
                                         }
                                     });
+                                    xc.getIn().setBody(atomsResultb.build());
+                                    break;
+                                case ZMQstoreAtoms:
+                                    final List<Atom> atomsToStore = inp.getAtomList().stream().map(res -> {
+                                        switch (res.getAtomtype()) {
+                                            case ZMQAtomTypeNode:
+                                                return new Node(res.getHandle(), AtomType.forId(res.getType()), res.getName());
+                                            case ZMQAtomTypeLink:
+                                                final List<Handle> outgoingSet = res.getOutgoingList().stream()
+                                                        .map(it -> new Handle(it))
+                                                        .collect(Collectors.toList());
+                                                final Link link = new Link(res.getHandle(), AtomType.forId(res.getType()), outgoingSet);
+                                                return link;
+                                            default:
+                                                throw new IllegalArgumentException("Unknown AtomResult kind: " + res.getAtomtype());
+                                        }
+                                    }).collect(Collectors.toList());
+                                    final Integer storedCount = neo4jBs.storeAtomsAsyncFromAtomList(atomsToStore).get();
                                     xc.getIn().setBody(atomsResultb.build());
                                     break;
                                 default:

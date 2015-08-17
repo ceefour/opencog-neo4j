@@ -14,4 +14,6 @@ public interface GraphBackingStore extends BackingStore {
     ListenableFuture<Optional<Node>> getNodeAsync(AtomType type, String name);
 
     ListenableFuture<Optional<Link>> getLinkAsync(AtomType type, List<Handle> handleSeq);
+
+    ListenableFuture<Integer> storeAtomsAsyncFromAtomList(List<Atom> atoms);
 }

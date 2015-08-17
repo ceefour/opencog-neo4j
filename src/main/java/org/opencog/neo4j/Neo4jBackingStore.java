@@ -1,6 +1,5 @@
 package org.opencog.neo4j;
 
-import clojure.lang.Symbol;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
@@ -228,13 +227,13 @@ public class Neo4jBackingStore extends GraphBackingStoreBase {
             this.matchDependencies = ImmutableList.of();
         }
 
-        @Override
-        public String toString() {
-            return create;
+        public String toStringWithDependencies() {
+            return (Joiner.on('\n').join(matchDependencies) + '\n' + create).trim();
         }
+
     }
 
-    protected static class CypherParts {
+    public static class CypherParts {
         public Map<String, CypherPart> nodes = new LinkedHashMap<>();
         public List<CypherPart> relationships = new ArrayList<>();
 
@@ -244,8 +243,8 @@ public class Neo4jBackingStore extends GraphBackingStoreBase {
         }
 
         public String getAllCypher() {
-            return nodes.values().stream().map(CypherPart::toString).collect(Collectors.joining("\n")) + "\n\n" +
-                    relationships.stream().map(CypherPart::toString).collect(Collectors.joining("\n"));
+            return nodes.values().stream().map(CypherPart::toStringWithDependencies).collect(Collectors.joining("\n")) + "\n\n" +
+                    relationships.stream().map(CypherPart::toStringWithDependencies).collect(Collectors.joining("\n"));
         }
 
         public ImmutableMap<String, Object> getAllParams() {
@@ -326,7 +325,8 @@ public class Neo4jBackingStore extends GraphBackingStoreBase {
      * @return
      * @throws Exception
      */
-    protected CypherPart createBinaryLinkVertex(final String relationshipType,
+    protected CypherPart createBinaryLinkVertex(final long uuid,
+                                                final String relationshipType,
                                                 CypherParts parts,
                                                 Double stvStrength,
                                                 Double stvConfidence,
@@ -341,7 +341,7 @@ public class Neo4jBackingStore extends GraphBackingStoreBase {
         } else {
             create = String.format("CREATE (%s:%s {gid: {gid}})", varName, relationshipType);
         }
-        outParams.put("gid", Atom.RANDOM.nextLong());
+        outParams.put("gid", uuid);
         outParams.put("tv", new double[] {
                 Optional.ofNullable(stvStrength).orElse(0d), Optional.ofNullable(stvConfidence).orElse(0d),
                 Optional.ofNullable(stvCount).orElse(0d)});
@@ -368,7 +368,8 @@ public class Neo4jBackingStore extends GraphBackingStoreBase {
      * @return
      * @throws Exception
      */
-    protected CypherPart createEvaluationLinkVertex(CypherParts parts,
+    protected CypherPart createEvaluationLinkVertex(final long uuid,
+                                                    CypherParts parts,
                                                     Double stvStrength,
                                                     Double stvConfidence,
                                                     Double stvCount,
@@ -386,7 +387,7 @@ public class Neo4jBackingStore extends GraphBackingStoreBase {
         } else {
             create = String.format("CREATE (%s:%s {gid: {gid}})", varName, relationshipType);
         }
-        outParams.put("gid", Atom.RANDOM.nextLong());
+        outParams.put("gid", uuid);
         outParams.put("tv", new double[] {
                 Optional.ofNullable(stvStrength).orElse(0d), Optional.ofNullable(stvConfidence).orElse(0d),
                 Optional.ofNullable(stvCount).orElse(0d)});
@@ -416,7 +417,8 @@ public class Neo4jBackingStore extends GraphBackingStoreBase {
      * @return
      * @throws Exception
      */
-    protected CypherPart createHyperedgeVertex(CypherParts parts,
+    protected CypherPart createHyperedgeVertex(final long uuid,
+                                               CypherParts parts,
                                                String relationshipType,
                                                     Double stvStrength,
                                                     Double stvConfidence,
@@ -431,7 +433,7 @@ public class Neo4jBackingStore extends GraphBackingStoreBase {
         } else {
             create = String.format("CREATE (%s:%s {gid: {gid}})", varName, relationshipType);
         }
-        outParams.put("gid", Atom.RANDOM.nextLong());
+        outParams.put("gid", uuid);
         outParams.put("tv", new double[] {
                 Optional.ofNullable(stvStrength).orElse(0d), Optional.ofNullable(stvConfidence).orElse(0d),
                 Optional.ofNullable(stvCount).orElse(0d)});
@@ -485,7 +487,7 @@ public class Neo4jBackingStore extends GraphBackingStoreBase {
                 uuidToMatch(paramVarName, link.getOutgoingSet().get(i).getUuid(), outParams, outDependencies);
                 paramNames.add(paramVarName);
             }
-            return createEvaluationLinkVertex(parts, stvStrength, stvConfidence, stvCount,
+            return createEvaluationLinkVertex(link.getUuid(), parts, stvStrength, stvConfidence, stvCount,
                     predicateName, null, predicateVarName,
                     paramNames, outParams, outDependencies);
         } catch (Exception e) {
@@ -512,7 +514,7 @@ public class Neo4jBackingStore extends GraphBackingStoreBase {
                 uuidToMatch(paramVarName, link.getOutgoingSet().get(i).getUuid(), outParams, outDependencies);
                 paramNames.add(paramVarName);
             }
-            return createHyperedgeVertex(parts, link.getType().getGraphLabel(),
+            return createHyperedgeVertex(link.getUuid(), parts, link.getType().getGraphLabel(),
                     stvStrength, stvConfidence, stvCount,
                     paramNames, outParams, outDependencies);
         } catch (Exception e) {
@@ -520,11 +522,9 @@ public class Neo4jBackingStore extends GraphBackingStoreBase {
         }
     }
 
-    @Override
-    public ListenableFuture<Integer> storeAtomsAsync(List<Handle> handles) {
+    public ListenableFuture<Integer> storeAtomsAsyncFromAtomList(List<Atom> atoms) {
         try (final Transaction tx = db.beginTx()) {
-            for (final Handle handle : handles) {
-                final Atom atom = handle.resolve().get();
+            for (final Atom atom : atoms) {
                 final CypherParts parts = new CypherParts();
                 if (atom instanceof org.opencog.atomspace.Node) {
                     log.info("Storing node {}", atom);
@@ -542,7 +542,7 @@ public class Neo4jBackingStore extends GraphBackingStoreBase {
                         outDependencies.add(matchAB);
                         outParams.put("a_gid", link.getOutgoingSet().get(0).getUuid());
                         outParams.put("b_gid", link.getOutgoingSet().get(1).getUuid());
-                        createBinaryLinkVertex(link.getType().getGraphLabel(), parts,
+                        createBinaryLinkVertex(link.getUuid(), link.getType().getGraphLabel(), parts,
                                 link.getTruthValue().getFuzzyStrength(), link.getTruthValue().getConfidence(), link.getTruthValue().getCount(),
                                 "a", "b", outParams, outDependencies);
                     } else if (AtomType.EVALUATION_LINK == link.getType()) {
@@ -557,12 +557,20 @@ public class Neo4jBackingStore extends GraphBackingStoreBase {
                 } else {
                     throw new IllegalArgumentException("Cannot determine atom is Node or Link: " + atom);
                 }
+                log.info("Executing: {} using {}", parts.getAllCypher(), parts.getAllParams());
                 db.execute(parts.getAllCypher(), parts.getAllParams());
             }
-            return Futures.immediateFuture(handles.size());
+            tx.success();
+            return Futures.immediateFuture(atoms.size());
         } catch (Exception e) {
             return Futures.immediateFailedFuture(e);
         }
+    }
+
+    @Override
+    public ListenableFuture<Integer> storeAtomsAsync(List<Handle> handles) {
+        return storeAtomsAsyncFromAtomList(handles.stream().map(it -> it.resolve().get())
+                .collect(Collectors.toList()));
     }
 
     @Override

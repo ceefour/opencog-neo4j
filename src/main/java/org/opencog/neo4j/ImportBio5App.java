@@ -3,6 +3,7 @@ package org.opencog.neo4j;
 import clojure.lang.LineNumberingPushbackReader;
 import clojure.lang.LispReader;
 import clojure.lang.Symbol;
+import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -132,6 +133,11 @@ public class ImportBio5App implements CommandLineRunner {
         public String toString() {
             return create;
         }
+
+        public String toStringWithDependencies() {
+            return (Joiner.on('\n').join(matchDependencies) + '\n' + create).trim();
+        }
+
     }
 
     public static class CypherParts {
@@ -144,8 +150,8 @@ public class ImportBio5App implements CommandLineRunner {
         }
 
         public String getAllCypher() {
-            return nodes.values().stream().map(CypherPart::toString).collect(Collectors.joining("\n")) + "\n\n" +
-                    relationships.stream().map(CypherPart::toString).collect(Collectors.joining("\n"));
+            return nodes.values().stream().map(CypherPart::toStringWithDependencies).collect(Collectors.joining("\n")) + "\n\n" +
+                    relationships.stream().map(CypherPart::toStringWithDependencies).collect(Collectors.joining("\n"));
         }
 
         public ImmutableMap<String, Object> getAllParams() {

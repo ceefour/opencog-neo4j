@@ -20,9 +20,9 @@ import java.util.stream.Collectors;
  * Created by ceefour on 6/28/15.
  */
 @Usage("Link operations")
-public class node extends BaseCommand {
+public class link extends BaseCommand {
 
-    private static final Logger log = LoggerFactory.getLogger(node.class);
+    private static final Logger log = LoggerFactory.getLogger(link.class);
 
     @Usage("Store link")
     @Command
@@ -34,12 +34,12 @@ public class node extends BaseCommand {
 
         final AtomType atomType = AtomType.valueOf(CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, nodePaths.get(0)));
         final List<Handle> outgoingSet = nodePaths.stream().skip(1).map(nodePath -> new Handle(Long.valueOf(nodePath))).collect(Collectors.toList());
-        final Link link = new Link(atomType, outgoingSet);
+        final Link link = new Link(Atom.RANDOM.nextLong(), atomType, outgoingSet);
         final Handle linkHandle = atomTable.addAsync(link).get();
 
         final Integer storedCount = backingStore.storeAtomsAsync(ImmutableList.of(linkHandle)).get();
-        System.out.println(link);
-        System.out.println("Stored " + storedCount + " links");
+        out.println(link);
+        out.println("Stored " + storedCount + " links");
     }
 
 }
