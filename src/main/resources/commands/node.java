@@ -12,11 +12,9 @@ import org.opencog.atomspace.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.beans.factory.support.DefaultListableBeanFactory;
-import org.springframework.context.ApplicationContext;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 /**
@@ -32,7 +30,7 @@ public class node extends BaseCommand {
     public void get(@Usage("ATOM_TYPE/NODE_NAME. e.g. 'ConceptNode/GO:0000024'") @Required @Argument List<String> nodePaths,
                      InvocationContext context) throws Exception {
         final ConfigurableListableBeanFactory appCtx = (ConfigurableListableBeanFactory) context.getAttributes().get("spring.beanfactory");
-        final GraphBackingStore backingStore = appCtx.getBean("zmqGraphBackingStore", GraphBackingStore.class);
+        final GraphBackingStore backingStore = appCtx.getBean("zmqBackingStore", GraphBackingStore.class);
 
         final List<AtomRequest> atomReqs = nodePaths.stream().map(nodePath -> {
             final List<String> segments = Splitter.on('/').splitToList(nodePath);
@@ -49,4 +47,28 @@ public class node extends BaseCommand {
 //            node.ifPresent(it -> out.println(it));
 //        });
     }
+
+    @Usage("Store node(s) by type and name")
+    @Command
+    public void store(@Usage("ATOM_TYPE/NODE_NAME. e.g. 'ConceptNode/GO:0000024'") @Required @Argument List<String> nodePaths,
+                    InvocationContext context) throws Exception {
+        final ConfigurableListableBeanFactory appCtx = (ConfigurableListableBeanFactory) context.getAttributes().get("spring.beanfactory");
+        final GraphBackingStore backingStore = appCtx.getBean("zmqBackingStore", GraphBackingStore.class);
+        final AtomTable atomTable = appCtx.getBean(AtomTable.class);
+
+        final List<Handle> handles = nodePaths.stream().map(nodePath -> {
+            try {
+                final List<String> segments = Splitter.on('/').splitToList(nodePath);
+                final AtomType atomType = AtomType.valueOf(CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, segments.get(0)));
+                final Node node = new Node(Atom.RANDOM.nextLong(), atomType, segments.get(1));
+                return atomTable.addAsync(node).get();
+            } catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException(e);
+            }
+        }).collect(Collectors.toList());
+        final Integer storedCount = backingStore.storeAtomsAsync(handles).get();
+        handles.forEach(handle -> System.out.println(handle.resolve().get()));
+        System.out.println("Stored " + storedCount + " nodes");
+    }
+
 }

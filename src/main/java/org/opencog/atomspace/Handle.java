@@ -31,6 +31,13 @@ public class Handle implements Serializable {
         this.uuid = uuid;
     }
 
+    public Handle(long uuid, AtomTable resolver, Atom atom) {
+        this.uuid = uuid;
+        this.resolvers = new CopyOnWriteArrayList<>();
+        this.resolvers.add(resolver);
+        this.atom = atom;
+    }
+
     /**
      * 64-bit numeric value.
      * @return
@@ -44,11 +51,13 @@ public class Handle implements Serializable {
             return Optional.of(atom);
         }
 
-        for (AtomTable resolver : resolvers) {
-            final Optional<Atom> found = resolver.getAtom(this);
-            if (found.isPresent()) {
-                atom = found.get();
-                return found;
+        if (resolvers != null) {
+            for (AtomTable resolver : resolvers) {
+                final Optional<Atom> found = resolver.getAtom(this);
+                if (found.isPresent()) {
+                    atom = found.get();
+                    return found;
+                }
             }
         }
         return Optional.empty();
@@ -60,4 +69,10 @@ public class Handle implements Serializable {
         }
         resolvers.add(resolver);
     }
+
+    @Override
+    public String toString() {
+        return "(handle " + uuid + ")";
+    }
+
 }

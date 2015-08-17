@@ -8,13 +8,10 @@ import org.crsh.command.BaseCommand;
 import org.crsh.command.InvocationContext;
 import org.opencog.atomspace.Atom;
 import org.opencog.atomspace.AtomRequest;
-import org.opencog.atomspace.GenericHandle;
 import org.opencog.atomspace.GraphBackingStore;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.context.ApplicationContext;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -28,10 +25,11 @@ public class atom extends BaseCommand {
     public void get(@Usage("Atom handle UUID") @Required @Argument List<String> uuidStrs,
                      InvocationContext context) throws Exception {
         final ConfigurableListableBeanFactory appCtx = (ConfigurableListableBeanFactory) context.getAttributes().get("spring.beanfactory");
-        final GraphBackingStore backingStore = appCtx.getBean("zmqGraphBackingStore", GraphBackingStore.class);
+        final GraphBackingStore backingStore = appCtx.getBean("zmqBackingStore", GraphBackingStore.class);
 
         final List<Atom> atoms = backingStore.getAtomsAsync(uuidStrs.stream()
                 .map(it -> new AtomRequest(Long.valueOf(it))).collect(Collectors.toList())).get();
         atoms.forEach(it -> out.println(it));
     }
+
 }

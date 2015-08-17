@@ -138,8 +138,8 @@ public class ZmqBackingStore extends GraphBackingStoreBase {
                                     case ZMQAtomTypeNode:
                                         return new Node(res.getHandle(), AtomType.forId(res.getType()), res.getName());
                                     case ZMQAtomTypeLink:
-                                        final List<GenericHandle> outgoingSet = res.getOutgoingList().stream()
-                                                .map(it -> new GenericHandle(it))
+                                        final List<Handle> outgoingSet = res.getOutgoingList().stream()
+                                                .map(it -> new Handle(it))
                                                 .collect(Collectors.toList());
                                         final Link link = new Link(res.getHandle(), AtomType.forId(res.getType()), outgoingSet);
                                         return link;

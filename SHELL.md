@@ -34,3 +34,9 @@ Password is `opencog`
 ### atom get
 
     > atom get 3084893020920648735 -1824963123531192610 8076551278925386278 -1838318155284644836
+
+### node/link store
+
+    node store ConceptNode/hendy ConceptNode/human
+    # outputs UUIDs
+    link store InheritanceLink UUID1 UUID2 
