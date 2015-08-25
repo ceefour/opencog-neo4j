@@ -80,7 +80,7 @@ public class AtomSpaceRouteConfig {
                                                     .setAtomtype(AtomSpaceProtos.ZMQAtomType.ZMQAtomTypeNode)
                                                             //.setAtomTypeStr(atom.getType().toUpperCamel()) // no longer needed
                                                     .setType(atom.getType().getId())
-                                                    .setAttentionvalueholder(ATTENTIONVALUE_BLANK) // FIXME: get from atom
+                                                    //.setAttentionvalueholder(ATTENTIONVALUE_BLANK) // FIXME: get from atom
                                                     .setName(((Node) atom).getName())
                                                     .build());
                                         } else if (atom instanceof Link) {
@@ -91,15 +91,15 @@ public class AtomSpaceRouteConfig {
                                                     .setAtomtype(AtomSpaceProtos.ZMQAtomType.ZMQAtomTypeLink)
                                                             //.setAtomTypeStr(atom.getType().toUpperCamel()) // no longer needed
                                                     .setType(atom.getType().getId())
-                                                    .setAttentionvalueholder(ATTENTIONVALUE_BLANK) // FIXME: get from atom
+                                                    //.setAttentionvalueholder(ATTENTIONVALUE_BLANK) // FIXME: get from atom
                                                     .addAllOutgoing(((Link) atom).getOutgoingSet().stream().map(Handle::getUuid).collect(Collectors.toList()))
                                                     .build());
                                         } else {
                                             atomsResultb.addAtom(AtomSpaceProtos.ZMQAtomMessage.newBuilder()
                                                     .setAtomtype(AtomSpaceProtos.ZMQAtomType.ZMQAtomTypeNotFound)
-                                                    .setHandle(Handle.UNDEFINED)
-                                                    .setType(0)
-                                                    .setAttentionvalueholder(ATTENTIONVALUE_BLANK) // unfortunately we have to fill this :(
+                                                    //.setHandle(Handle.UNDEFINED)
+                                                    //.setType(0)
+                                                    //.setAttentionvalueholder(ATTENTIONVALUE_BLANK) // unfortunately we have to fill this :(
                                                     .build());
                                         }
                                     });

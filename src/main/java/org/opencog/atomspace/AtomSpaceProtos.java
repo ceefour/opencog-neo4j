@@ -4735,27 +4735,27 @@ public final class AtomSpaceProtos {
      */
     org.opencog.atomspace.AtomSpaceProtos.ZMQAtomType getAtomtype();
 
-    // required .ZMQAttentionValueHolderMessage attentionvalueholder = 2;
+    // optional .ZMQAttentionValueHolderMessage attentionvalueholder = 2;
     /**
-     * <code>required .ZMQAttentionValueHolderMessage attentionvalueholder = 2;</code>
+     * <code>optional .ZMQAttentionValueHolderMessage attentionvalueholder = 2;</code>
      */
     boolean hasAttentionvalueholder();
     /**
-     * <code>required .ZMQAttentionValueHolderMessage attentionvalueholder = 2;</code>
+     * <code>optional .ZMQAttentionValueHolderMessage attentionvalueholder = 2;</code>
      */
     org.opencog.atomspace.AtomSpaceProtos.ZMQAttentionValueHolderMessage getAttentionvalueholder();
     /**
-     * <code>required .ZMQAttentionValueHolderMessage attentionvalueholder = 2;</code>
+     * <code>optional .ZMQAttentionValueHolderMessage attentionvalueholder = 2;</code>
      */
     org.opencog.atomspace.AtomSpaceProtos.ZMQAttentionValueHolderMessageOrBuilder getAttentionvalueholderOrBuilder();
 
-    // required uint64 handle = 3;
+    // optional uint64 handle = 3;
     /**
-     * <code>required uint64 handle = 3;</code>
+     * <code>optional uint64 handle = 3;</code>
      */
     boolean hasHandle();
     /**
-     * <code>required uint64 handle = 3;</code>
+     * <code>optional uint64 handle = 3;</code>
      */
     long getHandle();
 
@@ -4773,13 +4773,13 @@ public final class AtomSpaceProtos {
      */
     long getIncoming(int index);
 
-    // required int32 type = 5;
+    // optional int32 type = 5;
     /**
-     * <code>required int32 type = 5;</code>
+     * <code>optional int32 type = 5;</code>
      */
     boolean hasType();
     /**
-     * <code>required int32 type = 5;</code>
+     * <code>optional int32 type = 5;</code>
      */
     int getType();
 
@@ -5111,39 +5111,39 @@ public final class AtomSpaceProtos {
       return atomtype_;
     }
 
-    // required .ZMQAttentionValueHolderMessage attentionvalueholder = 2;
+    // optional .ZMQAttentionValueHolderMessage attentionvalueholder = 2;
     public static final int ATTENTIONVALUEHOLDER_FIELD_NUMBER = 2;
     private org.opencog.atomspace.AtomSpaceProtos.ZMQAttentionValueHolderMessage attentionvalueholder_;
     /**
-     * <code>required .ZMQAttentionValueHolderMessage attentionvalueholder = 2;</code>
+     * <code>optional .ZMQAttentionValueHolderMessage attentionvalueholder = 2;</code>
      */
     public boolean hasAttentionvalueholder() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>required .ZMQAttentionValueHolderMessage attentionvalueholder = 2;</code>
+     * <code>optional .ZMQAttentionValueHolderMessage attentionvalueholder = 2;</code>
      */
     public org.opencog.atomspace.AtomSpaceProtos.ZMQAttentionValueHolderMessage getAttentionvalueholder() {
       return attentionvalueholder_;
     }
     /**
-     * <code>required .ZMQAttentionValueHolderMessage attentionvalueholder = 2;</code>
+     * <code>optional .ZMQAttentionValueHolderMessage attentionvalueholder = 2;</code>
      */
     public org.opencog.atomspace.AtomSpaceProtos.ZMQAttentionValueHolderMessageOrBuilder getAttentionvalueholderOrBuilder() {
       return attentionvalueholder_;
     }
 
-    // required uint64 handle = 3;
+    // optional uint64 handle = 3;
     public static final int HANDLE_FIELD_NUMBER = 3;
     private long handle_;
     /**
-     * <code>required uint64 handle = 3;</code>
+     * <code>optional uint64 handle = 3;</code>
      */
     public boolean hasHandle() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
-     * <code>required uint64 handle = 3;</code>
+     * <code>optional uint64 handle = 3;</code>
      */
     public long getHandle() {
       return handle_;
@@ -5172,17 +5172,17 @@ public final class AtomSpaceProtos {
       return incoming_.get(index);
     }
 
-    // required int32 type = 5;
+    // optional int32 type = 5;
     public static final int TYPE_FIELD_NUMBER = 5;
     private int type_;
     /**
-     * <code>required int32 type = 5;</code>
+     * <code>optional int32 type = 5;</code>
      */
     public boolean hasType() {
       return ((bitField0_ & 0x00000008) == 0x00000008);
     }
     /**
-     * <code>required int32 type = 5;</code>
+     * <code>optional int32 type = 5;</code>
      */
     public int getType() {
       return type_;
@@ -5371,21 +5371,11 @@ public final class AtomSpaceProtos {
         memoizedIsInitialized = 0;
         return false;
       }
-      if (!hasAttentionvalueholder()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasHandle()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasType()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!getAttentionvalueholder().isInitialized()) {
-        memoizedIsInitialized = 0;
-        return false;
+      if (hasAttentionvalueholder()) {
+        if (!getAttentionvalueholder().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
       }
       if (hasTruthValue()) {
         if (!getTruthValue().isInitialized()) {
@@ -5799,21 +5789,11 @@ public final class AtomSpaceProtos {
           
           return false;
         }
-        if (!hasAttentionvalueholder()) {
-          
-          return false;
-        }
-        if (!hasHandle()) {
-          
-          return false;
-        }
-        if (!hasType()) {
-          
-          return false;
-        }
-        if (!getAttentionvalueholder().isInitialized()) {
-          
-          return false;
+        if (hasAttentionvalueholder()) {
+          if (!getAttentionvalueholder().isInitialized()) {
+            
+            return false;
+          }
         }
         if (hasTruthValue()) {
           if (!getTruthValue().isInitialized()) {
@@ -5885,18 +5865,18 @@ public final class AtomSpaceProtos {
         return this;
       }
 
-      // required .ZMQAttentionValueHolderMessage attentionvalueholder = 2;
+      // optional .ZMQAttentionValueHolderMessage attentionvalueholder = 2;
       private org.opencog.atomspace.AtomSpaceProtos.ZMQAttentionValueHolderMessage attentionvalueholder_ = org.opencog.atomspace.AtomSpaceProtos.ZMQAttentionValueHolderMessage.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
           org.opencog.atomspace.AtomSpaceProtos.ZMQAttentionValueHolderMessage, org.opencog.atomspace.AtomSpaceProtos.ZMQAttentionValueHolderMessage.Builder, org.opencog.atomspace.AtomSpaceProtos.ZMQAttentionValueHolderMessageOrBuilder> attentionvalueholderBuilder_;
       /**
-       * <code>required .ZMQAttentionValueHolderMessage attentionvalueholder = 2;</code>
+       * <code>optional .ZMQAttentionValueHolderMessage attentionvalueholder = 2;</code>
        */
       public boolean hasAttentionvalueholder() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>required .ZMQAttentionValueHolderMessage attentionvalueholder = 2;</code>
+       * <code>optional .ZMQAttentionValueHolderMessage attentionvalueholder = 2;</code>
        */
       public org.opencog.atomspace.AtomSpaceProtos.ZMQAttentionValueHolderMessage getAttentionvalueholder() {
         if (attentionvalueholderBuilder_ == null) {
@@ -5906,7 +5886,7 @@ public final class AtomSpaceProtos {
         }
       }
       /**
-       * <code>required .ZMQAttentionValueHolderMessage attentionvalueholder = 2;</code>
+       * <code>optional .ZMQAttentionValueHolderMessage attentionvalueholder = 2;</code>
        */
       public Builder setAttentionvalueholder(org.opencog.atomspace.AtomSpaceProtos.ZMQAttentionValueHolderMessage value) {
         if (attentionvalueholderBuilder_ == null) {
@@ -5922,7 +5902,7 @@ public final class AtomSpaceProtos {
         return this;
       }
       /**
-       * <code>required .ZMQAttentionValueHolderMessage attentionvalueholder = 2;</code>
+       * <code>optional .ZMQAttentionValueHolderMessage attentionvalueholder = 2;</code>
        */
       public Builder setAttentionvalueholder(
           org.opencog.atomspace.AtomSpaceProtos.ZMQAttentionValueHolderMessage.Builder builderForValue) {
@@ -5936,7 +5916,7 @@ public final class AtomSpaceProtos {
         return this;
       }
       /**
-       * <code>required .ZMQAttentionValueHolderMessage attentionvalueholder = 2;</code>
+       * <code>optional .ZMQAttentionValueHolderMessage attentionvalueholder = 2;</code>
        */
       public Builder mergeAttentionvalueholder(org.opencog.atomspace.AtomSpaceProtos.ZMQAttentionValueHolderMessage value) {
         if (attentionvalueholderBuilder_ == null) {
@@ -5955,7 +5935,7 @@ public final class AtomSpaceProtos {
         return this;
       }
       /**
-       * <code>required .ZMQAttentionValueHolderMessage attentionvalueholder = 2;</code>
+       * <code>optional .ZMQAttentionValueHolderMessage attentionvalueholder = 2;</code>
        */
       public Builder clearAttentionvalueholder() {
         if (attentionvalueholderBuilder_ == null) {
@@ -5968,7 +5948,7 @@ public final class AtomSpaceProtos {
         return this;
       }
       /**
-       * <code>required .ZMQAttentionValueHolderMessage attentionvalueholder = 2;</code>
+       * <code>optional .ZMQAttentionValueHolderMessage attentionvalueholder = 2;</code>
        */
       public org.opencog.atomspace.AtomSpaceProtos.ZMQAttentionValueHolderMessage.Builder getAttentionvalueholderBuilder() {
         bitField0_ |= 0x00000002;
@@ -5976,7 +5956,7 @@ public final class AtomSpaceProtos {
         return getAttentionvalueholderFieldBuilder().getBuilder();
       }
       /**
-       * <code>required .ZMQAttentionValueHolderMessage attentionvalueholder = 2;</code>
+       * <code>optional .ZMQAttentionValueHolderMessage attentionvalueholder = 2;</code>
        */
       public org.opencog.atomspace.AtomSpaceProtos.ZMQAttentionValueHolderMessageOrBuilder getAttentionvalueholderOrBuilder() {
         if (attentionvalueholderBuilder_ != null) {
@@ -5986,7 +5966,7 @@ public final class AtomSpaceProtos {
         }
       }
       /**
-       * <code>required .ZMQAttentionValueHolderMessage attentionvalueholder = 2;</code>
+       * <code>optional .ZMQAttentionValueHolderMessage attentionvalueholder = 2;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
           org.opencog.atomspace.AtomSpaceProtos.ZMQAttentionValueHolderMessage, org.opencog.atomspace.AtomSpaceProtos.ZMQAttentionValueHolderMessage.Builder, org.opencog.atomspace.AtomSpaceProtos.ZMQAttentionValueHolderMessageOrBuilder> 
@@ -6002,22 +5982,22 @@ public final class AtomSpaceProtos {
         return attentionvalueholderBuilder_;
       }
 
-      // required uint64 handle = 3;
+      // optional uint64 handle = 3;
       private long handle_ ;
       /**
-       * <code>required uint64 handle = 3;</code>
+       * <code>optional uint64 handle = 3;</code>
        */
       public boolean hasHandle() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>required uint64 handle = 3;</code>
+       * <code>optional uint64 handle = 3;</code>
        */
       public long getHandle() {
         return handle_;
       }
       /**
-       * <code>required uint64 handle = 3;</code>
+       * <code>optional uint64 handle = 3;</code>
        */
       public Builder setHandle(long value) {
         bitField0_ |= 0x00000004;
@@ -6026,7 +6006,7 @@ public final class AtomSpaceProtos {
         return this;
       }
       /**
-       * <code>required uint64 handle = 3;</code>
+       * <code>optional uint64 handle = 3;</code>
        */
       public Builder clearHandle() {
         bitField0_ = (bitField0_ & ~0x00000004);
@@ -6101,22 +6081,22 @@ public final class AtomSpaceProtos {
         return this;
       }
 
-      // required int32 type = 5;
+      // optional int32 type = 5;
       private int type_ ;
       /**
-       * <code>required int32 type = 5;</code>
+       * <code>optional int32 type = 5;</code>
        */
       public boolean hasType() {
         return ((bitField0_ & 0x00000010) == 0x00000010);
       }
       /**
-       * <code>required int32 type = 5;</code>
+       * <code>optional int32 type = 5;</code>
        */
       public int getType() {
         return type_;
       }
       /**
-       * <code>required int32 type = 5;</code>
+       * <code>optional int32 type = 5;</code>
        */
       public Builder setType(int value) {
         bitField0_ |= 0x00000010;
@@ -6125,7 +6105,7 @@ public final class AtomSpaceProtos {
         return this;
       }
       /**
-       * <code>required int32 type = 5;</code>
+       * <code>optional int32 type = 5;</code>
        */
       public Builder clearType() {
         bitField0_ = (bitField0_ & ~0x00000010);
@@ -11680,9 +11660,9 @@ public final class AtomSpaceProtos {
       "sage\"1\n\017ZMQTrailMessage\022\017\n\007maxSize\030\001 \002(\005" +
       "\022\r\n\005trail\030\002 \003(\004\"\232\002\n\016ZMQAtomMessage\022\036\n\010at" +
       "omtype\030\001 \002(\0162\014.ZMQAtomType\022=\n\024attentionv" +
-      "alueholder\030\002 \002(\0132\037.ZMQAttentionValueHold" +
-      "erMessage\022\016\n\006handle\030\003 \002(\004\022\020\n\010incoming\030\004 " +
-      "\003(\004\022\014\n\004type\030\005 \002(\005\022\r\n\005flags\030\006 \001(\005\022)\n\ntrut" +
+      "alueholder\030\002 \001(\0132\037.ZMQAttentionValueHold" +
+      "erMessage\022\016\n\006handle\030\003 \001(\004\022\020\n\010incoming\030\004 " +
+      "\003(\004\022\014\n\004type\030\005 \001(\005\022\r\n\005flags\030\006 \001(\005\022)\n\ntrut" +
       "hValue\030\007 \001(\0132\025.ZMQTruthValueMessage\022\014\n\004n",
       "ame\030\010 \001(\t\022\020\n\010outgoing\030\t \003(\004\022\037\n\005trail\030\n \001" +
       "(\0132\020.ZMQTrailMessage\"m\n\014ZMQAtomFetch\022\037\n\004" +
