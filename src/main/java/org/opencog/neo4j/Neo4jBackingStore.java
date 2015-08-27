@@ -227,6 +227,11 @@ public class Neo4jBackingStore extends GraphBackingStoreBase {
             this.matchDependencies = ImmutableList.of();
         }
 
+        @Override
+        public String toString() {
+            return create;
+        }
+
         public String getMatchDependenciesAsCypher() {
             return Joiner.on('\n').join(matchDependencies);
         }
