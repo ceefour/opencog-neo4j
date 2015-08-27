@@ -40,6 +40,7 @@ public enum AtomType {
     SUBSET_LINK(GraphMapping.HYPEREDGE, "opencog_SubsetLink"),
     INTENSIONAL_INHERITANCE_LINK(GraphMapping.BINARY_HYPEREDGE, "opencog_IntensionalInheritanceLink"),
     EXTENSIONAL_SIMILARITY_LINK(GraphMapping.HYPEREDGE, "opencog_ExtensionalSimilarityLink"),
+    INTENSIONAL_SIMILARITY_LINK(GraphMapping.HYPEREDGE, "opencog_IntensionalSimilarityLink"),
     AND_LINK(GraphMapping.HYPEREDGE, "opencog_AndLink"),
     OR_LINK(GraphMapping.HYPEREDGE, "opencog_OrLink"),
     NOT_LINK(GraphMapping.HYPEREDGE, "opencog_NotLink"),
