@@ -1,0 +1,73 @@
+---
+title: "Implementation of Graph Database for OpenCog Artificial General Intelligence Framework using Neo4j"
+author: "[Hendy Irawan](http://www.hendyirawan.com/), [Ary Setijadi Prihatmanto](mailto:asetijadi@lskk.ee.itb.ac.id)"
+date: "September 3, 2015"
+output:
+  html_document:
+    self_contained: no
+---
+
+## Abstract
+
+We create [a graph backing store](http://wiki.opencog.org/w/Neo4j_Backing_Store)[1] for [OpenCog](http://www.opencog.org/)[2, 3] using [Neo4j graph database](http://neo4.org/)[4]. The GraphBackingStore API will extend the current BackingStore C++ API. It can take special queries that map naturally into Cypher queries and simple manipulations of Neo4j graph traversals.
+
+The Neo4j node-relationship structures and custom indices are optimized for [AtomSpace](http://wiki.opencog.org/w/AtomSpace)[5] usage and performance. Data access is using [Protocol Buffers](https://developers.google.com/protocol-buffers/)-based[6] protocol over [ZeroMQ](http://www.zeromq.org/)[7] messaging transport.
+
+The initial work for Neo4j Graph Backing Store for OpenCog was implemented during [Google Summer of Code 2015](https://www.google-melange.com/gsoc/proposal/review/student/google/gsoc2015/hendy/5629499534213120). All source code is open source and available at https://github.com/ceefour/opencog-neo4j, https://github.com/opencog/atomspace, and https://github.com/opencog/opencog.
+
+## Introduction
+
+## Basic Architecture
+
+## Data Model
+
+### Atoms, Nodes, and Links
+
+### AtomSpace
+
+### Scheme Representation
+
+### Backing Store
+
+### Vertex Labels
+
+### Edge Types
+
+### Graph Schema
+
+### Indexing
+
+## Data Access Protocol
+
+### ZeroMQ
+
+### Protocol Buffers (Protobuf)
+
+### Functions
+
+## Clients
+
+### OpenCog Server
+
+### Java Command Line Interface (CLI) Client
+
+## Deployment
+
+## Related Work
+
+## Conclusion
+
+## Acknowledgements
+
+We would like to thank OpenCog Foundation mentors especially [Linas Vepstas](http://linas.org/), [Amen Belayneh](https://www.linkedin.com/in/amenbelayneh), and [Ben Goertzel](http://goertzel.org/), without whose great efforts we could not have built Neo4j Graph Backing Store for OpenCog. We also thank all former, current, and newer [Lumen Robot Friend](http://lumen.lskk.ee.itb.ac.id/) team members, including [Budhi Yulianto](https://www.linkedin.com/pub/budhi-yulianto/26/885/256) who researched Graph Database for Lumen Robot Friend, [Marzuki Syahfirin](https://onemarzuki.wordpress.com/) as coordinator of Lumen Robot Friend, [Maria Shusanti](https://www.facebook.com/maria.shusanti) for Lumen Robot Friend gesture research, [Wahyudi](https://www.facebook.com/wahyudi.si) for natural language understanding research, [Sigit Ari Wijanarko](https://www.facebook.com/sigit.ariw) for researching Lumen Robot Friend augmented reality visualization.
+
+## References
+
+1. OpenCog Foundation. Neo4j Graph Backing Store. http://wiki.opencog.org/w/Neo4j_Backing_Store.
+2. OpenCog Foundation. OpenCog website. http://www.opencog.org/.
+3. [Hart, David, and Ben Goertzel. "Opencog: A software framework for integrative artificial general intelligence." _Frontiers in Artificial Intelligence and Applications_ 171 (2008): 468.](https://books.google.co.id/books?id=atjvAgAAQBAJ&lpg=PA468&ots=9GT02Qu2jO&dq=opencog&lr&pg=PA468#v=onepage&q=opencog&f=false)
+4. Neo4j. Neo4j Graph Database. http://neo4.org/.
+5. OpenCog Foundation. AtomSpace. http://wiki.opencog.org/w/AtomSpace.
+6. Google, Inc. Protocol Buffers. https://developers.google.com/protocol-buffers/.
+7. ZeroMQ. ZeroMQ. http://www.zeromq.org/
+8. Irawan, Hendy. Proposal for Google Summer of Code 2015. https://www.google-melange.com/gsoc/proposal/review/student/google/gsoc2015/hendy/5629499534213120

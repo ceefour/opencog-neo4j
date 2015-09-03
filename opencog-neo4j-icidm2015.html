@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="author" content="Hendy Irawan, Ary Setijadi Prihatmanto" />
+
+
+<title>Implementation of Graph Database for OpenCog Artificial General Intelligence Framework using Neo4j</title>
+
+<script src="opencog-neo4j-icidm2015_files/jquery-1.11.0/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="opencog-neo4j-icidm2015_files/bootstrap-3.3.1/css/bootstrap.min.css" rel="stylesheet" />
+<script src="opencog-neo4j-icidm2015_files/bootstrap-3.3.1/js/bootstrap.min.js"></script>
+<script src="opencog-neo4j-icidm2015_files/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
+<script src="opencog-neo4j-icidm2015_files/bootstrap-3.3.1/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="opencog-neo4j-icidm2015_files/highlight/default.css"
+      type="text/css" />
+<script src="opencog-neo4j-icidm2015_files/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img { 
+  max-width:100%; 
+  height: auto; 
+}
+</style>
+<div class="container-fluid main-container">
+
+
+<div id="header">
+<h1 class="title">Implementation of Graph Database for OpenCog Artificial General Intelligence Framework using Neo4j</h1>
+<h4 class="author"><em><a href="http://www.hendyirawan.com/">Hendy Irawan</a>, <a href="mailto:asetijadi@lskk.ee.itb.ac.id">Ary Setijadi Prihatmanto</a></em></h4>
+<h4 class="date"><em>September 3, 2015</em></h4>
+</div>
+
+
+<div id="abstract" class="section level2">
+<h2>Abstract</h2>
+<p>We create <a href="http://wiki.opencog.org/w/Neo4j_Backing_Store">a graph backing store</a>[1] for <a href="http://www.opencog.org/">OpenCog</a>[2, 3] using <a href="http://neo4.org/">Neo4j graph database</a>[4]. The GraphBackingStore API will extend the current BackingStore C++ API. It can take special queries that map naturally into Cypher queries and simple manipulations of Neo4j graph traversals.</p>
+<p>The Neo4j node-relationship structures and custom indices are optimized for <a href="http://wiki.opencog.org/w/AtomSpace">AtomSpace</a> usage and performance. Data access is using <a href="https://developers.google.com/protocol-buffers/">Protocol Buffers</a>-based protocol over <a href="http://www.zeromq.org/">ZeroMQ</a> messaging transport.</p>
+<p>The initial work for Neo4j Graph Backing Store for OpenCog was implemented during <a href="https://www.google-melange.com/gsoc/proposal/review/student/google/gsoc2015/hendy/5629499534213120">Google Summer of Code 2015</a>. All source code is open source and available at <a href="https://github.com/ceefour/opencog-neo4j" class="uri">https://github.com/ceefour/opencog-neo4j</a>, <a href="https://github.com/opencog/atomspace" class="uri">https://github.com/opencog/atomspace</a>, and <a href="https://github.com/opencog/opencog" class="uri">https://github.com/opencog/opencog</a>.</p>
+</div>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+</div>
+<div id="basic-architecture" class="section level2">
+<h2>Basic Architecture</h2>
+</div>
+<div id="data-model" class="section level2">
+<h2>Data Model</h2>
+<div id="atoms-nodes-and-links" class="section level3">
+<h3>Atoms, Nodes, and Links</h3>
+</div>
+<div id="scheme-representation" class="section level3">
+<h3>Scheme Representation</h3>
+</div>
+<div id="vertex-labels" class="section level3">
+<h3>Vertex Labels</h3>
+</div>
+<div id="edge-types" class="section level3">
+<h3>Edge Types</h3>
+</div>
+<div id="graph-schema" class="section level3">
+<h3>Graph Schema</h3>
+</div>
+<div id="indexing" class="section level3">
+<h3>Indexing</h3>
+</div>
+</div>
+<div id="data-access-protocol" class="section level2">
+<h2>Data Access Protocol</h2>
+<div id="zeromq" class="section level3">
+<h3>ZeroMQ</h3>
+</div>
+<div id="protocol-buffers-protobuf" class="section level3">
+<h3>Protocol Buffers (Protobuf)</h3>
+</div>
+<div id="functions" class="section level3">
+<h3>Functions</h3>
+</div>
+</div>
+<div id="clients" class="section level2">
+<h2>Clients</h2>
+<div id="opencog-server" class="section level3">
+<h3>OpenCog Server</h3>
+</div>
+<div id="java-command-line-interface-cli-client" class="section level3">
+<h3>Java Command Line Interface (CLI) Client</h3>
+</div>
+</div>
+<div id="deployment" class="section level2">
+<h2>Deployment</h2>
+</div>
+<div id="related-work" class="section level2">
+<h2>Related Work</h2>
+</div>
+<div id="conclusion" class="section level2">
+<h2>Conclusion</h2>
+</div>
+<div id="acknowledgements" class="section level2">
+<h2>Acknowledgements</h2>
+<p>We would like to thank OpenCog Foundation mentors especially <a href="http://linas.org/">Linas Vepstas</a>, <a href="https://www.linkedin.com/in/amenbelayneh">Amen Belayneh</a>, and <a href="http://goertzel.org/">Ben Goertzel</a>, without whose great efforts we could not have built Neo4j Graph Backing Store for OpenCog. We also thank all former, current, and newer <a href="http://lumen.lskk.ee.itb.ac.id/">Lumen Robot Friend</a> team members, including <a href="https://www.linkedin.com/pub/budhi-yulianto/26/885/256">Budhi Yulianto</a> who researched Graph Database for Lumen Robot Friend, <a href="https://onemarzuki.wordpress.com/">Marzuki Syahfirin</a> as coordinator of Lumen Robot Friend, <a href="https://www.facebook.com/maria.shusanti">Maria Shusanti</a> for Lumen Robot Friend gesture research, <a href="https://www.facebook.com/wahyudi.si">Wahyudi</a> for natural language understanding research, <a href="https://www.facebook.com/sigit.ariw">Sigit Ari Wijanarko</a> for researching Lumen Robot Friend augmented reality visualization.</p>
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
+<ol style="list-style-type: decimal">
+<li>OpenCog Foundation. Neo4j Graph Backing Store. <a href="http://wiki.opencog.org/w/Neo4j_Backing_Store" class="uri">http://wiki.opencog.org/w/Neo4j_Backing_Store</a>.</li>
+<li>OpenCog Foundation. OpenCog website. <a href="http://www.opencog.org/" class="uri">http://www.opencog.org/</a>.</li>
+<li><a href="https://books.google.co.id/books?id=atjvAgAAQBAJ&amp;lpg=PA468&amp;ots=9GT02Qu2jO&amp;dq=opencog&amp;lr&amp;pg=PA468#v=onepage&amp;q=opencog&amp;f=false">Hart, David, and Ben Goertzel. “Opencog: A software framework for integrative artificial general intelligence.” <em>Frontiers in Artificial Intelligence and Applications</em> 171 (2008): 468.</a></li>
+<li>Neo4j. Neo4j Graph Database. <a href="http://neo4.org/" class="uri">http://neo4.org/</a>.</li>
+</ol>
+</div>
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

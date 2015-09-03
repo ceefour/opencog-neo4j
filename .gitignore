@@ -20,3 +20,4 @@ package.json
 out/
 .idea_modules/
 atlassian-ide-plugin.xml
+.Rproj.user
