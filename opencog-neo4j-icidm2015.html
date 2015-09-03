@@ -72,7 +72,7 @@ img {
 <div id="abstract" class="section level2">
 <h2>Abstract</h2>
 <p>We create <a href="http://wiki.opencog.org/w/Neo4j_Backing_Store">a graph backing store</a>[1] for <a href="http://www.opencog.org/">OpenCog</a>[2, 3] using <a href="http://neo4.org/">Neo4j graph database</a>[4]. The GraphBackingStore API will extend the current BackingStore C++ API. It can take special queries that map naturally into Cypher queries and simple manipulations of Neo4j graph traversals.</p>
-<p>The Neo4j node-relationship structures and custom indices are optimized for <a href="http://wiki.opencog.org/w/AtomSpace">AtomSpace</a> usage and performance. Data access is using <a href="https://developers.google.com/protocol-buffers/">Protocol Buffers</a>-based protocol over <a href="http://www.zeromq.org/">ZeroMQ</a> messaging transport.</p>
+<p>The Neo4j node-relationship structures and custom indices are optimized for <a href="http://wiki.opencog.org/w/AtomSpace">AtomSpace</a>[5] usage and performance. Data access is using <a href="https://developers.google.com/protocol-buffers/">Protocol Buffers</a>-based[6] protocol over <a href="http://www.zeromq.org/">ZeroMQ</a>[7] messaging transport.</p>
 <p>The initial work for Neo4j Graph Backing Store for OpenCog was implemented during <a href="https://www.google-melange.com/gsoc/proposal/review/student/google/gsoc2015/hendy/5629499534213120">Google Summer of Code 2015</a>. All source code is open source and available at <a href="https://github.com/ceefour/opencog-neo4j" class="uri">https://github.com/ceefour/opencog-neo4j</a>, <a href="https://github.com/opencog/atomspace" class="uri">https://github.com/opencog/atomspace</a>, and <a href="https://github.com/opencog/opencog" class="uri">https://github.com/opencog/opencog</a>.</p>
 </div>
 <div id="introduction" class="section level2">
@@ -86,8 +86,14 @@ img {
 <div id="atoms-nodes-and-links" class="section level3">
 <h3>Atoms, Nodes, and Links</h3>
 </div>
+<div id="atomspace" class="section level3">
+<h3>AtomSpace</h3>
+</div>
 <div id="scheme-representation" class="section level3">
 <h3>Scheme Representation</h3>
+</div>
+<div id="backing-store" class="section level3">
+<h3>Backing Store</h3>
 </div>
 <div id="vertex-labels" class="section level3">
 <h3>Vertex Labels</h3>
@@ -143,6 +149,10 @@ img {
 <li>OpenCog Foundation. OpenCog website. <a href="http://www.opencog.org/" class="uri">http://www.opencog.org/</a>.</li>
 <li><a href="https://books.google.co.id/books?id=atjvAgAAQBAJ&amp;lpg=PA468&amp;ots=9GT02Qu2jO&amp;dq=opencog&amp;lr&amp;pg=PA468#v=onepage&amp;q=opencog&amp;f=false">Hart, David, and Ben Goertzel. “Opencog: A software framework for integrative artificial general intelligence.” <em>Frontiers in Artificial Intelligence and Applications</em> 171 (2008): 468.</a></li>
 <li>Neo4j. Neo4j Graph Database. <a href="http://neo4.org/" class="uri">http://neo4.org/</a>.</li>
+<li>OpenCog Foundation. AtomSpace. <a href="http://wiki.opencog.org/w/AtomSpace" class="uri">http://wiki.opencog.org/w/AtomSpace</a>.</li>
+<li>Google, Inc. Protocol Buffers. <a href="https://developers.google.com/protocol-buffers/" class="uri">https://developers.google.com/protocol-buffers/</a>.</li>
+<li>ZeroMQ. ZeroMQ. <a href="http://www.zeromq.org/" class="uri">http://www.zeromq.org/</a></li>
+<li>Irawan, Hendy. Proposal for Google Summer of Code 2015. <a href="https://www.google-melange.com/gsoc/proposal/review/student/google/gsoc2015/hendy/5629499534213120" class="uri">https://www.google-melange.com/gsoc/proposal/review/student/google/gsoc2015/hendy/5629499534213120</a></li>
 </ol>
 </div>
 
