@@ -9,25 +9,133 @@ output:
 
 ## Abstract
 
-We create [a graph backing store](http://wiki.opencog.org/w/Neo4j_Backing_Store)[1] for [OpenCog](http://www.opencog.org/)[2, 3] using [Neo4j graph database](http://neo4.org/)[4]. The GraphBackingStore API will extend the current BackingStore C++ API. It can take special queries that map naturally into Cypher queries and simple manipulations of Neo4j graph traversals.
+We create [a graph backing store](http://wiki.opencog.org/w/Neo4j_Backing_Store)[1] for [OpenCog](http://www.opencog.org/)[2, 3] using [Neo4j graph database](http://neo4.org/)[4]. The GraphBackingStore API extends the current BackingStore C++ API. It can take special queries that map naturally into Cypher queries and simple manipulations of Neo4j graph traversals.
 
 The Neo4j node-relationship structures and custom indices are optimized for [AtomSpace](http://wiki.opencog.org/w/AtomSpace)[5] usage and performance. Data access is using [Protocol Buffers](https://developers.google.com/protocol-buffers/)-based[6] protocol over [ZeroMQ](http://www.zeromq.org/)[7] messaging transport.
 
-The initial work for Neo4j Graph Backing Store for OpenCog was implemented during [Google Summer of Code 2015](https://www.google-melange.com/gsoc/proposal/review/student/google/gsoc2015/hendy/5629499534213120). All source code is open source and available at https://github.com/ceefour/opencog-neo4j, https://github.com/opencog/atomspace, and https://github.com/opencog/opencog.
+The initial work for Neo4j Graph Backing Store for OpenCog was implemented during [Google Summer of Code 2015](https://www.google-melange.com/gsoc/proposal/review/student/google/gsoc2015/hendy/5629499534213120)[8]. All source code is open source and available at https://github.com/ceefour/opencog-neo4j, https://github.com/opencog/atomspace, and https://github.com/opencog/opencog.
 
-## Introduction
 
-## Basic Architecture
+## I. Introduction
 
-## Data Model
+OpenCog "[aims] to create an open source framework for Artificial General Intelligence, intended to one day express general intelligence at the human level and beyond."[9] OpenCog comprises of several integrated open source projects, with AtomSpace hypergraph knowledge representation system[5] and Cog Server as the most essential components. 
+
+For persisting knowledge, AtomSpace uses a Backing Store implementation. The most mature Backing Store implementation for OpenCog is SQL Backing Store written by Linas Vepstas. As AtomSpace represents knowledge in a hypergraph structure, persisting AtomSpace knowledge in a graph database is expected to be more intuitive and more portable. The Google Summer of Code 2015 work[8] implemented initial work on the Neo4j Graph Backing Store for OpenCog. Neo4j was chosen due to its popularity, flexible structure, good performance, portability, open source license, and availability of commercial support if required.
+
+
+## II. Basic Architecture
+
+![Figure 1. Architecture of Neo4j Backing Store for OpenCog](opencog-neo4j-architecture.png)
+
+AtomSpace[5] is embedded within Cog Server, written in combination of C++, Python, and Scheme programming languages.
+The AtomSpace accesses the Neo4j Backing Store via a ZeroMQ Backing Store implementation, which implements the AtomSpace C++ BackingStore API
+using message patterns with Protocol Buffers serialization and transported via ZeroMQ.
+
+The Neo4j Backing Store Server itself is implemented in Java and contains the Neo4j graph database service.
+The Neo4j Backing Store Server listens and communicates with client(s) using the OpenCog ZeroMQ protocol,
+which uses Protocol Buffers serialization and ZeroMQ message transport.
+The primary client of Neo4j Backing Store Server is the ZeroMQ Backing Store implementation in AtomSpace.
+
+
+## III. Data Model
 
 ### Atoms, Nodes, and Links
 
+[Atoms](http://wiki.opencog.org/w/Atom) are the basic elements of knowledge in AtomSpace, an Atom "captures the notion of an atomic formula (or atom) in mathematical logic."[10]
+All Atoms have a type, which inherit from either [Node](http://wiki.opencog.org/w/Node) or [Link](http://wiki.opencog.org/w/Link). The type of an Atom is immutable.
+
+* Nodes are Atoms with names. The name and the type of a Node together determine a unique key.[11] The name of a Node is also immutable.
+* Links are Atom types that connect other Atoms. A Link is uniquely defined by its type and its outgoing set, i.e., the set of Atoms linked by it.[12] The outgoing set of a Link is also immutable.
+
+15 Node types supported out-of-the-box by AtomSpace are:
+
+1. `ConceptNode`
+2. `NumberNode`
+3. `TypeNode`
+4. `TypeChoice`
+5. `VariableNode`
+6. `VariableList`
+7. `ProcedureNode`
+8. `GroundedProcedureNode`
+9. `SchemaNode`
+10. `DefinedSchemaNode`
+11. `GroundedSchemaNode`
+12. `PredicateNode`
+13. `DefinedPredicateNode`
+14. `GroundedPredicateNode`
+15. `AnchorNode`
+
+57 Link types supported out-of-the-box by AtomSpace are:
+
+1. `OrderedLink`
+2. `UnorderedLink`
+3. `SetLink`
+4. `ListLink`
+5. `MemberLink`
+6. `SubsetLink`
+7. `IntensionalInheritanceLink`
+8. `ExtensionalSimilarityLink`
+9. `IntensionalSimilartiyLink`
+10. `AndLink`
+11. `OrLink`
+12. `NotLink`
+13. `SequentialAndLink`
+14. `AbsentLink`
+15. `ChoiceLink`
+16. `PresentLink`
+17. `ContextLink`
+18. `TypedVariableLink`
+19. `LambdaLink`
+20. `DefineLink`
+21. `PutLink`
+22. `PatternLink`
+23. `GetLink`
+24. `SatisfactionLink`
+25. `BindLink`
+26. `QuoteLink`
+27. `UnquoteLink`
+28. `ForallLink`
+29. `ExistsLink`
+30. `AverageLink`
+31. `SatisfyingSetLink`
+32. `ScholemLink`
+33. `ImplicationLink`
+34. `EquivalenceLink`
+35. `AssociativeLink`
+36. `InheritanceLink`
+37. `SimilarityLink`
+38. `AttractionLink`
+39. `FreeLink`
+40. `EvaluationLink`
+41. `ExecutionLink`
+42. `SchemaExecutionLink`
+43. `SchemaEvaluationLink`
+44. `QuantityLink`
+45. `VirtualLink`
+46. `GreaterThanLink`
+47. `EqualLink`
+48. `FunctionLink`
+49. `ExecutionOutputLink`
+50. `FoldLink`
+51. `ArithmeticLink`
+52. `PlusLink`
+53. `TimesLink`
+54. `DeleteLink`
+55. `AssignLink`
+56. `InsertLink`
+57. `RemoveLink`
+
+### Truth Values
+
 ### AtomSpace
+
+AtomSpace is an essential component of OpenCog, "an API for storing and querying hypergraphs, and is the central Knowledge Representation system provided by the OpenCog Framework. The hypergraphs stored in the AtomSpace consist of Atoms (the superclass for Nodes and Links)."[5]
 
 ### Scheme Representation
 
 ### Backing Store
+
+## IV. Neo4j Graph Model Mapping
 
 ### Vertex Labels
 
@@ -37,7 +145,8 @@ The initial work for Neo4j Graph Backing Store for OpenCog was implemented durin
 
 ### Indexing
 
-## Data Access Protocol
+
+## V. Data Access Protocol
 
 ### ZeroMQ
 
@@ -45,23 +154,29 @@ The initial work for Neo4j Graph Backing Store for OpenCog was implemented durin
 
 ### Functions
 
-## Clients
+
+## VI. Clients
 
 ### OpenCog Server
 
 ### Java Command Line Interface (CLI) Client
 
-## Deployment
 
-## Related Work
+## VII. Deployment
 
-## Conclusion
 
-## Acknowledgements
+## VIII. Related Work
 
-We would like to thank OpenCog Foundation mentors especially [Linas Vepstas](http://linas.org/), [Amen Belayneh](https://www.linkedin.com/in/amenbelayneh), and [Ben Goertzel](http://goertzel.org/), without whose great efforts we could not have built Neo4j Graph Backing Store for OpenCog. We also thank all former, current, and newer [Lumen Robot Friend](http://lumen.lskk.ee.itb.ac.id/) team members, including [Budhi Yulianto](https://www.linkedin.com/pub/budhi-yulianto/26/885/256) who researched Graph Database for Lumen Robot Friend, [Marzuki Syahfirin](https://onemarzuki.wordpress.com/) as coordinator of Lumen Robot Friend, [Maria Shusanti](https://www.facebook.com/maria.shusanti) for Lumen Robot Friend gesture research, [Wahyudi](https://www.facebook.com/wahyudi.si) for natural language understanding research, [Sigit Ari Wijanarko](https://www.facebook.com/sigit.ariw) for researching Lumen Robot Friend augmented reality visualization.
 
-## References
+## IX. Conclusion
+
+
+## X. Acknowledgements
+
+We would like to thank OpenCog Foundation mentors especially [Linas Vepstas](http://linas.org/), [Amen Belayneh](https://www.linkedin.com/in/amenbelayneh), and [Ben Goertzel](http://goertzel.org/), without whose great efforts we could not have built Neo4j Graph Backing Store for OpenCog. We also thank all former, current, and newer [Lumen Robot Friend](http://lumen.lskk.ee.itb.ac.id/) team members, including [Budhi Yulianto](https://www.linkedin.com/pub/budhi-yulianto/26/885/256) who researched Graph Database for Lumen Robot Friend, [Marzuki Syahfirin](https://onemarzuki.wordpress.com/) as coordinator of Lumen Robot Friend, [Maria Shusanti](https://www.facebook.com/maria.shusanti) for Lumen Robot Friend gesture research, [Wahyudi](https://www.facebook.com/wahyudi.si) for natural language understanding research, [Sigit Ari Wijanarko](https://www.facebook.com/sigit.ariw) for researching Lumen Robot Friend augmented reality visualization, [Taufiq Nuzwir Nizar](https://independent.academia.edu/TaufiqNizar) for image processing algorithms, [Ahmad Syarif](https://itb.academia.edu/AhmadSyarif) for [NAO](https://www.aldebaran.com/en/humanoid-robot/nao-robot) avatar integration, [Putri Nhirun](https://www.researchgate.net/profile/Putri_Nhirun) for Lumen speech capabilities, [Setyaki Sholata Sya](https://itb.academia.edu/SetyakiSholataSya) for Lumen visual recognition.
+
+
+## XI. References
 
 1. OpenCog Foundation. Neo4j Graph Backing Store. http://wiki.opencog.org/w/Neo4j_Backing_Store.
 2. OpenCog Foundation. OpenCog website. http://www.opencog.org/.
@@ -71,3 +186,7 @@ We would like to thank OpenCog Foundation mentors especially [Linas Vepstas](htt
 6. Google, Inc. Protocol Buffers. https://developers.google.com/protocol-buffers/.
 7. ZeroMQ. ZeroMQ. http://www.zeromq.org/
 8. Irawan, Hendy. Proposal for Google Summer of Code 2015. https://www.google-melange.com/gsoc/proposal/review/student/google/gsoc2015/hendy/5629499534213120
+9. OpenCog Foundation. OpenCog. http://wiki.opencog.org/w/The_Open_Cognition_Project.
+10. OpenCog Foundation. Atom. http://wiki.opencog.org/w/Atom.
+11. OpenCog Foundation. Node. http://wiki.opencog.org/w/Node.
+12. OpenCog Foundation. Link. http://wiki.opencog.org/w/Link.

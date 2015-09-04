@@ -71,23 +71,115 @@ img {
 
 <div id="abstract" class="section level2">
 <h2>Abstract</h2>
-<p>We create <a href="http://wiki.opencog.org/w/Neo4j_Backing_Store">a graph backing store</a>[1] for <a href="http://www.opencog.org/">OpenCog</a>[2, 3] using <a href="http://neo4.org/">Neo4j graph database</a>[4]. The GraphBackingStore API will extend the current BackingStore C++ API. It can take special queries that map naturally into Cypher queries and simple manipulations of Neo4j graph traversals.</p>
+<p>We create <a href="http://wiki.opencog.org/w/Neo4j_Backing_Store">a graph backing store</a>[1] for <a href="http://www.opencog.org/">OpenCog</a>[2, 3] using <a href="http://neo4.org/">Neo4j graph database</a>[4]. The GraphBackingStore API extends the current BackingStore C++ API. It can take special queries that map naturally into Cypher queries and simple manipulations of Neo4j graph traversals.</p>
 <p>The Neo4j node-relationship structures and custom indices are optimized for <a href="http://wiki.opencog.org/w/AtomSpace">AtomSpace</a>[5] usage and performance. Data access is using <a href="https://developers.google.com/protocol-buffers/">Protocol Buffers</a>-based[6] protocol over <a href="http://www.zeromq.org/">ZeroMQ</a>[7] messaging transport.</p>
-<p>The initial work for Neo4j Graph Backing Store for OpenCog was implemented during <a href="https://www.google-melange.com/gsoc/proposal/review/student/google/gsoc2015/hendy/5629499534213120">Google Summer of Code 2015</a>. All source code is open source and available at <a href="https://github.com/ceefour/opencog-neo4j" class="uri">https://github.com/ceefour/opencog-neo4j</a>, <a href="https://github.com/opencog/atomspace" class="uri">https://github.com/opencog/atomspace</a>, and <a href="https://github.com/opencog/opencog" class="uri">https://github.com/opencog/opencog</a>.</p>
+<p>The initial work for Neo4j Graph Backing Store for OpenCog was implemented during <a href="https://www.google-melange.com/gsoc/proposal/review/student/google/gsoc2015/hendy/5629499534213120">Google Summer of Code 2015</a>[8]. All source code is open source and available at <a href="https://github.com/ceefour/opencog-neo4j" class="uri">https://github.com/ceefour/opencog-neo4j</a>, <a href="https://github.com/opencog/atomspace" class="uri">https://github.com/opencog/atomspace</a>, and <a href="https://github.com/opencog/opencog" class="uri">https://github.com/opencog/opencog</a>.</p>
 </div>
-<div id="introduction" class="section level2">
-<h2>Introduction</h2>
+<div id="i.-introduction" class="section level2">
+<h2>I. Introduction</h2>
+<p>OpenCog “[aims] to create an open source framework for Artificial General Intelligence, intended to one day express general intelligence at the human level and beyond.”[9] OpenCog comprises of several integrated open source projects, with AtomSpace hypergraph knowledge representation system[5] and Cog Server as the most essential components.</p>
+<p>For persisting knowledge, AtomSpace uses a Backing Store implementation. The most mature Backing Store implementation for OpenCog is SQL Backing Store written by Linas Vepstas. As AtomSpace represents knowledge in a hypergraph structure, persisting AtomSpace knowledge in a graph database is expected to be more intuitive and more portable. The Google Summer of Code 2015 work[8] implemented initial work on the Neo4j Graph Backing Store for OpenCog. Neo4j was chosen due to its popularity, flexible structure, good performance, portability, open source license, and availability of commercial support if required.</p>
 </div>
-<div id="basic-architecture" class="section level2">
-<h2>Basic Architecture</h2>
+<div id="ii.-basic-architecture" class="section level2">
+<h2>II. Basic Architecture</h2>
+<p><img src="opencog-neo4j-architecture.png" alt="Figure 1. Architecture of Neo4j Backing Store for OpenCog" /></p>
+<p>AtomSpace[5] is embedded within Cog Server, written in combination of C++, Python, and Scheme programming languages. The AtomSpace accesses the Neo4j Backing Store via a ZeroMQ Backing Store implementation, which implements the AtomSpace C++ BackingStore API using message patterns with Protocol Buffers serialization and transported via ZeroMQ.</p>
+<p>The Neo4j Backing Store Server itself is implemented in Java and contains the Neo4j graph database service. The Neo4j Backing Store Server listens and communicates with client(s) using the OpenCog ZeroMQ protocol, which uses Protocol Buffers serialization and ZeroMQ message transport. The primary client of Neo4j Backing Store Server is the ZeroMQ Backing Store implementation in AtomSpace.</p>
 </div>
-<div id="data-model" class="section level2">
-<h2>Data Model</h2>
+<div id="iii.-data-model" class="section level2">
+<h2>III. Data Model</h2>
 <div id="atoms-nodes-and-links" class="section level3">
 <h3>Atoms, Nodes, and Links</h3>
+<p><a href="http://wiki.opencog.org/w/Atom">Atoms</a> are the basic elements of knowledge in AtomSpace, an Atom “captures the notion of an atomic formula (or atom) in mathematical logic.”[10] All Atoms have a type, which inherit from either <a href="http://wiki.opencog.org/w/Node">Node</a> or <a href="http://wiki.opencog.org/w/Link">Link</a>. The type of an Atom is immutable.</p>
+<ul>
+<li>Nodes are Atoms with names. The name and the type of a Node together determine a unique key.[11] The name of a Node is also immutable.</li>
+<li>Links are Atom types that connect other Atoms. A Link is uniquely defined by its type and its outgoing set, i.e., the set of Atoms linked by it.[12] The outgoing set of a Link is also immutable.</li>
+</ul>
+<p>15 Node types supported out-of-the-box by AtomSpace are:</p>
+<ol style="list-style-type: decimal">
+<li><code>ConceptNode</code></li>
+<li><code>NumberNode</code></li>
+<li><code>TypeNode</code></li>
+<li><code>TypeChoice</code></li>
+<li><code>VariableNode</code></li>
+<li><code>VariableList</code></li>
+<li><code>ProcedureNode</code></li>
+<li><code>GroundedProcedureNode</code></li>
+<li><code>SchemaNode</code></li>
+<li><code>DefinedSchemaNode</code></li>
+<li><code>GroundedSchemaNode</code></li>
+<li><code>PredicateNode</code></li>
+<li><code>DefinedPredicateNode</code></li>
+<li><code>GroundedPredicateNode</code></li>
+<li><code>AnchorNode</code></li>
+</ol>
+<p>57 Link types supported out-of-the-box by AtomSpace are:</p>
+<ol style="list-style-type: decimal">
+<li><code>OrderedLink</code></li>
+<li><code>UnorderedLink</code></li>
+<li><code>SetLink</code></li>
+<li><code>ListLink</code></li>
+<li><code>MemberLink</code></li>
+<li><code>SubsetLink</code></li>
+<li><code>IntensionalInheritanceLink</code></li>
+<li><code>ExtensionalSimilarityLink</code></li>
+<li><code>IntensionalSimilartiyLink</code></li>
+<li><code>AndLink</code></li>
+<li><code>OrLink</code></li>
+<li><code>NotLink</code></li>
+<li><code>SequentialAndLink</code></li>
+<li><code>AbsentLink</code></li>
+<li><code>ChoiceLink</code></li>
+<li><code>PresentLink</code></li>
+<li><code>ContextLink</code></li>
+<li><code>TypedVariableLink</code></li>
+<li><code>LambdaLink</code></li>
+<li><code>DefineLink</code></li>
+<li><code>PutLink</code></li>
+<li><code>PatternLink</code></li>
+<li><code>GetLink</code></li>
+<li><code>SatisfactionLink</code></li>
+<li><code>BindLink</code></li>
+<li><code>QuoteLink</code></li>
+<li><code>UnquoteLink</code></li>
+<li><code>ForallLink</code></li>
+<li><code>ExistsLink</code></li>
+<li><code>AverageLink</code></li>
+<li><code>SatisfyingSetLink</code></li>
+<li><code>ScholemLink</code></li>
+<li><code>ImplicationLink</code></li>
+<li><code>EquivalenceLink</code></li>
+<li><code>AssociativeLink</code></li>
+<li><code>InheritanceLink</code></li>
+<li><code>SimilarityLink</code></li>
+<li><code>AttractionLink</code></li>
+<li><code>FreeLink</code></li>
+<li><code>EvaluationLink</code></li>
+<li><code>ExecutionLink</code></li>
+<li><code>SchemaExecutionLink</code></li>
+<li><code>SchemaEvaluationLink</code></li>
+<li><code>QuantityLink</code></li>
+<li><code>VirtualLink</code></li>
+<li><code>GreaterThanLink</code></li>
+<li><code>EqualLink</code></li>
+<li><code>FunctionLink</code></li>
+<li><code>ExecutionOutputLink</code></li>
+<li><code>FoldLink</code></li>
+<li><code>ArithmeticLink</code></li>
+<li><code>PlusLink</code></li>
+<li><code>TimesLink</code></li>
+<li><code>DeleteLink</code></li>
+<li><code>AssignLink</code></li>
+<li><code>InsertLink</code></li>
+<li><code>RemoveLink</code></li>
+</ol>
+</div>
+<div id="truth-values" class="section level3">
+<h3>Truth Values</h3>
 </div>
 <div id="atomspace" class="section level3">
 <h3>AtomSpace</h3>
+<p>AtomSpace is an essential component of OpenCog, “an API for storing and querying hypergraphs, and is the central Knowledge Representation system provided by the OpenCog Framework. The hypergraphs stored in the AtomSpace consist of Atoms (the superclass for Nodes and Links).”[5]</p>
 </div>
 <div id="scheme-representation" class="section level3">
 <h3>Scheme Representation</h3>
@@ -95,6 +187,9 @@ img {
 <div id="backing-store" class="section level3">
 <h3>Backing Store</h3>
 </div>
+</div>
+<div id="iv.-neo4j-graph-model-mapping" class="section level2">
+<h2>IV. Neo4j Graph Model Mapping</h2>
 <div id="vertex-labels" class="section level3">
 <h3>Vertex Labels</h3>
 </div>
@@ -108,8 +203,8 @@ img {
 <h3>Indexing</h3>
 </div>
 </div>
-<div id="data-access-protocol" class="section level2">
-<h2>Data Access Protocol</h2>
+<div id="v.-data-access-protocol" class="section level2">
+<h2>V. Data Access Protocol</h2>
 <div id="zeromq" class="section level3">
 <h3>ZeroMQ</h3>
 </div>
@@ -120,8 +215,8 @@ img {
 <h3>Functions</h3>
 </div>
 </div>
-<div id="clients" class="section level2">
-<h2>Clients</h2>
+<div id="vi.-clients" class="section level2">
+<h2>VI. Clients</h2>
 <div id="opencog-server" class="section level3">
 <h3>OpenCog Server</h3>
 </div>
@@ -129,21 +224,21 @@ img {
 <h3>Java Command Line Interface (CLI) Client</h3>
 </div>
 </div>
-<div id="deployment" class="section level2">
-<h2>Deployment</h2>
+<div id="vii.-deployment" class="section level2">
+<h2>VII. Deployment</h2>
 </div>
-<div id="related-work" class="section level2">
-<h2>Related Work</h2>
+<div id="viii.-related-work" class="section level2">
+<h2>VIII. Related Work</h2>
 </div>
-<div id="conclusion" class="section level2">
-<h2>Conclusion</h2>
+<div id="ix.-conclusion" class="section level2">
+<h2>IX. Conclusion</h2>
 </div>
-<div id="acknowledgements" class="section level2">
-<h2>Acknowledgements</h2>
-<p>We would like to thank OpenCog Foundation mentors especially <a href="http://linas.org/">Linas Vepstas</a>, <a href="https://www.linkedin.com/in/amenbelayneh">Amen Belayneh</a>, and <a href="http://goertzel.org/">Ben Goertzel</a>, without whose great efforts we could not have built Neo4j Graph Backing Store for OpenCog. We also thank all former, current, and newer <a href="http://lumen.lskk.ee.itb.ac.id/">Lumen Robot Friend</a> team members, including <a href="https://www.linkedin.com/pub/budhi-yulianto/26/885/256">Budhi Yulianto</a> who researched Graph Database for Lumen Robot Friend, <a href="https://onemarzuki.wordpress.com/">Marzuki Syahfirin</a> as coordinator of Lumen Robot Friend, <a href="https://www.facebook.com/maria.shusanti">Maria Shusanti</a> for Lumen Robot Friend gesture research, <a href="https://www.facebook.com/wahyudi.si">Wahyudi</a> for natural language understanding research, <a href="https://www.facebook.com/sigit.ariw">Sigit Ari Wijanarko</a> for researching Lumen Robot Friend augmented reality visualization.</p>
+<div id="x.-acknowledgements" class="section level2">
+<h2>X. Acknowledgements</h2>
+<p>We would like to thank OpenCog Foundation mentors especially <a href="http://linas.org/">Linas Vepstas</a>, <a href="https://www.linkedin.com/in/amenbelayneh">Amen Belayneh</a>, and <a href="http://goertzel.org/">Ben Goertzel</a>, without whose great efforts we could not have built Neo4j Graph Backing Store for OpenCog. We also thank all former, current, and newer <a href="http://lumen.lskk.ee.itb.ac.id/">Lumen Robot Friend</a> team members, including <a href="https://www.linkedin.com/pub/budhi-yulianto/26/885/256">Budhi Yulianto</a> who researched Graph Database for Lumen Robot Friend, <a href="https://onemarzuki.wordpress.com/">Marzuki Syahfirin</a> as coordinator of Lumen Robot Friend, <a href="https://www.facebook.com/maria.shusanti">Maria Shusanti</a> for Lumen Robot Friend gesture research, <a href="https://www.facebook.com/wahyudi.si">Wahyudi</a> for natural language understanding research, <a href="https://www.facebook.com/sigit.ariw">Sigit Ari Wijanarko</a> for researching Lumen Robot Friend augmented reality visualization, <a href="https://independent.academia.edu/TaufiqNizar">Taufiq Nuzwir Nizar</a> for image processing algorithms, <a href="https://itb.academia.edu/AhmadSyarif">Ahmad Syarif</a> for <a href="https://www.aldebaran.com/en/humanoid-robot/nao-robot">NAO</a> avatar integration, <a href="https://www.researchgate.net/profile/Putri_Nhirun">Putri Nhirun</a> for Lumen speech capabilities, <a href="https://itb.academia.edu/SetyakiSholataSya">Setyaki Sholata Sya</a> for Lumen visual recognition.</p>
 </div>
-<div id="references" class="section level2">
-<h2>References</h2>
+<div id="xi.-references" class="section level2">
+<h2>XI. References</h2>
 <ol style="list-style-type: decimal">
 <li>OpenCog Foundation. Neo4j Graph Backing Store. <a href="http://wiki.opencog.org/w/Neo4j_Backing_Store" class="uri">http://wiki.opencog.org/w/Neo4j_Backing_Store</a>.</li>
 <li>OpenCog Foundation. OpenCog website. <a href="http://www.opencog.org/" class="uri">http://www.opencog.org/</a>.</li>
@@ -153,6 +248,10 @@ img {
 <li>Google, Inc. Protocol Buffers. <a href="https://developers.google.com/protocol-buffers/" class="uri">https://developers.google.com/protocol-buffers/</a>.</li>
 <li>ZeroMQ. ZeroMQ. <a href="http://www.zeromq.org/" class="uri">http://www.zeromq.org/</a></li>
 <li>Irawan, Hendy. Proposal for Google Summer of Code 2015. <a href="https://www.google-melange.com/gsoc/proposal/review/student/google/gsoc2015/hendy/5629499534213120" class="uri">https://www.google-melange.com/gsoc/proposal/review/student/google/gsoc2015/hendy/5629499534213120</a></li>
+<li>OpenCog Foundation. OpenCog. <a href="http://wiki.opencog.org/w/The_Open_Cognition_Project" class="uri">http://wiki.opencog.org/w/The_Open_Cognition_Project</a>.</li>
+<li>OpenCog Foundation. Atom. <a href="http://wiki.opencog.org/w/Atom" class="uri">http://wiki.opencog.org/w/Atom</a>.</li>
+<li>OpenCog Foundation. Node. <a href="http://wiki.opencog.org/w/Node" class="uri">http://wiki.opencog.org/w/Node</a>.</li>
+<li>OpenCog Foundation. Link. <a href="http://wiki.opencog.org/w/Link" class="uri">http://wiki.opencog.org/w/Link</a>.</li>
 </ol>
 </div>
 
