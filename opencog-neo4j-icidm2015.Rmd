@@ -44,8 +44,8 @@ The primary client of Neo4j Backing Store Server is the ZeroMQ Backing Store imp
 [Atoms](http://wiki.opencog.org/w/Atom) are the basic elements of knowledge in AtomSpace, an Atom "captures the notion of an atomic formula (or atom) in mathematical logic."[10]
 All Atoms have a type, which inherit from either [Node](http://wiki.opencog.org/w/Node) or [Link](http://wiki.opencog.org/w/Link). The type of an Atom is immutable.
 
-* Nodes are Atoms with names. The name and the type of a Node together determine a unique key.[11] The name of a Node is also immutable.
-* Links are Atom types that connect other Atoms. A Link is uniquely defined by its type and its outgoing set, i.e., the set of Atoms linked by it.[12] The outgoing set of a Link is also immutable.
+* **Nodes** are Atoms with names. The name and the type of a Node together determine a unique key.[11] The name of a Node is also immutable.
+* **Links** are Atom types that connect other Atoms. A Link is uniquely defined by its type and its outgoing set, i.e., the set of Atoms linked by it.[12] The outgoing set of a Link is also immutable.
 
 15 Node types supported out-of-the-box by AtomSpace are:
 
@@ -127,6 +127,21 @@ All Atoms have a type, which inherit from either [Node](http://wiki.opencog.org/
 
 ### Truth Values
 
+A truth value gives each Atom a valuation or an interpretation; thus all Atoms in a given, fixed AtomSpace always carry a default valuation/interpretation along with them.[10] All truth values expose at least two parameters describing truth:[13]
+
+1. **Strength**, a floating-point value ranging from 0 to 1, with 0 denoting the classical `Boolean` `false`, and 1.0 denoting `true`.
+2. **Confidence**, a floating point value ranging from 0 to 1, expressing the certainty of the strength, with 0 denoting completely uncertain, and 1 denoting completely confident.
+
+Currently, OpenCog supports 7 types of truth values:
+
+1. `SimpleTruthValue`. Holds two floating-point values, commonly called "strength" and "confidence".
+2. `CountTruthValue`. Holds three floating point values. One is typically a raw count (integer) of having seen some event. Another is typically the logarithm of the normalized frequency (i.e. observed probability) of the event.
+3. `IndefiniteTruthValue`. Holds four floating point numbers.
+4. `FuzzyTruthValue`. Fuzzy truth value.
+5. `GenericTruthValue`. Generic truth value.
+6. `NullTruthValue`. A special type of truth value.
+7. `ProbabilisticTruthValue`. A truth value that stores a mean, a confidence and the number of observations.
+
 ### AtomSpace
 
 AtomSpace is an essential component of OpenCog, "an API for storing and querying hypergraphs, and is the central Knowledge Representation system provided by the OpenCog Framework. The hypergraphs stored in the AtomSpace consist of Atoms (the superclass for Nodes and Links)."[5]
@@ -142,6 +157,8 @@ AtomSpace is an essential component of OpenCog, "an API for storing and querying
 ### Edge Types
 
 ### Graph Schema
+
+### Linked Data, Schema.org, and YAGO Integration
 
 ### Indexing
 
@@ -190,3 +207,4 @@ We would like to thank OpenCog Foundation mentors especially [Linas Vepstas](htt
 10. OpenCog Foundation. Atom. http://wiki.opencog.org/w/Atom.
 11. OpenCog Foundation. Node. http://wiki.opencog.org/w/Node.
 12. OpenCog Foundation. Link. http://wiki.opencog.org/w/Link.
+13. OpenCog Foundation. Truth Value. http://wiki.opencog.org/w/TruthValue.

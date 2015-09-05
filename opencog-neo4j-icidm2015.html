@@ -92,8 +92,8 @@ img {
 <h3>Atoms, Nodes, and Links</h3>
 <p><a href="http://wiki.opencog.org/w/Atom">Atoms</a> are the basic elements of knowledge in AtomSpace, an Atom “captures the notion of an atomic formula (or atom) in mathematical logic.”[10] All Atoms have a type, which inherit from either <a href="http://wiki.opencog.org/w/Node">Node</a> or <a href="http://wiki.opencog.org/w/Link">Link</a>. The type of an Atom is immutable.</p>
 <ul>
-<li>Nodes are Atoms with names. The name and the type of a Node together determine a unique key.[11] The name of a Node is also immutable.</li>
-<li>Links are Atom types that connect other Atoms. A Link is uniquely defined by its type and its outgoing set, i.e., the set of Atoms linked by it.[12] The outgoing set of a Link is also immutable.</li>
+<li><strong>Nodes</strong> are Atoms with names. The name and the type of a Node together determine a unique key.[11] The name of a Node is also immutable.</li>
+<li><strong>Links</strong> are Atom types that connect other Atoms. A Link is uniquely defined by its type and its outgoing set, i.e., the set of Atoms linked by it.[12] The outgoing set of a Link is also immutable.</li>
 </ul>
 <p>15 Node types supported out-of-the-box by AtomSpace are:</p>
 <ol style="list-style-type: decimal">
@@ -176,6 +176,21 @@ img {
 </div>
 <div id="truth-values" class="section level3">
 <h3>Truth Values</h3>
+<p>A truth value gives each Atom a valuation or an interpretation; thus all Atoms in a given, fixed AtomSpace always carry a default valuation/interpretation along with them.[10] All truth values expose at least two parameters describing truth:[13]</p>
+<ol style="list-style-type: decimal">
+<li><strong>Strength</strong>, a floating-point value ranging from 0 to 1, with 0 denoting the classical <code>Boolean</code> <code>false</code>, and 1.0 denoting <code>true</code>.</li>
+<li><strong>Confidence</strong>, a floating point value ranging from 0 to 1, expressing the certainty of the strength, with 0 denoting completely uncertain, and 1 denoting completely confident.</li>
+</ol>
+<p>Currently, OpenCog supports 7 types of truth values:</p>
+<ol style="list-style-type: decimal">
+<li><code>SimpleTruthValue</code>. Holds two floating-point values, commonly called “strength” and “confidence”.</li>
+<li><code>CountTruthValue</code>. Holds three floating point values. One is typically a raw count (integer) of having seen some event. Another is typically the logarithm of the normalized frequency (i.e. observed probability) of the event.</li>
+<li><code>IndefiniteTruthValue</code>. Holds four floating point numbers.</li>
+<li><code>FuzzyTruthValue</code>. Fuzzy truth value.</li>
+<li><code>GenericTruthValue</code>. Generic truth value.</li>
+<li><code>NullTruthValue</code>. A special type of truth value.</li>
+<li><code>ProbabilisticTruthValue</code>. A truth value that stores a mean, a confidence and the number of observations.</li>
+</ol>
 </div>
 <div id="atomspace" class="section level3">
 <h3>AtomSpace</h3>
@@ -198,6 +213,9 @@ img {
 </div>
 <div id="graph-schema" class="section level3">
 <h3>Graph Schema</h3>
+</div>
+<div id="linked-data-schema.org-and-yago-integration" class="section level3">
+<h3>Linked Data, Schema.org, and YAGO Integration</h3>
 </div>
 <div id="indexing" class="section level3">
 <h3>Indexing</h3>
@@ -252,6 +270,7 @@ img {
 <li>OpenCog Foundation. Atom. <a href="http://wiki.opencog.org/w/Atom" class="uri">http://wiki.opencog.org/w/Atom</a>.</li>
 <li>OpenCog Foundation. Node. <a href="http://wiki.opencog.org/w/Node" class="uri">http://wiki.opencog.org/w/Node</a>.</li>
 <li>OpenCog Foundation. Link. <a href="http://wiki.opencog.org/w/Link" class="uri">http://wiki.opencog.org/w/Link</a>.</li>
+<li>OpenCog Foundation. Truth Value. <a href="http://wiki.opencog.org/w/TruthValue" class="uri">http://wiki.opencog.org/w/TruthValue</a>.</li>
 </ol>
 </div>
 
