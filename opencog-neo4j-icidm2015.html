@@ -72,7 +72,7 @@ img {
 <p>(Draft Paper to be submitted to <a href="http://icidm2015.seaconf.org/">4th International Conference on Interactive Digital Media (ICIDM) 2015</a>)</p>
 <div id="abstract" class="section level2">
 <h2>Abstract</h2>
-<p>We create <a href="http://wiki.opencog.org/w/Neo4j_Backing_Store">a graph backing store</a>[1] for <a href="http://www.opencog.org/">OpenCog</a>[2, 3] using <a href="http://neo4.org/">Neo4j graph database</a>[4]. The GraphBackingStore API extends the current BackingStore C++ API. It can take special queries that map naturally into Cypher queries and simple manipulations of Neo4j graph traversals.</p>
+<p>We create <a href="http://wiki.opencog.org/w/Neo4j_Backing_Store">a graph backing store</a>[1] for <a href="http://www.opencog.org/">OpenCog</a>[2, 3, 26, 27, 28] using <a href="http://neo4.org/">Neo4j graph database</a>[4]. The GraphBackingStore API extends the current BackingStore C++ API. It can take special queries that map naturally into Cypher queries and simple manipulations of Neo4j graph traversals.</p>
 <p>The Neo4j node-relationship structures and custom indices are optimized for <a href="http://wiki.opencog.org/w/AtomSpace">AtomSpace</a>[5] usage and performance, with considerations for integration with <a href="http://linkeddata.org/">Linked Data</a>[17]. This makes it easier to integrate projects which use common Linked Data foundation, such as <a href="http://lumen.lskk.ee.itb.ac.id/">Lumen Robot Friend</a>[29]. Data access is using <a href="https://developers.google.com/protocol-buffers/">Protocol Buffers</a>-based[6] protocol over <a href="http://www.zeromq.org/">ZeroMQ</a>[7] messaging transport.</p>
 <p>The initial work for Neo4j Graph Backing Store for OpenCog was implemented during <a href="https://www.google-melange.com/gsoc/proposal/review/student/google/gsoc2015/hendy/5629499534213120">Google Summer of Code 2015</a>[8]. All source code is open source and available at <a href="https://github.com/ceefour/opencog-neo4j" class="uri">https://github.com/ceefour/opencog-neo4j</a>, <a href="https://github.com/opencog/atomspace" class="uri">https://github.com/opencog/atomspace</a>, and <a href="https://github.com/opencog/opencog" class="uri">https://github.com/opencog/opencog</a>.</p>
 </div>
@@ -184,13 +184,13 @@ img {
 </ol>
 <p>Currently, OpenCog supports 7 types of truth values:</p>
 <ol style="list-style-type: decimal">
-<li><code>SimpleTruthValue</code>. Holds two floating-point values, commonly called “strength” and “confidence”.</li>
-<li><code>CountTruthValue</code>. Holds three floating point values. One is typically a raw count (integer) of having seen some event. Another is typically the logarithm of the normalized frequency (i.e. observed probability) of the event.</li>
-<li><code>IndefiniteTruthValue</code>. Holds four floating point numbers.</li>
-<li><code>FuzzyTruthValue</code>. Fuzzy truth value.</li>
-<li><code>GenericTruthValue</code>. Generic truth value.</li>
-<li><code>NullTruthValue</code>. A special type of truth value.</li>
-<li><code>ProbabilisticTruthValue</code>. A truth value that stores a mean, a confidence and the number of observations.</li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/SimpleTruthValue"><code>SimpleTruthValue</code></a>. Holds two floating-point values, commonly called “strength” and “confidence”.</li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/CountTruthValue"><code>CountTruthValue</code></a>. Holds three floating point values. One is typically a raw count (integer) of having seen some event. Another is typically the logarithm of the normalized frequency (i.e. observed probability) of the event.</li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/IndefiniteTruthValue"><code>IndefiniteTruthValue</code></a>. Holds four floating point numbers.</li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/FuzzyTruthValue"><code>FuzzyTruthValue</code></a>. Fuzzy truth value.</li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/GenericTruthValue"><code>GenericTruthValue</code></a>. Generic truth value.</li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/NullTruthValue"><code>NullTruthValue</code></a>. A special type of truth value.</li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/ProbabilisticTruthValue"><code>ProbabilisticTruthValue</code></a>. A truth value that stores a mean, a confidence and the number of observations.</li>
 </ol>
 </div>
 <div id="atomspace" class="section level3">
@@ -244,7 +244,7 @@ img {
 </div>
 <div id="linked-data-rdf-schema.org-and-yago-integration" class="section level3">
 <h3>Linked Data, RDF, Schema.org, and YAGO Integration</h3>
-<p>The structure and naming of the vertices, edges, and properties of the OpenCog Neo4j graph database are designed to facilitate integration with <a href="http://linkeddata.org/">Linked Data</a>[17] technologies, with special considerations for <a href="http://www.w3.org/RDF/">Resource Description Framework (RDF)</a>[18], <a href="http://schema.org/">Schema.org</a>[19], and <a href="http://www.mpi-inf.mpg.de/departments/databases-and-information-systems/research/yago-naga/yago/">YAGO</a>[20] ontologies.</p>
+<p>The structure and naming of the vertices, edges, and properties of the OpenCog Neo4j graph database are designed to facilitate integration with <a href="http://linkeddata.org/">Linked Data</a>[17] technologies, with special considerations for <a href="http://www.w3.org/RDF/">Resource Description Framework (RDF)</a>[18], <a href="http://schema.org/">Schema.org</a>[19], and <a href="http://www.mpi-inf.mpg.de/departments/databases-and-information-systems/research/yago-naga/yago/">YAGO</a>[20, 30] ontologies.</p>
 <p>The following table lists the Linked Data-friendly Neo4j vertex labels to represent AtomSpace knowledge base:</p>
 <table>
 <thead>
@@ -548,7 +548,7 @@ img {
 </div>
 <div id="x.-acknowledgements" class="section level2">
 <h2>X. Acknowledgements</h2>
-<p>We would like to thank OpenCog Foundation mentors especially <a href="http://linas.org/">Linas Vepstas</a>, <a href="https://www.linkedin.com/in/amenbelayneh">Amen Belayneh</a>, and <a href="http://goertzel.org/">Ben Goertzel</a>, without whose great efforts we could not have built Neo4j Graph Backing Store for OpenCog. We thank <a href="https://suchanek.name/">Fabian Suchanek</a> and his team for their excellent work on <a href="http://www.mpi-inf.mpg.de/departments/databases-and-information-systems/research/yago-naga/yago/">YAGO Semantic Knowledge Base</a>[20]. We also thank all former, current, and newer <a href="http://lumen.lskk.ee.itb.ac.id/">Lumen Robot Friend</a>[29] team members, including <a href="https://www.linkedin.com/pub/budhi-yulianto/26/885/256">Budhi Yulianto</a> who researched Graph Database for Lumen Robot Friend, <a href="https://onemarzuki.wordpress.com/">Marzuki Syahfirin</a> as coordinator of Lumen Robot Friend, <a href="https://www.facebook.com/maria.shusanti">Maria Shusanti</a> for Lumen Robot Friend gesture research, <a href="https://www.facebook.com/wahyudi.si">Wahyudi</a> for natural language understanding research, <a href="https://www.facebook.com/sigit.ariw">Sigit Ari Wijanarko</a> for researching Lumen Robot Friend augmented reality visualization, <a href="https://independent.academia.edu/TaufiqNizar">Taufiq Nuzwir Nizar</a> for image processing algorithms, <a href="https://itb.academia.edu/AhmadSyarif">Ahmad Syarif</a> for <a href="https://www.aldebaran.com/en/humanoid-robot/nao-robot">NAO</a> avatar integration, <a href="https://www.researchgate.net/profile/Putri_Nhirun">Putri Nhirun</a> for Lumen speech capabilities, <a href="https://itb.academia.edu/SetyakiSholataSya">Setyaki Sholata Sya</a> for Lumen visual recognition.</p>
+<p>We would like to thank OpenCog Foundation mentors especially <a href="http://linas.org/">Linas Vepstas</a>, <a href="https://www.linkedin.com/in/amenbelayneh">Amen Belayneh</a>, and <a href="http://goertzel.org/">Ben Goertzel</a>, without whose great efforts we could not have built Neo4j Graph Backing Store for OpenCog. We thank <a href="https://suchanek.name/">Fabian Suchanek</a> and his team for their excellent work on <a href="http://www.mpi-inf.mpg.de/departments/databases-and-information-systems/research/yago-naga/yago/">YAGO Semantic Knowledge Base</a>[20, 30]. We also thank all former, current, and newer <a href="http://lumen.lskk.ee.itb.ac.id/">Lumen Robot Friend</a>[29] team members, including <a href="https://www.linkedin.com/pub/budhi-yulianto/26/885/256">Budhi Yulianto</a> who researched Graph Database for Lumen Robot Friend, <a href="https://onemarzuki.wordpress.com/">Marzuki Syahfirin</a> as coordinator of Lumen Robot Friend, <a href="https://www.facebook.com/maria.shusanti">Maria Shusanti</a> for Lumen Robot Friend gesture research, <a href="https://www.facebook.com/wahyudi.si">Wahyudi</a> for natural language understanding research, <a href="https://www.facebook.com/sigit.ariw">Sigit Ari Wijanarko</a> for researching Lumen Robot Friend augmented reality visualization, <a href="https://independent.academia.edu/TaufiqNizar">Taufiq Nuzwir Nizar</a> for image processing algorithms, <a href="https://itb.academia.edu/AhmadSyarif">Ahmad Syarif</a> for <a href="https://www.aldebaran.com/en/humanoid-robot/nao-robot">NAO</a> avatar integration, <a href="https://www.researchgate.net/profile/Putri_Nhirun">Putri Nhirun</a> for Lumen speech capabilities, <a href="https://itb.academia.edu/SetyakiSholataSya">Setyaki Sholata Sya</a> for Lumen visual recognition.</p>
 </div>
 <div id="xi.-references" class="section level2">
 <h2>XI. References</h2>
@@ -582,6 +582,7 @@ img {
 <li>Goertzel, Ben, David Hanson, and Gino Yu. “Toward a Robust Software Architecture for Generally Intelligent Humanoid Robotics.” <a href="http://goertzel.org/ICRA_humanoid_goertzel_v1.pdf" class="uri">http://goertzel.org/ICRA_humanoid_goertzel_v1.pdf</a></li>
 <li>Goertzel, Ben, Cassio Pennachin, and Nil Geisweiller. “The OpenCog Framework.” Engineering General Intelligence, Part 2. Atlantis Press, 2014. 3-29. <a href="http://link.springer.com/chapter/10.2991/978-94-6239-030-0_1" class="uri">http://link.springer.com/chapter/10.2991/978-94-6239-030-0_1</a></li>
 <li>Control Systems and Computer Laboratory Bandung Institute of Technology (LSKK ITB). Lumen Social Robot. <a href="http://lumen.lskk.ee.itb.ac.id/" class="uri">http://lumen.lskk.ee.itb.ac.id/</a></li>
+<li>Mahdisoltani, Farzaneh, Joanna Biega, and Fabian Suchanek. “YAGO3: A knowledge base from multilingual Wikipedias.” 7th Biennial Conference on Innovative Data Systems Research. CIDR 2015, 2014. <a href="http://pubman.mpdl.mpg.de/pubman/item/escidoc:2077946/component/escidoc:2077968/CIDR15_Paper1.pdf" class="uri">http://pubman.mpdl.mpg.de/pubman/item/escidoc:2077946/component/escidoc:2077968/CIDR15_Paper1.pdf</a>.</li>
 </ol>
 </div>
 
