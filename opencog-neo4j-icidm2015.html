@@ -198,39 +198,290 @@ img {
 </div>
 <div id="scheme-representation" class="section level3">
 <h3>Scheme Representation</h3>
+<p>Scheme is a principal dialect of the computer programming language Lisp. Scheme follows a minimalist design philosophy that specifies a small standard core accompanied by powerful tools for language extension, this is in contrast to Common Lisp which has a relatively richer “core”.[14]</p>
+<p><a href="http://wiki.opencog.org/w/Scheme">Scheme is used by OpenCog</a> in many places to represent Atoms,[15] for example a simple <code>ConceptNode</code>:</p>
+<pre><code>(ConceptNode &quot;tree&quot;)</code></pre>
+<p>A <code>ConceptNode</code> with a <code>SimpleTruthValue</code>:</p>
+<pre><code>(ConceptNode (stv 0.9 0.2) &quot;tree&quot;)</code></pre>
+<p>A <code>ReferenceLink</code> with a <code>SimpleTruthValue</code>:</p>
+<pre><code>(ReferenceLink (stv 0.987 0.234)
+  (ConceptNode &quot;dog-instance-1&quot;) (WordNode &quot;dog&quot;))</code></pre>
+<p>OpenCog’s Scheme notation makes it easier to represent and understand simple to moderately complex Atom relationships.</p>
 </div>
 <div id="backing-store" class="section level3">
 <h3>Backing Store</h3>
+<p>AtomSpace works mainly in-memory. It supports persisting Atoms to permanent storage via Backing Store mechanism. AtomSpace supports <a href="https://github.com/opencog/atomspace/blob/master/opencog/persist/README">5 Backing Store implementations</a>[16] in various states:</p>
+<ol style="list-style-type: decimal">
+<li><code>file</code>. File-based storage. Works, but deprecated.</li>
+<li><code>hypertable</code>. Experimental HyperTable support. Unmaintained. (Won’t compile at this time.)</li>
+<li><code>memcache</code>. Experimental/broken, uses memcached for persistence. (Won’t compile at this time.)</li>
+<li><code>sql</code>. Works well for most uses – with caveats.</li>
+<li><code>zmq</code>. ZeroMQ-based AtomSpace serialization and deserialization. This is the Backing Store implementation that is used with the Neo4j Graph Backing Store Server.</li>
+</ol>
 </div>
 </div>
 <div id="iv.-neo4j-graph-model-mapping" class="section level2">
 <h2>IV. Neo4j Graph Model Mapping</h2>
+<p>The AtomSpace hypergraph model and Neo4j graph model have many similarities. However, we still needed to map particular AtomSpace concepts to their representation in Neo4j.</p>
 <div id="vertex-labels" class="section level3">
 <h3>Vertex Labels</h3>
+<p>OpenCog Neo4j Graph Backing Store represents all <code>Node</code>s as graph vertices, and also by default represents <code>Link</code>s as graph vertices. The Atom types are mapped one-to-one to Neo4j vertex labels. By default, Atom types are mapped to a vertex label prefixed with <code>opencog_</code>, e.g., <code>WordNode</code> maps to <code>opencog_WordNode</code>.</p>
+<p>Neo4j allows graph vertices to have labels. While multiple labels are possible, OpenCog Neo4j Graph Backing Store only uses one label for each vertex.</p>
 </div>
 <div id="edge-types" class="section level3">
 <h3>Edge Types</h3>
+<p>Neo4j Backing Store differs between binary <code>Link</code>s and n-ary <code>Link</code>. For binary <code>Link</code>s, edge types are:</p>
+<ol style="list-style-type: decimal">
+<li><code>rdf_subject</code>. Edge that connects to the first element of the outgoing set.</li>
+<li><code>rdf_object</code>. Edge that connects to the second/last element of the outgoing set.</li>
+</ol>
+<p>For n-ary <code>Links</code>, Neo4j Backing Store uses these edge types:</p>
+<ol style="list-style-type: decimal">
+<li><code>opencog_predicate</code>. Only used by <code>PredicateLink</code>, this connects the <code>PredicateLink</code> to the <code>PredicateNode</code>.</li>
+<li><code>opencog_parameter</code>. This connects the <code>Link</code> to each element of the outgoing set. In case of <code>PredicateLink</code>, the first outgoing edge to <code>PredicateNode</code> is excluded. Each edge has an integer <code>position</code> property which specifies the parameter index of the outgoing set (starting from 0).</li>
+</ol>
 </div>
-<div id="graph-schema" class="section level3">
-<h3>Graph Schema</h3>
-</div>
-<div id="linked-data-schema.org-and-yago-integration" class="section level3">
-<h3>Linked Data, Schema.org, and YAGO Integration</h3>
+<div id="linked-data-rdf-schema.org-and-yago-integration" class="section level3">
+<h3>Linked Data, RDF, Schema.org, and YAGO Integration</h3>
+<p>The structure and naming of the vertices, edges, and properties of the OpenCog Neo4j graph database are designed to facilitate integration with <a href="http://linkeddata.org/">Linked Data</a>[17] technologies, with special considerations for <a href="http://www.w3.org/RDF/">Resource Description Framework (RDF)</a>[18], <a href="http://schema.org/">Schema.org</a>[19], and <a href="http://www.mpi-inf.mpg.de/departments/databases-and-information-systems/research/yago-naga/yago/">YAGO</a>[20] ontologies.</p>
+<p>The following table lists the Linked Data-friendly Neo4j vertex labels to represent AtomSpace knowledge base:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left"><strong>Atom type</strong></th>
+<th align="left"><strong>Linked Data URI</strong></th>
+<th align="left"><strong>Vertex label</strong></th>
+<th align="left"><strong>Ontology</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>ConceptNode</code></td>
+<td align="left"><a href="http://schema.org/Thing" class="uri">http://schema.org/Thing</a></td>
+<td align="left"><code>schema_Thing</code></td>
+<td align="left"><a href="http://schema.org/">Schema.org</a></td>
+</tr>
+<tr class="even">
+<td align="left"><code>InheritanceLink</code></td>
+<td align="left"><a href="http://www.w3.org/2000/01/rdf-schema#subClassOf" class="uri">http://www.w3.org/2000/01/rdf-schema#subClassOf</a></td>
+<td align="left"><code>rdfs_subClassOf</code></td>
+<td align="left"><a href="http://www.w3.org/RDF/">Resource Description Framework (RDF)</a></td>
+</tr>
+<tr class="odd">
+<td align="left"><code>MemberLink</code></td>
+<td align="left"><a href="http://www.w3.org/1999/02/22-rdf-syntax-ns#type" class="uri">http://www.w3.org/1999/02/22-rdf-syntax-ns#type</a></td>
+<td align="left"><code>rdf_type</code></td>
+<td align="left"><a href="http://www.w3.org/RDF/">Resource Description Framework (RDF)</a></td>
+</tr>
+</tbody>
+</table>
+<p>The Neo4j edge types for binary <code>Link</code>s use reuse Linked Data properties from <a href="http://www.w3.org/RDF/">Resource Description Framework (RDF)</a>:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left"><strong>Description</strong></th>
+<th align="left"><strong>Linked Data URI</strong></th>
+<th align="left"><strong>Edge type</strong></th>
+<th align="left"><strong>Ontology</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">First outgoing element of binary <code>Link</code></td>
+<td align="left"><a href="http://www.w3.org/1999/02/22-rdf-syntax-ns#subject" class="uri">http://www.w3.org/1999/02/22-rdf-syntax-ns#subject</a></td>
+<td align="left"><code>rdf_subject</code></td>
+<td align="left"><a href="http://www.w3.org/RDF/">Resource Description Framework (RDF)</a></td>
+</tr>
+<tr class="even">
+<td align="left">Second outgoing element of binary <code>Link</code></td>
+<td align="left"><a href="http://www.w3.org/1999/02/22-rdf-syntax-ns#object" class="uri">http://www.w3.org/1999/02/22-rdf-syntax-ns#object</a></td>
+<td align="left"><code>rdf_object</code></td>
+<td align="left"><a href="http://www.w3.org/RDF/">Resource Description Framework (RDF)</a></td>
+</tr>
+</tbody>
+</table>
+<p>The vertex and edge properties used by OpenCog Neo4j Graph Backing Store are designed to interoperate with Linked Data technologies:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left"><strong>Property</strong></th>
+<th align="left"><strong>Description</strong></th>
+<th align="left"><strong>Linked Data URI</strong></th>
+<th align="left"><strong>Ontology</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>nn</code></td>
+<td align="left">Node name or <a href="https://en.wikipedia.org/wiki/QName">Linked Data QName</a>[21]</td>
+<td align="left"><a href="http://www.w3.org/1999/02/22-rdf-syntax-ns#about" class="uri">http://www.w3.org/1999/02/22-rdf-syntax-ns#about</a></td>
+<td align="left"><a href="http://www.w3.org/RDF/">Resource Description Framework (RDF)</a></td>
+</tr>
+<tr class="even">
+<td align="left"><code>prefLabel</code></td>
+<td align="left">Preferred label</td>
+<td align="left"><a href="http://yago-knowledge.org/resource/prefLabel" class="uri">http://yago-knowledge.org/resource/prefLabel</a></td>
+<td align="left"><a href="http://www.mpi-inf.mpg.de/departments/databases-and-information-systems/research/yago-naga/yago/">YAGO</a></td>
+</tr>
+<tr class="odd">
+<td align="left"><code>isPreferredMeaningOf</code></td>
+<td align="left">Indicates the <code>Node</code> is the preferred meaning of specified textual label</td>
+<td align="left"><a href="http://yago-knowledge.org/resource/isPreferredMeaningOf" class="uri">http://yago-knowledge.org/resource/isPreferredMeaningOf</a></td>
+<td align="left"><a href="http://www.mpi-inf.mpg.de/departments/databases-and-information-systems/research/yago-naga/yago/">YAGO</a></td>
+</tr>
+<tr class="even">
+<td align="left"><code>tv</code></td>
+<td align="left">Generic truth value (array of floating-point values)</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="indexing" class="section level3">
 <h3>Indexing</h3>
+<p>Neo4j already has excellent graph traversal performance. To provide faster lookup performance, all graph vertices are also indexed.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left"><strong>Property</strong></th>
+<th align="left"><strong>Index type</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>nn</code></td>
+<td align="left">Unique constraint</td>
+</tr>
+<tr class="even">
+<td align="left"><code>prefLabel</code></td>
+<td align="left">Index</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>isPreferredMeaningOf</code></td>
+<td align="left">Index</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div id="v.-data-access-protocol" class="section level2">
 <h2>V. Data Access Protocol</h2>
+<p>While Neo4j Server provides a REST/HTTP endpoint out-of-the-box, AtomSpace operations may require better performance by reducing serialization overhead, and also to prepare for asynchronous/event-based functionality. Therefore, the Neo4j Graph Backing Store Server supports the OpenCog Protocol which uses the ZeroMQ transport and Protocol Buffers serialization.</p>
 <div id="zeromq" class="section level3">
 <h3>ZeroMQ</h3>
+<p><a href="http://www.zeromq.org/">ZeroMQ</a>[7] transport layer is used to communicate between Neo4j Graph Backing Store Server and its clients. The primary client is the OpenCog Server.</p>
+<p>ZeroMQ has several attractive features:</p>
+<ol style="list-style-type: decimal">
+<li>Supports multiple languages and platforms.</li>
+<li>Carries messages across inproc, IPC, TCP, TIPC, multicast.</li>
+<li>Smart patterns like pub-sub, push-pull, and router-dealer.</li>
+<li>High-speed asynchronous I/O engines, in a tiny library.</li>
+<li>Backed by a large and active open source community.</li>
+<li>Architectural flexibility: centralized, distributed, small, or large.</li>
+<li>Free software with full commercial support.</li>
+</ol>
 </div>
 <div id="protocol-buffers-protobuf" class="section level3">
 <h3>Protocol Buffers (Protobuf)</h3>
+<p>OpenCog Protocol serializes messages using <a href="https://developers.google.com/protocol-buffers/">Protocol Buffers</a>[6], a language-neutral, platform-neutral extensible mechanism for serializing structured data.</p>
+<p>The following table lists the core data structures of the <a href="https://github.com/opencog/atomspace/blob/master/opencog/persist/zmq/atomspace/ZMQMessages.proto">OpenCog Protobuf serialization</a>[22]:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left"><strong>Name</strong></th>
+<th align="left"><strong>Type</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>ZMQAttentionValueHolderMessage</code></td>
+<td align="left">Message</td>
+</tr>
+<tr class="even">
+<td align="left"><code>ZMQTruthValueType</code></td>
+<td align="left">Enumeration</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>ZMQVersionHandleMessage</code></td>
+<td align="left">Message</td>
+</tr>
+<tr class="even">
+<td align="left"><code>ZMQSingleTruthValueMessage</code></td>
+<td align="left">Message</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>ZMQTruthValueMessage</code></td>
+<td align="left">Message</td>
+</tr>
+<tr class="even">
+<td align="left"><code>ZMQTrailMessage</code></td>
+<td align="left">Message</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>ZMQAtomType</code></td>
+<td align="left">Enumeration</td>
+</tr>
+<tr class="even">
+<td align="left"><code>ZMQAtomMessage</code></td>
+<td align="left">Message</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>ZMQAtomFetchKind</code></td>
+<td align="left">Enumeration</td>
+</tr>
+<tr class="even">
+<td align="left"><code>ZMQAtomFetch</code></td>
+<td align="left">Message</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>ZMQFunctionType</code></td>
+<td align="left">Enumeration</td>
+</tr>
+<tr class="even">
+<td align="left"><code>ZMQAtomTypeInfo</code></td>
+<td align="left">Message</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>ZMQRequestMessage</code></td>
+<td align="left">Message</td>
+</tr>
+<tr class="even">
+<td align="left"><code>ZMQReplyMessage</code></td>
+<td align="left">Message</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="functions" class="section level3">
 <h3>Functions</h3>
+<p>In a ZeroMQ message, the client can request a particular function of the OpenCog Neo4j Backing Store Server. It is planned to expand these functions to optimize more OpenCog graph operations. The currently supported functions are listed the following table.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left"><strong>Function</strong></th>
+<th align="left"><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>ZMQgetAtom</code></td>
+<td align="left">Get a single atom by handle UUID.</td>
+</tr>
+<tr class="even">
+<td align="left"><code>ZMQgetName</code></td>
+<td align="left">Get name of a node.</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>ZMQgetAtoms</code></td>
+<td align="left">Get multiple atoms by UUID, atomType + node name, or atomType + outgoing set.</td>
+</tr>
+<tr class="even">
+<td align="left"><code>ZMQstoreAtoms</code></td>
+<td align="left">Store multiple atoms by atomType + node name (for node), or atomType + outgoing set (for link).</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div id="vi.-clients" class="section level2">
@@ -271,6 +522,15 @@ img {
 <li>OpenCog Foundation. Node. <a href="http://wiki.opencog.org/w/Node" class="uri">http://wiki.opencog.org/w/Node</a>.</li>
 <li>OpenCog Foundation. Link. <a href="http://wiki.opencog.org/w/Link" class="uri">http://wiki.opencog.org/w/Link</a>.</li>
 <li>OpenCog Foundation. Truth Value. <a href="http://wiki.opencog.org/w/TruthValue" class="uri">http://wiki.opencog.org/w/TruthValue</a>.</li>
+<li>Wikipedia. Scheme (programming language). <a href="https://en.wikipedia.org/wiki/Scheme_(programming_language)" class="uri">https://en.wikipedia.org/wiki/Scheme_(programming_language)</a>.</li>
+<li>OpenCog Foundation. Scheme. <a href="http://wiki.opencog.org/w/Scheme" class="uri">http://wiki.opencog.org/w/Scheme</a>.</li>
+<li>OpenCog Foundation. <code>atomspace/opencog/persist/README</code>. <a href="https://github.com/opencog/atomspace/blob/master/opencog/persist/README" class="uri">https://github.com/opencog/atomspace/blob/master/opencog/persist/README</a>.</li>
+<li>Linked Data Community. Linked Data. <a href="http://linkeddata.org/" class="uri">http://linkeddata.org/</a>.</li>
+<li>RDF Working Group. Resource Description Framework (RDF). <a href="http://www.w3.org/RDF/" class="uri">http://www.w3.org/RDF/</a>.</li>
+<li>W3C Schema.org Community Group. Schema.org. <a href="http://schema.org/" class="uri">http://schema.org/</a>.</li>
+<li>Max Planck Institute for Informatics. YAGO: A High-Quality Knowledge Base. <a href="http://www.mpi-inf.mpg.de/departments/databases-and-information-systems/research/yago-naga/yago/" class="uri">http://www.mpi-inf.mpg.de/departments/databases-and-information-systems/research/yago-naga/yago/</a>.</li>
+<li>Wikipedia. QName. <a href="https://en.wikipedia.org/wiki/QName" class="uri">https://en.wikipedia.org/wiki/QName</a>.</li>
+<li>OpenCog Foundation. <code>atomspace/opencog/persist/zmq/atomspace/ZMQMessages.proto</code>. <a href="https://github.com/opencog/atomspace/blob/master/opencog/persist/zmq/atomspace/ZMQMessages.proto" class="uri">https://github.com/opencog/atomspace/blob/master/opencog/persist/zmq/atomspace/ZMQMessages.proto</a>.</li>
 </ol>
 </div>
 

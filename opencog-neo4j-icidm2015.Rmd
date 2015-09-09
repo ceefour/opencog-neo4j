@@ -148,29 +148,150 @@ AtomSpace is an essential component of OpenCog, "an API for storing and querying
 
 ### Scheme Representation
 
+Scheme is a principal dialect of the computer programming language Lisp. Scheme follows a minimalist design philosophy that specifies a small standard core accompanied by powerful tools for language extension, this is in contrast to Common Lisp which has a relatively richer "core".[14]
+
+[Scheme is used by OpenCog](http://wiki.opencog.org/w/Scheme) in many places to represent Atoms,[15] for example a simple `ConceptNode`:
+
+    (ConceptNode "tree")
+
+A `ConceptNode` with a `SimpleTruthValue`:
+
+    (ConceptNode (stv 0.9 0.2) "tree")
+
+A `ReferenceLink` with a `SimpleTruthValue`:
+
+    (ReferenceLink (stv 0.987 0.234)
+      (ConceptNode "dog-instance-1") (WordNode "dog"))
+
+OpenCog's Scheme notation makes it easier to represent and understand simple to moderately
+complex Atom relationships.
+
 ### Backing Store
+
+AtomSpace works mainly in-memory. It supports persisting Atoms to permanent storage
+via Backing Store mechanism. AtomSpace supports [5 Backing Store implementations](https://github.com/opencog/atomspace/blob/master/opencog/persist/README)[16] in various states:
+
+1. `file`. File-based storage. Works, but deprecated.
+2. `hypertable`. Experimental HyperTable support. Unmaintained. (Won't compile at this time.)
+3. `memcache`. Experimental/broken, uses memcached for persistence. (Won't compile at this time.)
+4. `sql`. Works well for most uses -- with caveats.
+5. `zmq`. ZeroMQ-based AtomSpace serialization and deserialization. This is the Backing Store implementation that is used with the Neo4j Graph Backing Store Server.
 
 ## IV. Neo4j Graph Model Mapping
 
+The AtomSpace hypergraph model and Neo4j graph model have many similarities. However, we still needed to map particular AtomSpace concepts to their representation in Neo4j.
+
 ### Vertex Labels
+
+OpenCog Neo4j Graph Backing Store represents all `Node`s as graph vertices, and also by default represents `Link`s as graph vertices. The Atom types are mapped one-to-one to Neo4j vertex labels. By default, Atom types are mapped to a vertex label prefixed with `opencog_`, e.g., `WordNode` maps to `opencog_WordNode`.
+
+Neo4j allows graph vertices to have labels. While multiple labels are possible, OpenCog Neo4j Graph Backing Store only uses one label for each vertex.
 
 ### Edge Types
 
-### Graph Schema
+Neo4j Backing Store differs between binary `Link`s and n-ary `Link`. For binary `Link`s, edge types are:
 
-### Linked Data, Schema.org, and YAGO Integration
+1. `rdf_subject`. Edge that connects to the first element of the outgoing set.
+2. `rdf_object`. Edge that connects to the second/last element of the outgoing set.
+
+For n-ary `Links`, Neo4j Backing Store uses these edge types:
+
+1. `opencog_predicate`. Only used by `PredicateLink`, this connects the `PredicateLink` to the `PredicateNode`.
+2. `opencog_parameter`. This connects the `Link` to each element of the outgoing set. In case of `PredicateLink`, the first outgoing edge to `PredicateNode` is excluded. Each edge has an integer `position` property which specifies the parameter index of the outgoing set (starting from 0).
+
+### Linked Data, RDF, Schema.org, and YAGO Integration
+
+The structure and naming of the vertices, edges, and properties of the OpenCog Neo4j graph database are designed to facilitate integration with [Linked Data](http://linkeddata.org/)[17] technologies, with special considerations for [Resource Description Framework (RDF)](http://www.w3.org/RDF/)[18], [Schema.org](http://schema.org/)[19], and [YAGO](http://www.mpi-inf.mpg.de/departments/databases-and-information-systems/research/yago-naga/yago/)[20] ontologies.
+
+The following table lists the Linked Data-friendly Neo4j vertex labels to represent AtomSpace knowledge base:
+
+| **Atom type**   | **Linked Data URI**                             | **Vertex label**| **Ontology**                                               |
+|-----------------|-------------------------------------------------|-----------------|----------------------------------------------------------------|
+| `ConceptNode`     | http://schema.org/Thing                         | `schema_Thing`    | [Schema.org](http://schema.org/)                               |
+| `InheritanceLink` | http://www.w3.org/2000/01/rdf-schema#subClassOf | `rdfs_subClassOf` | [Resource Description Framework (RDF)](http://www.w3.org/RDF/) |
+| `MemberLink`      | http://www.w3.org/1999/02/22-rdf-syntax-ns#type | `rdf_type`        | [Resource Description Framework (RDF)](http://www.w3.org/RDF/) |
+
+The Neo4j edge types for binary `Link`s use reuse Linked Data properties from [Resource Description Framework (RDF)](http://www.w3.org/RDF/):
+
+| **Description**   | **Linked Data URI**                             | **Edge type**| **Ontology**                                               |
+|-----------------|-------------------------------------------------|-----------------|----------------------------------------------------------------|
+| First outgoing element of binary `Link` | http://www.w3.org/1999/02/22-rdf-syntax-ns#subject | `rdf_subject` | [Resource Description Framework (RDF)](http://www.w3.org/RDF/) |
+| Second outgoing element of binary `Link` | http://www.w3.org/1999/02/22-rdf-syntax-ns#object | `rdf_object`        | [Resource Description Framework (RDF)](http://www.w3.org/RDF/) |
+
+The vertex and edge properties used by OpenCog Neo4j Graph Backing Store are designed to interoperate with Linked Data technologies:
+
+| **Property**   | **Description**          | **Linked Data URI**                             | **Ontology**                                               |
+|-----------------|-------------------------------------------------|-----------------|----------------------------------------------------------------|
+| `nn` | Node name or [Linked Data QName](https://en.wikipedia.org/wiki/QName)[21] | http://www.w3.org/1999/02/22-rdf-syntax-ns#about | [Resource Description Framework (RDF)](http://www.w3.org/RDF/) |
+| `prefLabel` | Preferred label | http://yago-knowledge.org/resource/prefLabel | [YAGO](http://www.mpi-inf.mpg.de/departments/databases-and-information-systems/research/yago-naga/yago/) |
+| `isPreferredMeaningOf` | Indicates the `Node` is the preferred meaning of specified textual label | http://yago-knowledge.org/resource/isPreferredMeaningOf |  [YAGO](http://www.mpi-inf.mpg.de/departments/databases-and-information-systems/research/yago-naga/yago/) |
+| `tv` | Generic truth value (array of floating-point values) | | |
 
 ### Indexing
 
+Neo4j already has excellent graph traversal performance.
+To provide faster lookup performance, all graph vertices are also indexed.
+
+| **Property**   | **Index type**          |
+|-----------------|-------------------------------------------------|
+| `nn` | Unique constraint |
+| `prefLabel` | Index |
+| `isPreferredMeaningOf` | Index |
 
 ## V. Data Access Protocol
 
+While Neo4j Server provides a REST/HTTP endpoint out-of-the-box, AtomSpace operations may require better performance by reducing serialization overhead, and also to prepare for asynchronous/event-based functionality. Therefore, the Neo4j Graph Backing Store Server supports the OpenCog Protocol which uses the ZeroMQ transport and Protocol Buffers serialization.
+
 ### ZeroMQ
+
+[ZeroMQ](http://www.zeromq.org/)[7] transport layer is used to communicate between Neo4j Graph Backing Store Server and its clients.
+The primary client is the OpenCog Server.
+
+ZeroMQ has several attractive features:
+
+1. Supports multiple languages and platforms.
+2. Carries messages across inproc, IPC, TCP, TIPC, multicast.
+3. Smart patterns like pub-sub, push-pull, and router-dealer.
+4. High-speed asynchronous I/O engines, in a tiny library.
+5. Backed by a large and active open source community.
+6. Architectural flexibility: centralized, distributed, small, or large.
+7. Free software with full commercial support.
 
 ### Protocol Buffers (Protobuf)
 
+OpenCog Protocol serializes messages using [Protocol Buffers](https://developers.google.com/protocol-buffers/)[6], a language-neutral, platform-neutral extensible mechanism for serializing structured data.
+
+The following table lists the core data structures of the [OpenCog Protobuf serialization](https://github.com/opencog/atomspace/blob/master/opencog/persist/zmq/atomspace/ZMQMessages.proto)[22]:
+
+| **Name**   | **Type**          |
+|-----------------|-------------------------------------------------|
+| `ZMQAttentionValueHolderMessage` | Message |
+| `ZMQTruthValueType` | Enumeration |
+| `ZMQVersionHandleMessage` | Message |
+| `ZMQSingleTruthValueMessage` | Message |
+| `ZMQTruthValueMessage` | Message |
+| `ZMQTrailMessage` | Message |
+| `ZMQAtomType` | Enumeration |
+| `ZMQAtomMessage` | Message |
+| `ZMQAtomFetchKind` | Enumeration |
+| `ZMQAtomFetch` | Message |
+| `ZMQFunctionType` | Enumeration |
+| `ZMQAtomTypeInfo` | Message |
+| `ZMQRequestMessage` | Message |
+| `ZMQReplyMessage` | Message |
+
 ### Functions
 
+In a ZeroMQ message, the client can request a particular function of the OpenCog Neo4j Backing Store Server.
+It is planned to expand these functions to optimize more OpenCog graph operations.
+The currently supported functions are listed the following table.
+
+| **Function**   | **Description**          |
+|-----------------|-------------------------------------------------|
+| `ZMQgetAtom` | Get a single atom by handle UUID. |
+| `ZMQgetName` | Get name of a node. |
+| `ZMQgetAtoms` | Get multiple atoms by UUID, atomType + node name, or atomType + outgoing set. |
+| `ZMQstoreAtoms` | Store multiple atoms by atomType + node name (for node), or atomType + outgoing set (for link). |
 
 ## VI. Clients
 
@@ -208,3 +329,12 @@ We would like to thank OpenCog Foundation mentors especially [Linas Vepstas](htt
 11. OpenCog Foundation. Node. http://wiki.opencog.org/w/Node.
 12. OpenCog Foundation. Link. http://wiki.opencog.org/w/Link.
 13. OpenCog Foundation. Truth Value. http://wiki.opencog.org/w/TruthValue.
+14. Wikipedia. Scheme (programming language). https://en.wikipedia.org/wiki/Scheme_(programming_language).
+15. OpenCog Foundation. Scheme. http://wiki.opencog.org/w/Scheme.
+16. OpenCog Foundation. `atomspace/opencog/persist/README`. https://github.com/opencog/atomspace/blob/master/opencog/persist/README.
+17. Linked Data Community. Linked Data. http://linkeddata.org/.
+18. RDF Working Group. Resource Description Framework (RDF). http://www.w3.org/RDF/.
+19. W3C Schema.org Community Group. Schema.org. http://schema.org/.
+20. Max Planck Institute for Informatics. YAGO: A High-Quality Knowledge Base. http://www.mpi-inf.mpg.de/departments/databases-and-information-systems/research/yago-naga/yago/.
+21. Wikipedia. QName. https://en.wikipedia.org/wiki/QName.
+22. OpenCog Foundation. `atomspace/opencog/persist/zmq/atomspace/ZMQMessages.proto`. https://github.com/opencog/atomspace/blob/master/opencog/persist/zmq/atomspace/ZMQMessages.proto.
