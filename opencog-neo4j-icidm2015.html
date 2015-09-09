@@ -69,6 +69,7 @@ img {
 </div>
 
 
+<p>(Draft Paper to be submitted to <a href="http://icidm2015.seaconf.org/">4th International Conference on Interactive Digital Media (ICIDM) 2015</a>)</p>
 <div id="abstract" class="section level2">
 <h2>Abstract</h2>
 <p>We create <a href="http://wiki.opencog.org/w/Neo4j_Backing_Store">a graph backing store</a>[1] for <a href="http://www.opencog.org/">OpenCog</a>[2, 3] using <a href="http://neo4.org/">Neo4j graph database</a>[4]. The GraphBackingStore API extends the current BackingStore C++ API. It can take special queries that map naturally into Cypher queries and simple manipulations of Neo4j graph traversals.</p>
@@ -97,81 +98,81 @@ img {
 </ul>
 <p>15 Node types supported out-of-the-box by AtomSpace are:</p>
 <ol style="list-style-type: decimal">
-<li><code>ConceptNode</code></li>
-<li><code>NumberNode</code></li>
-<li><code>TypeNode</code></li>
-<li><code>TypeChoice</code></li>
-<li><code>VariableNode</code></li>
-<li><code>VariableList</code></li>
-<li><code>ProcedureNode</code></li>
-<li><code>GroundedProcedureNode</code></li>
-<li><code>SchemaNode</code></li>
-<li><code>DefinedSchemaNode</code></li>
-<li><code>GroundedSchemaNode</code></li>
-<li><code>PredicateNode</code></li>
-<li><code>DefinedPredicateNode</code></li>
-<li><code>GroundedPredicateNode</code></li>
-<li><code>AnchorNode</code></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/ConceptNode"><code>ConceptNode</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/NumberNode"><code>NumberNode</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/TypeNode"><code>TypeNode</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/TypeChoice"><code>TypeChoice</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/VariableNode"><code>VariableNode</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/VariableList"><code>VariableList</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/ProcedureNode"><code>ProcedureNode</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/GroundedProcedureNode"><code>GroundedProcedureNode</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/SchemaNode"><code>SchemaNode</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/DefinedSchemaNode"><code>DefinedSchemaNode</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/GroundedSchemaNode"><code>GroundedSchemaNode</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/PredicateNode"><code>PredicateNode</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/DefinedPredicateNode"><code>DefinedPredicateNode</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/GroundedPredicateNode"><code>GroundedPredicateNode</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/AnchorNode"><code>AnchorNode</code></a></li>
 </ol>
 <p>57 Link types supported out-of-the-box by AtomSpace are:</p>
 <ol style="list-style-type: decimal">
-<li><code>OrderedLink</code></li>
-<li><code>UnorderedLink</code></li>
-<li><code>SetLink</code></li>
-<li><code>ListLink</code></li>
-<li><code>MemberLink</code></li>
-<li><code>SubsetLink</code></li>
-<li><code>IntensionalInheritanceLink</code></li>
-<li><code>ExtensionalSimilarityLink</code></li>
-<li><code>IntensionalSimilartiyLink</code></li>
-<li><code>AndLink</code></li>
-<li><code>OrLink</code></li>
-<li><code>NotLink</code></li>
-<li><code>SequentialAndLink</code></li>
-<li><code>AbsentLink</code></li>
-<li><code>ChoiceLink</code></li>
-<li><code>PresentLink</code></li>
-<li><code>ContextLink</code></li>
-<li><code>TypedVariableLink</code></li>
-<li><code>LambdaLink</code></li>
-<li><code>DefineLink</code></li>
-<li><code>PutLink</code></li>
-<li><code>PatternLink</code></li>
-<li><code>GetLink</code></li>
-<li><code>SatisfactionLink</code></li>
-<li><code>BindLink</code></li>
-<li><code>QuoteLink</code></li>
-<li><code>UnquoteLink</code></li>
-<li><code>ForallLink</code></li>
-<li><code>ExistsLink</code></li>
-<li><code>AverageLink</code></li>
-<li><code>SatisfyingSetLink</code></li>
-<li><code>ScholemLink</code></li>
-<li><code>ImplicationLink</code></li>
-<li><code>EquivalenceLink</code></li>
-<li><code>AssociativeLink</code></li>
-<li><code>InheritanceLink</code></li>
-<li><code>SimilarityLink</code></li>
-<li><code>AttractionLink</code></li>
-<li><code>FreeLink</code></li>
-<li><code>EvaluationLink</code></li>
-<li><code>ExecutionLink</code></li>
-<li><code>SchemaExecutionLink</code></li>
-<li><code>SchemaEvaluationLink</code></li>
-<li><code>QuantityLink</code></li>
-<li><code>VirtualLink</code></li>
-<li><code>GreaterThanLink</code></li>
-<li><code>EqualLink</code></li>
-<li><code>FunctionLink</code></li>
-<li><code>ExecutionOutputLink</code></li>
-<li><code>FoldLink</code></li>
-<li><code>ArithmeticLink</code></li>
-<li><code>PlusLink</code></li>
-<li><code>TimesLink</code></li>
-<li><code>DeleteLink</code></li>
-<li><code>AssignLink</code></li>
-<li><code>InsertLink</code></li>
-<li><code>RemoveLink</code></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/OrderedLink"><code>OrderedLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/UnorderedLink"><code>UnorderedLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/SetLink"><code>SetLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/ListLink"><code>ListLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/MemberLink"><code>MemberLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/SubsetLink"><code>SubsetLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/IntensionalInheritanceLink"><code>IntensionalInheritanceLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/ExtensionalSimilarityLink"><code>ExtensionalSimilarityLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/IntensionalSimilarityLink"><code>IntensionalSimilartiyLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/AndLink"><code>AndLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/OrLink"><code>OrLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/NotLink"><code>NotLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/SequentialAndLink"><code>SequentialAndLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/AbsentLink"><code>AbsentLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/ChoiceLink"><code>ChoiceLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/PresentLink"><code>PresentLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/ContextLink"><code>ContextLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/TypedVariableLink"><code>TypedVariableLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/LambdaLink"><code>LambdaLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/DefineLink"><code>DefineLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/PutLink"><code>PutLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/PatternLink"><code>PatternLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/GetLink"><code>GetLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/SatisfactionLink"><code>SatisfactionLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/BindLink"><code>BindLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/QuoteLink"><code>QuoteLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/UnquoteLink"><code>UnquoteLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/ForallLink"><code>ForallLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/ExistsLink"><code>ExistsLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/AverageLink"><code>AverageLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/SatisfyingSetLink"><code>SatisfyingSetLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/ScholemLink"><code>ScholemLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/ImplicationLink"><code>ImplicationLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/EquivalenceLink"><code>EquivalenceLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/AssociativeLink"><code>AssociativeLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/InheritanceLink"><code>InheritanceLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/SimilarityLink"><code>SimilarityLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/AttractionLink"><code>AttractionLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/FreeLink"><code>FreeLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/EvaluationLink"><code>EvaluationLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/ExecutionLink"><code>ExecutionLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/SchemaExecutionLink"><code>SchemaExecutionLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/SchemaEvaluationLink"><code>SchemaEvaluationLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/QuantityLink"><code>QuantityLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/VirtualLink"><code>VirtualLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/GreaterThanLink"><code>GreaterThanLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/EqualLink"><code>EqualLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/FunctionLink"><code>FunctionLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/ExecutionOutputLink"><code>ExecutionOutputLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/FoldLink"><code>FoldLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/ArithmeticLink"><code>ArithmeticLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/PlusLink"><code>PlusLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/TimesLink"><code>TimesLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/DeleteLink"><code>DeleteLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/AssignLink"><code>AssignLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/InsertLink"><code>InsertLink</code></a></li>
+<li><a href="http://wiki.opencog.org/wikihome/index.php/RemoveLink"><code>RemoveLink</code></a></li>
 </ol>
 </div>
 <div id="truth-values" class="section level3">
@@ -198,7 +199,7 @@ img {
 </div>
 <div id="scheme-representation" class="section level3">
 <h3>Scheme Representation</h3>
-<p>Scheme is a principal dialect of the computer programming language Lisp. Scheme follows a minimalist design philosophy that specifies a small standard core accompanied by powerful tools for language extension, this is in contrast to Common Lisp which has a relatively richer “core”.[14]</p>
+<p><a href="https://en.wikipedia.org/wiki/Scheme_(programming_language)">Scheme</a> is a principal dialect of the computer programming language Lisp. Scheme follows a minimalist design philosophy that specifies a small standard core accompanied by powerful tools for language extension, this is in contrast to Common Lisp which has a relatively richer “core”.[14]</p>
 <p><a href="http://wiki.opencog.org/w/Scheme">Scheme is used by OpenCog</a> in many places to represent Atoms,[15] for example a simple <code>ConceptNode</code>:</p>
 <pre><code>(ConceptNode &quot;tree&quot;)</code></pre>
 <p>A <code>ConceptNode</code> with a <code>SimpleTruthValue</code>:</p>
@@ -486,21 +487,64 @@ img {
 </div>
 <div id="vi.-clients" class="section level2">
 <h2>VI. Clients</h2>
+<p>OpenCog Neo4j Backing Store Server exposes its functionality through the ZeroMQ-based OpenCog Protocol, which means any client can access it through the appropriate messages. The primary client for OpenCog Neo4j Backing Store Server is the OpenCog Server.</p>
 <div id="opencog-server" class="section level3">
 <h3>OpenCog Server</h3>
+<p>OpenCog Server is the primary software which contains the OpenCog Artificial General Intelligence and the AtomSpace knowledge hypergraph. AtomSpace hypergraph can be loaded from and persisted to Neo4j using <a href="https://github.com/ceefour/opencog/blob/persist-zmq/opencog/modules/PersistZmqModule.h">appropriate Scheme commands</a>[23]. These commands allow AtomSpace to integrate with Neo4j Backing Store Server using OpenCog ZeroMQ Protocol. The supported commands are listed in the table below.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left"><strong>Command</strong></th>
+<th align="left"><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>zmq-close</code></td>
+<td align="left">Close the currently open ZeroMQ persistence.</td>
+</tr>
+<tr class="even">
+<td align="left"><code>zmq-load</code></td>
+<td align="left">Load contents of ZeroMQ persistence.</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>zmq-open</code></td>
+<td align="left">Open connection to ZeroMQ persistence.</td>
+</tr>
+<tr class="even">
+<td align="left"><code>zmq-store</code></td>
+<td align="left">Save the atomtable on the ZeroMQ persistence.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="java-command-line-interface-cli-client" class="section level3">
 <h3>Java Command Line Interface (CLI) Client</h3>
+<p>A Java-based Command Line Interface (CLI) client is also available for ad-hoc testing of the Neo4j Graph Backing Store Server or any backing store supporting the OpenCog ZeroMQ Protocol.</p>
 </div>
 </div>
 <div id="vii.-deployment" class="section level2">
 <h2>VII. Deployment</h2>
+<p>A typical deployment of an OpenCog application with the Neo4j Graph Backing Store requires the following components:</p>
+<ol style="list-style-type: decimal">
+<li>A modern Linux distribution such as <a href="http://www.ubuntu.com/">Ubuntu</a>[24] or <a href="http://linuxmint.com/">Linux Mint</a>[25]. Parts of OpenCog are written in fully portable languages such as <a href="https://en.wikipedia.org/wiki/Java_(programming_language)">Java</a>, <a href="https://www.python.org/">Python</a>, and <a href="https://en.wikipedia.org/wiki/Scheme_(programming_language)">Scheme</a>[14]. However, there are parts which require libraries which are only readily available in Linux operating systems.</li>
+<li>OpenCog Server. The OpenCog server can be built from three Git project repositories: <code>cogutils</code>, <code>atomspace</code>, and <code>opencog</code>.</li>
+<li>Neo4j Backing Store Server. This server is implemented entirely in Java and can run in any operating system supported by the Java Runtime Engine (JRE), such as Windows, Linux, and Mac OS X.</li>
+<li>High-level Application. While not strictly required, a separate application can be deployed which utilizes the artificial intelligence capabilities of OpenCog. The application can communicate with OpenCog Server via either the low-level <code>cogserver</code> Scheme shell at port 17001, or via the OpenCog ZeroMQ Protocol.</li>
+</ol>
 </div>
 <div id="viii.-related-work" class="section level2">
 <h2>VIII. Related Work</h2>
+<p>Various papers have been publicized which describes the OpenCog Framework and its components. Some which are particularly related to AtomSpace are:</p>
+<ol style="list-style-type: decimal">
+<li><a href="http://www.sciencedirect.com/science/article/pii/S1877050914015440">A Software Architecture for Generally Intelligent Humanoid Robotics.</a>[26]</li>
+<li><a href="http://goertzel.org/ICRA_humanoid_goertzel_v1.pdf">Toward a Robust Software Architecture for Generally Intelligent Humanoid Robotics.</a>[27]</li>
+<li><a href="http://link.springer.com/chapter/10.2991/978-94-6239-030-0_1">The OpenCog Framework.</a>[28]</li>
+</ol>
 </div>
 <div id="ix.-conclusion" class="section level2">
 <h2>IX. Conclusion</h2>
+<p>OpenCog Framework is a mature and comprehensive Artificial General Intelligence (AGI) framework which is open source and can be used for various purposes, including humanoid robotics, natural language processing, and probabilistic reasoning. AtomSpace, an essential part of OpenCog, provides the knowledge hypergraph which allows individual artificial intelligence modules to integrate and manipulate knowledge in a uniform way and using common metamodel. OpenCog Neo4j Graph Backing Store enhances this functionality by providing persisted storage of the AtomSpace knowledge in a graph database which has very similar structure to AtomSpace. By supporting a platform-agnostic ZeroMQ-based protocol, OpenCog Neo4j Graph Backing Store opens potential uses cases of integration with intelligent applications. OpenCog Neo4j Graph Backing Store also maps well to Linked Data technologies, especially reusing Resource Description Framework (RDF), Schema.org, and YAGO ontologies. This is an elaborate design to ease collaboration with other researchers and the technology industry players, particularly from the Linked Data community, YAGO researchers, and Artificial Intelligence community.</p>
 </div>
 <div id="x.-acknowledgements" class="section level2">
 <h2>X. Acknowledgements</h2>
@@ -531,6 +575,12 @@ img {
 <li>Max Planck Institute for Informatics. YAGO: A High-Quality Knowledge Base. <a href="http://www.mpi-inf.mpg.de/departments/databases-and-information-systems/research/yago-naga/yago/" class="uri">http://www.mpi-inf.mpg.de/departments/databases-and-information-systems/research/yago-naga/yago/</a>.</li>
 <li>Wikipedia. QName. <a href="https://en.wikipedia.org/wiki/QName" class="uri">https://en.wikipedia.org/wiki/QName</a>.</li>
 <li>OpenCog Foundation. <code>atomspace/opencog/persist/zmq/atomspace/ZMQMessages.proto</code>. <a href="https://github.com/opencog/atomspace/blob/master/opencog/persist/zmq/atomspace/ZMQMessages.proto" class="uri">https://github.com/opencog/atomspace/blob/master/opencog/persist/zmq/atomspace/ZMQMessages.proto</a>.</li>
+<li>OpenCog Foundation. <code>opencog/opencog/modules/PersistZmqModule.h</code>. <a href="https://github.com/ceefour/opencog/blob/persist-zmq/opencog/modules/PersistZmqModule.h" class="uri">https://github.com/ceefour/opencog/blob/persist-zmq/opencog/modules/PersistZmqModule.h</a>.</li>
+<li>Canonical. Ubuntu. <a href="http://www.ubuntu.com/" class="uri">http://www.ubuntu.com/</a>.</li>
+<li>Linux Mint. Linux Mint. <a href="http://linuxmint.com/" class="uri">http://linuxmint.com/</a>.</li>
+<li>Goertzel, Ben, David Hanson, and Gino Yu. “A Software Architecture for Generally Intelligent Humanoid Robotics.” Procedia Computer Science 41 (2014): 158-163. <a href="http://www.sciencedirect.com/science/article/pii/S1877050914015440" class="uri">http://www.sciencedirect.com/science/article/pii/S1877050914015440</a>.</li>
+<li>Goertzel, Ben, David Hanson, and Gino Yu. “Toward a Robust Software Architecture for Generally Intelligent Humanoid Robotics.” <a href="http://goertzel.org/ICRA_humanoid_goertzel_v1.pdf" class="uri">http://goertzel.org/ICRA_humanoid_goertzel_v1.pdf</a></li>
+<li>Goertzel, Ben, Cassio Pennachin, and Nil Geisweiller. “The OpenCog Framework.” Engineering General Intelligence, Part 2. Atlantis Press, 2014. 3-29. <a href="http://link.springer.com/chapter/10.2991/978-94-6239-030-0_1" class="uri">http://link.springer.com/chapter/10.2991/978-94-6239-030-0_1</a></li>
 </ol>
 </div>
 
