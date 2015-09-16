@@ -17,6 +17,8 @@ The Neo4j node-relationship structures and custom indices are optimized for [Ato
 
 The initial work for Neo4j Graph Backing Store for OpenCog was implemented during [Google Summer of Code 2015](https://www.google-melange.com/gsoc/proposal/review/student/google/gsoc2015/hendy/5629499534213120)[8]. All source code is open source and available at https://github.com/ceefour/opencog-neo4j, https://github.com/opencog/atomspace, and https://github.com/opencog/opencog.
 
+**Keywords:** OpenCog, graph database, Neo4j, artificial intelligence, ZeroMQ, Linked Data, YAGO, semantic web, protocol buffers, knowledge representation
+
 
 ## I. Introduction
 
@@ -352,12 +354,12 @@ OpenCog Neo4j Graph Backing Store opens potential uses cases of integration with
 maps well to Linked Data technologies, especially reusing [Resource Description Framework (RDF)](http://www.w3.org/RDF/)[18], [Simple Knowledge Organization System (SKOS)](http://www.w3.org/2004/02/skos/)[31], [Schema.org](http://schema.org/)[19], and [YAGO](http://www.mpi-inf.mpg.de/departments/databases-and-information-systems/research/yago-naga/yago/)[20, 30, 32] ontologies. This is an elaborate design to ease collaboration with other researchers and the technology industry players, particularly from the Linked Data community, YAGO researchers, Artificial Intelligence community, and [Lumen Robot Friend](http://lumen.lskk.ee.itb.ac.id/)[29] researchers.
 
 
-## X. Acknowledgements
+## Acknowledgment
 
-We would like to thank OpenCog Foundation mentors especially [Linas Vepstas](http://linas.org/), [Amen Belayneh](https://www.linkedin.com/in/amenbelayneh), and [Ben Goertzel](http://goertzel.org/), without whose great efforts we could not have built Neo4j Graph Backing Store for OpenCog. We thank [Fabian Suchanek](https://suchanek.name/) and his team for their excellent work on [YAGO Semantic Knowledge Base](http://www.mpi-inf.mpg.de/departments/databases-and-information-systems/research/yago-naga/yago/)[20, 30, 32]. We also thank all former, current, and newer [Lumen Robot Friend](http://lumen.lskk.ee.itb.ac.id/)[29] team members, including [Budhi Yulianto](https://www.linkedin.com/pub/budhi-yulianto/26/885/256) who researched Graph Database for Lumen Robot Friend, [Marzuki Syahfirin](https://onemarzuki.wordpress.com/) as coordinator of Lumen Robot Friend, [Maria Shusanti](https://www.facebook.com/maria.shusanti) for Lumen Robot Friend gesture research, [Wahyudi](https://www.facebook.com/wahyudi.si) for natural language understanding research, [Sigit Ari Wijanarko](https://www.facebook.com/sigit.ariw) for researching Lumen Robot Friend augmented reality visualization, [Taufiq Nuzwir Nizar](https://independent.academia.edu/TaufiqNizar) for image processing algorithms, [Ahmad Syarif](https://itb.academia.edu/AhmadSyarif) for [NAO](https://www.aldebaran.com/en/humanoid-robot/nao-robot) avatar integration, [Putri Nhirun](https://www.researchgate.net/profile/Putri_Nhirun) for Lumen speech capabilities, [Setyaki Sholata Sya](https://itb.academia.edu/SetyakiSholataSya) for Lumen visual recognition.
+We would like to thank OpenCog Foundation mentors especially [Linas Vepstas](http://linas.org/), [Amen Belayneh](https://www.linkedin.com/in/amenbelayneh), and [Ben Goertzel](http://goertzel.org/), without whose great efforts we could not have built Neo4j Graph Backing Store for OpenCog. We thank [Fabian M. Suchanek](https://suchanek.name/) and his team for their excellent work on [YAGO Semantic Knowledge Base](http://www.mpi-inf.mpg.de/departments/databases-and-information-systems/research/yago-naga/yago/)[20, 30, 32]. We also thank all former, current, and newer [Lumen Robot Friend](http://lumen.lskk.ee.itb.ac.id/)[29] team members, including [Budhi Yulianto](https://www.linkedin.com/pub/budhi-yulianto/26/885/256) who researched Graph Database for Lumen Robot Friend, [Marzuki Syahfirin](https://onemarzuki.wordpress.com/) as coordinator of Lumen Robot Friend, [Maria Shusanti](https://www.facebook.com/maria.shusanti) for Lumen Robot Friend gesture research, [Wahyudi](https://www.facebook.com/wahyudi.si) for natural language understanding research, [Sigit Ari Wijanarko](https://www.facebook.com/sigit.ariw) for researching Lumen Robot Friend augmented reality visualization, [Taufiq Nuzwir Nizar](https://independent.academia.edu/TaufiqNizar) for image processing algorithms, [Ahmad Syarif](https://itb.academia.edu/AhmadSyarif) for [NAO](https://www.aldebaran.com/en/humanoid-robot/nao-robot) avatar integration, [Putri Nhirun](https://www.researchgate.net/profile/Putri_Nhirun) for Lumen speech capabilities, [Setyaki Sholata Sya](https://itb.academia.edu/SetyakiSholataSya) for Lumen visual recognition.
 
 
-## XI. References
+## References
 
 1. OpenCog Foundation. Neo4j Graph Backing Store. http://wiki.opencog.org/w/Neo4j_Backing_Store.
 2. OpenCog Foundation. OpenCog website. http://www.opencog.org/.
